@@ -1,4 +1,5 @@
 import AVFoundation
+import SwiftData
 import SwiftUI
 
 @main struct SnapperApp: App {
@@ -10,5 +11,6 @@ import SwiftUI
     WindowGroup {
       ContentView()
     }
+    .modelContainer(for: AlbumHistoryEntry.self)
   }
 }
