@@ -86,6 +86,7 @@ nonisolated enum RecordLinkage {
     for leftIndex in leftCharacters.indices {
       let lowerBound = max(0, leftIndex - matchingWindow)
       let upperBound = min(leftIndex + matchingWindow + 1, rightCharacters.count)
+      guard lowerBound < upperBound else { continue }
       for rightIndex in lowerBound ..< upperBound where !rightMatches[rightIndex] {
         guard leftCharacters[leftIndex] == rightCharacters[rightIndex] else { continue }
         leftMatches[leftIndex] = true

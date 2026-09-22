@@ -1,7 +1,9 @@
+import AVFoundation
 import SwiftUI
 
 struct ContentView: View {
   @State private var viewModel = AlbumSearchViewModel()
+  @State private var playback = PreviewPlaybackController()
 
   var body: some View {
     @Bindable var viewModel = viewModel
@@ -60,11 +62,30 @@ struct ContentView: View {
       }
       .navigationTitle("Snap")
       .navigationDestination(for: AlbumSelection.self) { selection in
-        AlbumDetailView(selection: selection)
+        AlbumDetailView(selection: selection, playback: playback)
       }
+    }
+    .safeAreaInset(edge: .bottom) {
+      PreviewMiniPlayer(playback: playback)
     }
     .task(id: [viewModel.searchMode.rawValue, viewModel.query]) {
       await viewModel.search()
+    }
+    .task(id: playback.itemIdentifier) {
+      await playback.observeItemEnd()
+    }
+    .task(id: playback.itemIdentifier) {
+      await playback.observeItemFailure()
+    }
+    .onChange(of: playback.player?.currentItem?.status) { _, status in
+      playback.handleItemStatus(status)
+    }
+    .onChange(of: playback.player?.timeControlStatus) {
+      playback.updateNowPlaying()
+    }
+    .onReceive(NotificationCenter.default.publisher(for: AVAudioSession.interruptionNotification)) {
+      _ in
+      playback.pause()
     }
   }
 }
