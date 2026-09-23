@@ -24,7 +24,7 @@ struct ContentView: View {
       await playback.observeItemFailure()
     }
     .onChange(of: playback.player?.currentItem?.status) { _, status in
-      playback.handleItemStatus(status)
+      Task { await playback.handleItemStatus(status) }
     }
     .onChange(of: playback.player?.timeControlStatus) {
       playback.updateNowPlaying()

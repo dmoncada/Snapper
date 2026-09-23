@@ -22,6 +22,11 @@ struct AlbumHistoryRow: View {
       Text(entry.selectedAt.formatted(date: .abbreviated, time: .shortened))
         .font(.caption)
         .foregroundStyle(.tertiary)
+
+      if entry.latitude != nil, entry.longitude != nil {
+        AlbumLocationDescription(entry: entry)
+          .font(.caption)
+      }
     }
   }
 }

@@ -15,6 +15,11 @@ final class AlbumHistoryEntry {
   var discogsUrlString: String?
   var barcode: String?
   var selectedAt: Date
+  var latitude: Double? = nil
+  var longitude: Double? = nil
+  var horizontalAccuracy: Double? = nil
+  var locationCapturedAt: Date? = nil
+  var locationLabel: String? = nil
 
   init(selection: AlbumSelection, selectedAt: Date = .now) {
     let candidate = selection.candidate

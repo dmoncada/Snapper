@@ -5,8 +5,10 @@ struct AlbumHistoryView: View {
   let playback: PreviewPlaybackController
 
   @Environment(\.modelContext) private var modelContext
+
   @Query(sort: \AlbumHistoryEntry.selectedAt, order: .reverse)
   private var entries: [AlbumHistoryEntry]
+
   @State private var isConfirmingClear = false
   @State private var saveError: String?
 
@@ -18,9 +20,12 @@ struct AlbumHistoryView: View {
             "No History Yet",
             systemImage: "clock.arrow.circlepath",
             description: Text("Albums you open from Recog will appear here."))
+
         } else {
           ForEach(entries) { entry in
-            NavigationLink(value: entry.selection) {
+            NavigationLink(
+              value: AlbumDetailRoute(selection: entry.selection, historyEntryID: entry.id)
+            ) {
               AlbumHistoryRow(entry: entry)
             }
             .swipeActions {
@@ -57,8 +62,11 @@ struct AlbumHistoryView: View {
       } message: {
         Text("This removes every saved album selection.")
       }
-      .navigationDestination(for: AlbumSelection.self) { selection in
-        AlbumDetailView(selection: selection, playback: playback)
+      .navigationDestination(for: AlbumDetailRoute.self) { route in
+        AlbumDetailView(
+          selection: route.selection,
+          historyEntryID: route.historyEntryID,
+          playback: playback)
       }
       .alert("Couldn’t Save History", isPresented: saveErrorIsPresented) {
         Button("OK", role: .cancel) {

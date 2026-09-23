@@ -47,7 +47,7 @@ struct AlbumTrackRow: View {
           .labelStyle(.iconOnly)
         } else {
           Button("Play Preview", systemImage: "play.fill") {
-            playback.toggle(track, artist: artist, album: album)
+            Task { await playback.toggle(track, artist: artist, album: album) }
           }
           .labelStyle(.iconOnly)
         }

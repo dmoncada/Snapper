@@ -6,8 +6,9 @@ struct RecognitionView: View {
 
   @Environment(\.modelContext) private var modelContext
   @State private var viewModel = AlbumSearchViewModel()
-  @State private var path: [AlbumSelection] = []
+  @State private var path: [AlbumDetailRoute] = []
   @State private var historySaveError: String?
+  @State private var locationCaptureService = AlbumLocationCaptureService()
 
   var body: some View {
     @Bindable var viewModel = viewModel
@@ -68,8 +69,11 @@ struct RecognitionView: View {
         }
       }
       .navigationTitle("Recog")
-      .navigationDestination(for: AlbumSelection.self) { selection in
-        AlbumDetailView(selection: selection, playback: playback)
+      .navigationDestination(for: AlbumDetailRoute.self) { route in
+        AlbumDetailView(
+          selection: route.selection,
+          historyEntryID: route.historyEntryID,
+          playback: playback)
       }
     }
     .task(id: [viewModel.searchMode.rawValue, viewModel.query]) {
@@ -97,11 +101,37 @@ struct RecognitionView: View {
 
     do {
       try modelContext.save()
+      path.append(AlbumDetailRoute(selection: selection, historyEntryID: entry.id))
+      captureLocation(for: entry.id)
+
     } catch {
       modelContext.delete(entry)
       historySaveError = error.localizedDescription
+      path.append(AlbumDetailRoute(selection: selection, historyEntryID: entry.id))
     }
+  }
 
-    path.append(selection)
+  private func captureLocation(for entryID: UUID) {
+    Task {
+      guard let location = await locationCaptureService.captureCurrentLocation() else { return }
+
+      let descriptor = FetchDescriptor<AlbumHistoryEntry>(
+        predicate: #Predicate { $0.id == entryID })
+
+      guard let entry = try? modelContext.fetch(descriptor).first else { return }
+
+      entry.latitude = location.latitude
+      entry.longitude = location.longitude
+      entry.horizontalAccuracy = location.horizontalAccuracy
+      entry.locationCapturedAt = location.capturedAt
+      entry.locationLabel = location.placeLabel
+
+      do {
+        try modelContext.save()
+
+      } catch {
+        historySaveError = error.localizedDescription
+      }
+    }
   }
 }

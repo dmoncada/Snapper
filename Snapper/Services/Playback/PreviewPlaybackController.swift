@@ -14,21 +14,32 @@ final class PreviewPlaybackController {
   private(set) var player: AVPlayer?
 
   @ObservationIgnored private var remoteCommandsInstalled = false
+  @ObservationIgnored private var playbackRequestID = UUID()
 
-  func toggle(_ track: AlbumTrack, artist: String, album: String) {
+  func toggle(_ track: AlbumTrack, artist: String, album: String) async {
     guard let url = track.previewUrl else { return }
 
     if currentTrack?.id == track.id {
-      isPlaying ? pause() : resume()
+      if isPlaying == false {
+        await resume()
+      }
       return
     }
 
+    let requestID = UUID()
+    playbackRequestID = requestID
+
     do {
-      try activateAudioSession()
+      try await activateAudioSession()
+
     } catch {
-      fail(trackId: track.id)
+      guard playbackRequestID == requestID else { return }
+      failedTrackId = track.id
+      await stop()
       return
     }
+
+    guard playbackRequestID == requestID else { return }
 
     installRemoteCommandsIfNeeded()
     failedTrackId = nil
@@ -42,11 +53,13 @@ final class PreviewPlaybackController {
     if let player {
       player.replaceCurrentItem(with: item)
       player.play()
+
     } else {
       let player = AVPlayer(playerItem: item)
       self.player = player
       player.play()
     }
+
     updateNowPlaying()
   }
 
@@ -57,20 +70,29 @@ final class PreviewPlaybackController {
     updateNowPlaying()
   }
 
-  func resume() {
-    guard currentTrack != nil else { return }
+  func resume() async {
+    guard let trackID = currentTrack?.id else { return }
+
+    let requestID = UUID()
+    playbackRequestID = requestID
+
     do {
-      try activateAudioSession()
+      try await activateAudioSession()
     } catch {
-      fail(trackId: currentTrack?.id)
+      guard playbackRequestID == requestID else { return }
+      failedTrackId = trackID
+      await stop()
       return
     }
+
+    guard playbackRequestID == requestID, currentTrack?.id == trackID else { return }
     player?.play()
     isPlaying = true
     updateNowPlaying()
   }
 
-  func stop() {
+  func stop() async {
+    playbackRequestID = UUID()
     player?.pause()
     player?.replaceCurrentItem(with: nil)
     player = nil
@@ -80,13 +102,15 @@ final class PreviewPlaybackController {
     isPlaying = false
     itemIdentifier = nil
     MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-    try? AVAudioSession.sharedInstance().setActive(
-      false, options: .notifyOthersOnDeactivation)
+
+    _ = try? await AVAudioSession.sharedInstance().deactivate(
+      options: .notifyOthersOnDeactivation)
   }
 
-  func handleItemStatus(_ status: AVPlayerItem.Status?) {
+  func handleItemStatus(_ status: AVPlayerItem.Status?) async {
     if status == .failed {
-      fail(trackId: currentTrack?.id)
+      failedTrackId = currentTrack?.id
+      await stop()
     } else if status == .readyToPlay {
       updateNowPlaying()
     }
@@ -118,7 +142,7 @@ final class PreviewPlaybackController {
       if let endedItem = notification.object as? AVPlayerItem,
         endedItem === player?.currentItem
       {
-        stop()
+        await stop()
         return
       }
     }
@@ -134,21 +158,17 @@ final class PreviewPlaybackController {
       if let failedItem = notification.object as? AVPlayerItem,
         failedItem === player?.currentItem
       {
-        fail(trackId: currentTrack?.id)
+        failedTrackId = currentTrack?.id
+        await stop()
         return
       }
     }
   }
 
-  private func fail(trackId: String?) {
-    stop()
-    failedTrackId = trackId
-  }
-
-  private func activateAudioSession() throws {
+  private func activateAudioSession() async throws {
     let session = AVAudioSession.sharedInstance()
     try session.setCategory(.playback, mode: .default)
-    try session.setActive(true)
+    _ = try await session.activate()
   }
 
   private func installRemoteCommandsIfNeeded() {
@@ -158,7 +178,7 @@ final class PreviewPlaybackController {
     let commands = MPRemoteCommandCenter.shared()
 
     commands.playCommand.addTarget { [weak self] _ in
-      Task { @MainActor in self?.resume() }
+      Task { @MainActor in await self?.resume() }
       return .success
     }
     commands.pauseCommand.addTarget { [weak self] _ in
@@ -168,7 +188,11 @@ final class PreviewPlaybackController {
     commands.togglePlayPauseCommand.addTarget { [weak self] _ in
       Task { @MainActor in
         guard let self else { return }
-        self.isPlaying ? self.pause() : self.resume()
+        if self.isPlaying {
+          self.pause()
+        } else {
+          await self.resume()
+        }
       }
       return .success
     }

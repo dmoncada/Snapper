@@ -24,13 +24,13 @@ struct PreviewMiniPlayer: View {
           .labelStyle(.iconOnly)
         } else {
           Button("Play Preview", systemImage: "play.fill") {
-            playback.resume()
+            Task { await playback.resume() }
           }
           .labelStyle(.iconOnly)
         }
 
         Button("Stop Preview", systemImage: "xmark") {
-          playback.stop()
+          Task { await playback.stop() }
         }
         .labelStyle(.iconOnly)
       }

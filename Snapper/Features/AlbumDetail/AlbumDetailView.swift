@@ -1,14 +1,24 @@
+import SwiftData
 import SwiftUI
 
 struct AlbumDetailView: View {
   let selection: AlbumSelection
+  let historyEntryID: UUID
   let playback: PreviewPlaybackController
+
+  @Query private var historyEntries: [AlbumHistoryEntry]
 
   @State private var viewModel: AlbumDetailViewModel
 
-  init(selection: AlbumSelection, playback: PreviewPlaybackController) {
+  init(
+    selection: AlbumSelection,
+    historyEntryID: UUID,
+    playback: PreviewPlaybackController
+  ) {
     self.selection = selection
+    self.historyEntryID = historyEntryID
     self.playback = playback
+
     _viewModel = State(initialValue: AlbumDetailViewModel(selection: selection))
   }
 
@@ -19,6 +29,15 @@ struct AlbumDetailView: View {
           .bold()
         Text(selection.candidate.artist)
           .foregroundStyle(.secondary)
+      }
+
+      Section("Recognized Location") {
+        if let entry = historyEntries.first(where: { $0.id == historyEntryID }) {
+          AlbumLocationDescription(entry: entry)
+        } else {
+          Text("No location saved")
+            .foregroundStyle(.secondary)
+        }
       }
 
       AlbumDetailContent(viewModel: viewModel, playback: playback)

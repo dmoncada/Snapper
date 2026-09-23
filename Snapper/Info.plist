@@ -20,6 +20,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>DISCOGS_TOKEN</key>
 	<string>$(DISCOGS_TOKEN)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Snapper saves where you recognized each album so you can revisit that place in your history.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
