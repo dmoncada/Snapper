@@ -20,6 +20,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>DISCOGS_TOKEN</key>
 	<string>$(DISCOGS_TOKEN)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Snapper uses the camera to read album text and barcodes so you can find album releases.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Snapper saves where you recognized each album so you can revisit that place in your history.</string>
 	<key>UIBackgroundModes</key>

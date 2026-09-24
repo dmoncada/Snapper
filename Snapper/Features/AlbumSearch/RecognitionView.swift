@@ -9,12 +9,19 @@ struct RecognitionView: View {
   @State private var path: [AlbumDetailRoute] = []
   @State private var historySaveError: String?
   @State private var locationCaptureService = AlbumLocationCaptureService()
+  @State private var imageDataToRecognize: Data?
+  @State private var imageRecognitionID = UUID()
 
   var body: some View {
     @Bindable var viewModel = viewModel
 
     NavigationStack(path: $path) {
       List {
+        AlbumImageSourceSection(
+          onImage: scheduleImageRecognition,
+          onError: viewModel.reportImageImportError,
+          isDisabled: viewModel.isScanningImage)
+
         Section {
           Picker("Search input", selection: $viewModel.searchMode) {
             Text("Term").tag(AlbumSearchMode.term)
@@ -29,6 +36,7 @@ struct RecognitionView: View {
           .textInputAutocapitalization(.never)
           .autocorrectionDisabled()
         }
+        .disabled(viewModel.isScanningImage)
 
         Section("Album Candidates") {
           switch viewModel.searchState {
@@ -37,6 +45,12 @@ struct RecognitionView: View {
               "Start Searching",
               systemImage: "magnifyingglass",
               description: Text("Enter an artist, album, or barcode."))
+
+          case .recognizing:
+            HStack {
+              ProgressView()
+              Text("Reading image...")
+            }
 
           case .searching:
             HStack {
@@ -48,7 +62,14 @@ struct RecognitionView: View {
             ContentUnavailableView(
               "No Matches",
               systemImage: "music.note.list",
-              description: Text("Try a different search."))
+              description: Text("Try another query or scan a different side."))
+
+          case .unreadable:
+            ContentUnavailableView(
+              "Couldn’t Read Album",
+              systemImage: "text.viewfinder",
+              description: Text(
+                "No barcode or clear album text was found. Try another side or search manually."))
 
           case .error(let message):
             ContentUnavailableView(
@@ -79,6 +100,11 @@ struct RecognitionView: View {
     .task(id: [viewModel.searchMode.rawValue, viewModel.query]) {
       await viewModel.search()
     }
+    .task(id: imageRecognitionID) {
+      guard let imageDataToRecognize else { return }
+      await viewModel.recognizeAndSearch(imageData: imageDataToRecognize)
+      self.imageDataToRecognize = nil
+    }
     .alert("Couldn’t Save to History", isPresented: historySaveErrorIsPresented) {
       Button("Continue", role: .cancel) {
         historySaveError = nil
@@ -92,6 +118,11 @@ struct RecognitionView: View {
     Binding(
       get: { historySaveError != nil },
       set: { if !$0 { historySaveError = nil } })
+  }
+
+  private func scheduleImageRecognition(_ imageData: Data) {
+    imageDataToRecognize = imageData
+    imageRecognitionID = UUID()
   }
 
   private func open(_ candidate: AlbumCandidate) {

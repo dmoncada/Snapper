@@ -12,8 +12,12 @@ nonisolated struct AlbumCandidate: Identifiable, Sendable, Hashable {
   let discogsUrl: URL?
 
   var displayMetadata: String {
-    [year.map(String.init), formats.first, country]
-      .compactMap(\.self)
-      .joined(separator: " • ")
+    [
+      year.map(String.init),
+      formats.first,
+      country,
+    ]
+    .compactMap(\.self)
+    .joined(separator: " • ")
   }
 }
