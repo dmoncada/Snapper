@@ -52,6 +52,7 @@ struct AlbumThumbnail: View {
     }
     .frame(width: 64, height: 64)
     .clipShape(.rect(cornerRadius: Radius.sm))
+    .asyncImageURLSession(.images)
   }
 }
 

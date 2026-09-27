@@ -6,6 +6,25 @@ nonisolated struct AlbumTracklist: Sendable, Hashable {
   let source: AlbumTracklistSource
 }
 
+nonisolated enum AlbumTracklistSource: Sendable, Hashable {
+  case itunes(URL?)
+  case discogs
+
+  var title: String {
+    switch self {
+    case .itunes:
+      "Tracks and previews from iTunes"
+    case .discogs:
+      "Tracklist from Discogs"
+    }
+  }
+
+  var itunesUrl: URL? {
+    guard case .itunes(let url) = self else { return nil }
+    return url
+  }
+}
+
 nonisolated struct AlbumTracklistResolver: Sendable {
   private let discogsClient: DiscogsClient
   private let itunesClient: ItunesClient
@@ -113,16 +132,39 @@ struct AlbumDetailView2: View {
 
 private struct AlbumCover: View {
   let url: URL?
+  let height: CGFloat
+
+  init(url: URL?, height: CGFloat = 300) {
+    self.url = url
+    self.height = height
+  }
 
   var body: some View {
-    AsyncImage(url: url) { image in
-      image
-        .resizable()
-        .scaledToFill()
+    AsyncImage(url: url) { phase in
+      switch phase {
+      case .empty:
+        ZStack {
+          Color.gray
+          ProgressView()
+            .tint(.white)
+        }
 
-    } placeholder: {
-      ProgressView()
+      case .success(let image):
+        image
+          .resizable()
+          .scaledToFill()
+
+      case .failure:
+        Color.gray
+
+      @unknown default:
+        Color.gray
+      }
     }
+    .asyncImageURLSession(.images)
+    .frame(maxWidth: .infinity)
+    .frame(height: height)
+    .clipped()
   }
 }
 

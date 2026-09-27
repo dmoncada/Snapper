@@ -47,6 +47,7 @@ struct HistoryView: View {
               }
             }
           }
+          .scrollIndicators(.hidden)
         }
       }
       .frame(
@@ -104,7 +105,10 @@ private struct AlbumHistoryItem: View {
 
   var body: some View {
     VStack(alignment: .leading) {
-      AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
+      AlbumCover2(url: URL(string: entry.coverImageUrlString ?? ""))
+        .frame(maxWidth: .infinity)
+        .aspectRatio(1, contentMode: .fit)
+        .clipShape(.rect(cornerRadius: Radius.md))
 
       HStack {
         VStack(alignment: .leading, spacing: Spacing.xs) {
@@ -172,6 +176,37 @@ private struct AlbumCover: View {
     .frame(maxWidth: .infinity)
     .aspectRatio(1, contentMode: .fit)
     .clipShape(.rect(cornerRadius: Radius.sm))
+  }
+}
+
+private struct AlbumCover2: View {
+  let url: URL?
+
+  var body: some View {
+    AsyncImage(url: url) { phase in
+      switch phase {
+      case .empty:
+        ZStack {
+          Color.gray
+          ProgressView()
+            .tint(.white)
+        }
+
+      case .success(let image):
+        image
+          .resizable()
+          .scaledToFill()
+
+      case .failure:
+        Color.gray
+
+      @unknown default:
+        Color.gray
+      }
+    }
+    .asyncImageURLSession(.images)
+    .frame(maxWidth: .infinity)
+    .clipped()
   }
 }
 

@@ -83,6 +83,14 @@ private struct AlbumCandidateSection: View {
             .font(.libreCaslonTextRegular(.subheadline))
         }
 
+      case .searching:
+        ProgressView()
+          .scaleEffect(2)
+          .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity
+          )
+
       case .results:
         ScrollView(.vertical) {
           VStack {
@@ -102,18 +110,17 @@ private struct AlbumCandidateSection: View {
             }
           }
         }
-        .scrollBounceBehavior(
-          .basedOnSize,
-          axes: .vertical
-        )
+        .scrollBounceBehavior(.basedOnSize)
 
-      case .searching:
-        ProgressView()
-          .scaleEffect(2)
-          .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity
-          )
+      case .error(let error):
+        ContentUnavailableView {
+          Text("Oh no!")
+            .font(.libreCaslonTextBold(.headline))
+
+        } description: {
+          Text(error)
+            .font(.libreCaslonTextRegular(.subheadline))
+        }
 
       default:
         EmptyView()

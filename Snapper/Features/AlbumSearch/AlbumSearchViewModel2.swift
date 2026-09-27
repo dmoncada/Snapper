@@ -7,7 +7,7 @@ import Observation
 class AlbumSearchViewModel2 {
   private let discogsClient: DiscogsClient
 
-  private(set) var state: AlbumSearchState = .idle
+  private(set) var state: State = .idle
   private(set) var results: [AlbumCandidate] = []
   private(set) var location: CLLocation?
 
@@ -39,10 +39,10 @@ class AlbumSearchViewModel2 {
       try await Task.sleep(for: debounceDuration)
       try Task.checkCancellation()
 
-      async let locationTask = await locator?.currentLocation
+      // async let locationTask = await locator?.currentLocation
       async let searchTask = await discogsClient.searchAlbums(matching: searchText)
 
-      location = try await locationTask
+      // location = try await locationTask
       results = try await searchTask
 
       state =
@@ -57,5 +57,17 @@ class AlbumSearchViewModel2 {
       state = .error(error.localizedDescription)
       results = []
     }
+  }
+}
+
+extension AlbumSearchViewModel2 {
+  enum State: Equatable {
+    case idle
+    case recognizing
+    case searching
+    case results
+    case empty
+    case unreadable
+    case error(String)
   }
 }
