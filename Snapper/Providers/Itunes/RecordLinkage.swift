@@ -78,15 +78,18 @@ nonisolated enum RecordLinkage {
 
     let leftCharacters = Array(left)
     let rightCharacters = Array(right)
-    let matchingWindow = max(0, max(leftCharacters.count, rightCharacters.count) / 2 - 1)
+
     var leftMatches = Array(repeating: false, count: leftCharacters.count)
     var rightMatches = Array(repeating: false, count: rightCharacters.count)
+
     var matches = 0
+    let matchingWindow = max(0, max(leftCharacters.count, rightCharacters.count) / 2 - 1)
 
     for leftIndex in leftCharacters.indices {
       let lowerBound = max(0, leftIndex - matchingWindow)
       let upperBound = min(leftIndex + matchingWindow + 1, rightCharacters.count)
       guard lowerBound < upperBound else { continue }
+
       for rightIndex in lowerBound ..< upperBound where !rightMatches[rightIndex] {
         guard leftCharacters[leftIndex] == rightCharacters[rightIndex] else { continue }
         leftMatches[leftIndex] = true
@@ -102,6 +105,7 @@ nonisolated enum RecordLinkage {
     let matchedRight = rightCharacters.indices.filter { rightMatches[$0] }.map {
       rightCharacters[$0]
     }
+
     let transpositions = zip(matchedLeft, matchedRight).filter(!=).count / 2
     let matchCount = Double(matches)
     let jaro =

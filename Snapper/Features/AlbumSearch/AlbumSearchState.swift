@@ -1,3 +1,4 @@
+/*
 enum AlbumSearchState: Equatable {
   case idle
   case recognizing
@@ -7,3 +8,4 @@ enum AlbumSearchState: Equatable {
   case unreadable
   case error(String)
 }
+ */

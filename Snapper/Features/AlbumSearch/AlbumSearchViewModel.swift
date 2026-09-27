@@ -5,7 +5,7 @@ import Observation
 @Observable
 final class AlbumSearchViewModel {
   var query = ""
-  var searchMode = AlbumSearchMode.term
+  // var searchMode = AlbumSearchMode.term
 
   private(set) var searchState = AlbumSearchState.idle
   private(set) var candidates: [AlbumCandidate] = []
@@ -17,29 +17,32 @@ final class AlbumSearchViewModel {
   convenience init() {
     let token = Bundle.main.object(forInfoDictionaryKey: "DISCOGS_TOKEN") as? String ?? ""
     self.init(
-      client: DiscogsClient(token: token),
-      imageRecognitionService: AlbumImageRecognitionService())
+      client: .init(token: token),
+      imageRecognitionService: .init())
   }
 
   init(
     client: DiscogsClient,
-    imageRecognitionService: AlbumImageRecognitionService = AlbumImageRecognitionService()
+    imageRecognitionService: AlbumImageRecognitionService = .init()
   ) {
     self.client = client
     self.imageRecognitionService = imageRecognitionService
   }
 
   func selection(for candidate: AlbumCandidate) -> AlbumSelection {
+    /*
     let barcode =
       searchMode == .barcode ? query.trimmingCharacters(in: .whitespacesAndNewlines) : nil
     return AlbumSelection(candidate: candidate, barcode: barcode)
+     */
+    AlbumSelection(candidate: candidate, barcode: nil)
   }
 
   func recognizeAndSearch(imageData: Data) async {
     isScanningImage = true
     defer { isScanningImage = false }
 
-    searchMode = .term
+    // searchMode = .term
     query = ""
     candidates = []
     searchState = .recognizing
@@ -56,11 +59,12 @@ final class AlbumSearchViewModel {
       searchState = .searching
 
       if let barcode = recognition.barcode {
-        searchMode = .barcode
+        // searchMode = .barcode
         query = barcode
 
         let barcodeCandidates = try await client.searchAlbums(withBarcode: barcode)
         try Task.checkCancellation()
+
         candidates = barcodeCandidates
 
         if !barcodeCandidates.isEmpty {
@@ -74,20 +78,21 @@ final class AlbumSearchViewModel {
         return
       }
 
-      searchMode = .term
+      // searchMode = .term
       query = textQuery
 
       let textCandidates = try await client.searchAlbums(matching: textQuery)
       try Task.checkCancellation()
-      candidates = textCandidates
+
       searchState = textCandidates.isEmpty ? .empty : .results
+      candidates = textCandidates
 
     } catch is CancellationError {
       // A newer input or view lifecycle event replaced this scan.
 
     } catch {
-      candidates = []
       searchState = .error(error.localizedDescription)
+      candidates = []
     }
   }
 
@@ -96,11 +101,11 @@ final class AlbumSearchViewModel {
     searchState = .error(message)
   }
 
-  func search() async {
-    guard !isScanningImage else { return }
+  func search(debounceDuration: Duration = .seconds(1)) async {
+    if isScanningImage { return }
 
     let query = query.trimmingCharacters(in: .whitespacesAndNewlines)
-    let searchMode = searchMode
+    // let searchMode = searchMode
 
     if query.isEmpty {
       candidates = []
@@ -111,9 +116,10 @@ final class AlbumSearchViewModel {
     searchState = .searching
 
     do {
-      try await Task.sleep(for: .seconds(1))
+      try await Task.sleep(for: debounceDuration)
       try Task.checkCancellation()
 
+      /*
       let candidates =
         switch searchMode {
         case .term:
@@ -121,6 +127,9 @@ final class AlbumSearchViewModel {
         case .barcode:
           try await client.searchAlbums(withBarcode: query)
         }
+       */
+
+      let candidates = try await client.searchAlbums(matching: query)
 
       try Task.checkCancellation()
       self.candidates = candidates
@@ -134,4 +143,14 @@ final class AlbumSearchViewModel {
       searchState = .error(error.localizedDescription)
     }
   }
+}
+
+enum AlbumSearchState: Equatable {
+  case idle
+  case recognizing
+  case searching
+  case results
+  case empty
+  case unreadable
+  case error(String)
 }

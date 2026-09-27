@@ -9,8 +9,7 @@ import SwiftUI
 
   var body: some Scene {
     WindowGroup {
-      ContentView()
+      SnapperAppShell()
     }
-    .modelContainer(for: AlbumHistoryEntry.self)
   }
 }

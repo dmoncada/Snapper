@@ -8,14 +8,10 @@ nonisolated enum DiscogsClientError: LocalizedError, Sendable {
 
   var errorDescription: String? {
     switch self {
-    case .emptySearchTerm:
-      "Enter a search term."
-    case .invalidUrl:
-      "Could not construct the Discogs request."
-    case .invalidToken:
-      "A valid Discogs token is required."
-    case .unexpectedStatusCode(let statusCode):
-      "Discogs returned HTTP status \(statusCode)."
+    case .emptySearchTerm: "Enter a search term."
+    case .invalidUrl: "Could not construct the Discogs request."
+    case .invalidToken: "A valid Discogs token is required."
+    case .unexpectedStatusCode(let statusCode): "Discogs returned HTTP status \(statusCode)."
     }
   }
 }

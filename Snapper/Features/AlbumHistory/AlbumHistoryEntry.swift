@@ -47,6 +47,7 @@ final class AlbumHistoryEntry {
       labels: labels,
       country: country,
       thumbnailUrl: thumbnailUrlString.flatMap(URL.init(string:)),
+      coverImageUrl: thumbnailUrlString.flatMap(URL.init(string:)),
       discogsUrl: discogsUrlString.flatMap(URL.init(string:)))
 
     return AlbumSelection(candidate: candidate, barcode: barcode)

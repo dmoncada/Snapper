@@ -13,11 +13,13 @@ struct AlbumHistoryRow: View {
           .foregroundStyle(.secondary)
       }
 
+      /*
       if entry.selection.candidate.displayMetadata.count > 0 {
         Text(entry.selection.candidate.displayMetadata)
           .font(.subheadline)
           .foregroundStyle(.secondary)
       }
+       */
 
       Text(entry.selectedAt.formatted(date: .abbreviated, time: .shortened))
         .font(.caption)

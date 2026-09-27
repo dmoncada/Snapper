@@ -20,7 +20,11 @@ nonisolated struct DiscogsClient: Sendable {
     self.transport = transport
   }
 
-  func searchAlbums(matching searchTerm: String, limit: Int = 5) async throws -> [AlbumCandidate] {
+  func searchAlbums(
+    matching searchTerm: String,
+    limit: Int = 5
+  ) async throws -> [AlbumCandidate] {
+
     let trimmedSearchTerm = searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
     if trimmedSearchTerm.isEmpty {
       throw DiscogsClientError.emptySearchTerm
@@ -32,7 +36,11 @@ nonisolated struct DiscogsClient: Sendable {
       limit: limit)
   }
 
-  func searchAlbums(withBarcode barcode: String, limit: Int = 5) async throws -> [AlbumCandidate] {
+  func searchAlbums(
+    withBarcode barcode: String,
+    limit: Int = 5
+  ) async throws -> [AlbumCandidate] {
+
     let trimmedBarcode = barcode.trimmingCharacters(in: .whitespacesAndNewlines)
     if trimmedBarcode.isEmpty {
       throw DiscogsClientError.emptySearchTerm
@@ -44,12 +52,16 @@ nonisolated struct DiscogsClient: Sendable {
       limit: limit)
   }
 
-  func tracklist(forReleaseId releaseId: Int) async throws -> [AlbumTrack] {
+  func tracklist(
+    forReleaseId releaseId: Int
+  ) async throws -> [AlbumTrack] {
+
     do {
       var components = URLComponents()
       components.scheme = "https"
       components.host = "api.discogs.com"
       components.path = "/releases/\(releaseId)"
+
       guard let url = components.url else {
         throw DiscogsClientError.invalidUrl
       }
@@ -63,6 +75,7 @@ nonisolated struct DiscogsClient: Sendable {
       let statusCode = httpResponse.response.statusCode
       Self.logger.info(
         "Discogs release response: HTTP \(statusCode), \(httpResponse.data.count) bytes.")
+
       guard (200 ..< 300).contains(statusCode) else {
         throw DiscogsClientError.unexpectedStatusCode(statusCode)
       }
@@ -70,6 +83,7 @@ nonisolated struct DiscogsClient: Sendable {
       let response = try JSONDecoder().decode(DiscogsReleaseResponse.self, from: httpResponse.data)
       let tracks = (response.tracklist ?? []).compactMap(AlbumTrack.init)
       Self.logger.debug("Mapped \(tracks.count) Discogs tracks.")
+
       return tracks
 
     } catch is CancellationError {
@@ -84,9 +98,12 @@ nonisolated struct DiscogsClient: Sendable {
     }
   }
 
-  private func search(queryName: String, queryValue: String, limit: Int) async throws
-    -> [AlbumCandidate]
-  {
+  private func search(
+    queryName: String,
+    queryValue: String,
+    limit: Int
+  ) async throws -> [AlbumCandidate] {
+
     do {
       if token.isEmpty {
         throw DiscogsClientError.invalidToken
@@ -99,8 +116,7 @@ nonisolated struct DiscogsClient: Sendable {
 
       let httpResponse = try await transport.send(request)
       let statusCode = httpResponse.response.statusCode
-      Self.logger.info(
-        "Discogs response: HTTP \(statusCode), \(httpResponse.data.count) bytes.")
+      Self.logger.info("Discogs response: HTTP \(statusCode), \(httpResponse.data.count) bytes.")
 
       guard (200 ..< 300).contains(statusCode) else {
         Self.logger.error("Discogs returned HTTP \(statusCode).")
@@ -122,7 +138,12 @@ nonisolated struct DiscogsClient: Sendable {
     }
   }
 
-  private func makeRequest(queryName: String, queryValue: String, limit: Int) throws -> URLRequest {
+  private func makeRequest(
+    queryName: String,
+    queryValue: String,
+    limit: Int
+  ) throws -> URLRequest {
+
     var components = URLComponents()
     components.scheme = "https"
     components.host = "api.discogs.com"
@@ -161,6 +182,7 @@ extension AlbumCandidate {
     if let separatorRange = searchResult.title.range(of: " - ") {
       artist = String(searchResult.title[..<separatorRange.lowerBound])
       title = String(searchResult.title[separatorRange.upperBound...])
+
     } else {
       artist = ""
       title = searchResult.title
@@ -172,6 +194,7 @@ extension AlbumCandidate {
     labels = searchResult.label ?? []
     country = searchResult.country
     thumbnailUrl = searchResult.thumb.flatMap(URL.init(string:))
+    coverImageUrl = searchResult.coverImage.flatMap(URL.init(string:))
     discogsUrl = searchResult.uri.flatMap { URL(string: "https://www.discogs.com\($0)") }
   }
 }

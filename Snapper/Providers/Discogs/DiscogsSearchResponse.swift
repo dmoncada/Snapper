@@ -12,6 +12,7 @@ nonisolated struct DiscogsSearchResult: Decodable, Sendable {
   let label: [String]?
   let country: String?
   let thumb: String?
+  let coverImage: String?
   let uri: String?
 
   enum CodingKeys: String, CodingKey {
@@ -22,6 +23,7 @@ nonisolated struct DiscogsSearchResult: Decodable, Sendable {
     case label
     case country
     case thumb
+    case coverImage = "cover_image"
     case uri
   }
 }

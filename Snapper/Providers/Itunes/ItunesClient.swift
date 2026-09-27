@@ -20,9 +20,13 @@ nonisolated struct ItunesClient: Sendable {
     self.transport = transport
   }
 
-  func tracklist(for candidate: AlbumCandidate, barcode: String?) async throws -> ItunesTracklist? {
+  func tracklist(
+    for candidate: AlbumCandidate,
+    barcode: String?
+  ) async throws -> ItunesTracklist? {
+
     do {
-      if let barcode, !barcode.isEmpty, let collection = try await collection(forUpc: barcode) {
+      if let barcode, barcode.count > 0, let collection = try await collection(forUpc: barcode) {
         Self.logger.info("Resolved iTunes collection through UPC lookup.")
         return try await tracks(for: collection)
       }
@@ -35,6 +39,7 @@ nonisolated struct ItunesClient: Sendable {
           URLQueryItem(name: "entity", value: "album"),
           URLQueryItem(name: "limit", value: "25"),
         ])
+
       if let collection = RecordLinkage.bestCollection(from: albumResults.results, for: candidate) {
         Self.logger.info("Resolved iTunes collection through album search.")
         return try await tracks(for: collection)
@@ -48,6 +53,7 @@ nonisolated struct ItunesClient: Sendable {
           URLQueryItem(name: "entity", value: "musicArtist"),
           URLQueryItem(name: "limit", value: "10"),
         ])
+
       guard
         let artist = RecordLinkage.bestArtist(from: artistResults.results, named: candidate.artist),
         let artistId = artist.artistId
@@ -63,6 +69,7 @@ nonisolated struct ItunesClient: Sendable {
           URLQueryItem(name: "entity", value: "album"),
           URLQueryItem(name: "limit", value: "200"),
         ])
+
       guard
         let collection = RecordLinkage.bestCollection(from: artistAlbums.results, for: candidate)
       else {
@@ -77,6 +84,7 @@ nonisolated struct ItunesClient: Sendable {
     } catch is CancellationError {
       Self.logger.debug("iTunes tracklist resolution cancelled.")
       throw CancellationError()
+
     } catch {
       Self.logger.error(
         "iTunes resolution failed with \(String(reflecting: type(of: error)), privacy: .public).")
@@ -91,24 +99,32 @@ nonisolated struct ItunesClient: Sendable {
         URLQueryItem(name: "upc", value: barcode),
         URLQueryItem(name: "entity", value: "song"),
       ])
+
     return response.results.first { $0.collectionId != nil }
   }
 
-  private func tracks(for collection: ItunesSearchResult) async throws -> ItunesTracklist? {
+  private func tracks(
+    for collection: ItunesSearchResult
+  ) async throws -> ItunesTracklist? {
+
     guard let collectionId = collection.collectionId else { return nil }
+
     let response = try await request(
       path: "/lookup",
       queryItems: [
         URLQueryItem(name: "id", value: String(collectionId)),
         URLQueryItem(name: "entity", value: "song"),
       ])
+
     let tracks = response.results.compactMap(ItunesTrack.init).sorted {
       ($0.discNumber, $0.trackNumber) < ($1.discNumber, $1.trackNumber)
     }
-    guard !tracks.isEmpty else {
+
+    if tracks.isEmpty {
       Self.logger.info("iTunes collection returned no tracks; using Discogs fallback.")
       return nil
     }
+
     return ItunesTracklist(
       collectionId: collectionId,
       artist: collection.artistName ?? "",
@@ -117,26 +133,38 @@ nonisolated struct ItunesClient: Sendable {
       tracks: tracks)
   }
 
-  private func request(path: String, queryItems: [URLQueryItem]) async throws
-    -> ItunesSearchResponse
-  {
+  private func request(
+    path: String,
+    queryItems: [URLQueryItem]
+  ) async throws -> ItunesSearchResponse {
+
     var components = URLComponents()
     components.scheme = "https"
     components.host = "itunes.apple.com"
     components.path = path
     components.queryItems =
-      queryItems + [URLQueryItem(name: "country", value: storefront.countryCode)]
-    guard let url = components.url else { throw ItunesClientError.invalidUrl }
+      queryItems + [
+        URLQueryItem(
+          name: "country",
+          value: storefront.countryCode)
+      ]
+
+    guard let url = components.url else {
+      throw ItunesClientError.invalidUrl
+    }
 
     Self.logger.debug(
       "Starting iTunes request at \(path, privacy: .public) for storefront \(storefront.countryCode, privacy: .public)."
     )
+
     let httpResponse = try await transport.send(URLRequest(url: url))
     let statusCode = httpResponse.response.statusCode
     Self.logger.info("iTunes response: HTTP \(statusCode), \(httpResponse.data.count) bytes.")
+
     guard (200 ..< 300).contains(statusCode) else {
       throw ItunesClientError.unexpectedStatusCode(statusCode)
     }
+
     let response = try JSONDecoder().decode(ItunesSearchResponse.self, from: httpResponse.data)
     Self.logger.debug("Decoded \(response.results.count) iTunes results.")
     return response

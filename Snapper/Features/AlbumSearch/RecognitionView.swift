@@ -1,3 +1,4 @@
+/*
 import SwiftData
 import SwiftUI
 
@@ -166,3 +167,4 @@ struct RecognitionView: View {
     }
   }
 }
+ */

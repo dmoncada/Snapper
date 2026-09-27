@@ -9,8 +9,10 @@ nonisolated struct AlbumCandidate: Identifiable, Sendable, Hashable {
   let labels: [String]
   let country: String?
   let thumbnailUrl: URL?
+  let coverImageUrl: URL?
   let discogsUrl: URL?
 
+  /*
   var displayMetadata: String {
     [
       year.map(String.init),
@@ -20,4 +22,5 @@ nonisolated struct AlbumCandidate: Identifiable, Sendable, Hashable {
     .compactMap(\.self)
     .joined(separator: " • ")
   }
+   */
 }

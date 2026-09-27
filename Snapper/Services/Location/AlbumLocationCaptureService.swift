@@ -24,7 +24,8 @@ final class AlbumLocationCaptureService {
               return nil
             }
 
-            guard let location = update.location,
+            guard
+              let location = update.location,
               location.horizontalAccuracy >= 0,
               abs(location.timestamp.timeIntervalSinceNow) < 120
             else {
@@ -57,6 +58,7 @@ final class AlbumLocationCaptureService {
 
     guard let location else { return nil }
     let label = await placeLabel(for: location)
+
     return AlbumLocation(
       latitude: location.latitude,
       longitude: location.longitude,
@@ -71,6 +73,7 @@ final class AlbumLocationCaptureService {
 
     do {
       return try await request.mapItems.first?.address?.shortAddress
+
     } catch {
       return nil
     }

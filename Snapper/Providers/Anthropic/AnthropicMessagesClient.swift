@@ -25,7 +25,7 @@ nonisolated enum AnthropicClientError: Error, LocalizedError, Sendable {
     case .missingApiKey:
       "Set ANTHROPIC_API_KEY in the app configuration."
     case .invalidRequest:
-      "Snapper couldn’t prepare the Anthropic request."
+      "App could not prepare the Anthropic request."
     case .invalidResponse:
       "Anthropic returned an unexpected response."
     case .httpStatus(let code, let message):
