@@ -1,4 +1,3 @@
-import CoreLocation
 import Foundation
 import Observation
 
@@ -9,9 +8,6 @@ class AlbumSearchViewModel2 {
 
   private(set) var state: State = .idle
   private(set) var results: [AlbumCandidate] = []
-  private(set) var location: CLLocation?
-
-  var locator: LocationManager?
 
   var searchText = ""
 
@@ -39,11 +35,8 @@ class AlbumSearchViewModel2 {
       try await Task.sleep(for: debounceDuration)
       try Task.checkCancellation()
 
-      // async let locationTask = await locator?.currentLocation
-      async let searchTask = await discogsClient.searchAlbums(matching: searchText)
-
-      // location = try await locationTask
-      results = try await searchTask
+      results = try await discogsClient.searchAlbums(matching: query, limit: 10)
+      try Task.checkCancellation()
 
       state =
         results.isEmpty

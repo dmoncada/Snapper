@@ -1,10 +1,3 @@
-//
-//  ToolbarTitle.swift
-//  Snapper
-//
-//  Created by David Moncada on 9/26/26.
-//
-
 import SwiftUI
 
 struct ToolbarTitle: ToolbarContent {
@@ -27,3 +20,16 @@ struct ToolbarTitle: ToolbarContent {
     .sharedBackgroundVisibility(.hidden)
   }
 }
+
+#if DEBUG
+  #Preview {
+    NavigationStack {
+      ScrollView {
+        Text("Hello, world!")
+      }
+      .toolbar { ToolbarTitle("Hello") }
+      .toolbarBackground(.thinMaterial, for: .navigationBar)
+      .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+    }
+  }
+#endif

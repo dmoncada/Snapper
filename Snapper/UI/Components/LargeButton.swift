@@ -11,11 +11,11 @@ struct LargeButton: View {
 
   var body: some View {
     Button(title, action: action)
-      .buttonStyle(.fullWidth)
-      .buttonStyle(.roundedOutline)
       .font(.basteleurBold(.title2))
       .foregroundStyle(.themePrimaryInverted)
       .background(.themeSeafoam)
+      .buttonStyle(.fullWidth)
+      .roundedOutline()
   }
 }
 

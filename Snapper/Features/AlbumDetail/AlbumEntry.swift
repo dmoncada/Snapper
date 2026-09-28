@@ -16,12 +16,9 @@ class AlbumEntry {
   var coverImageUrlString: String?
   var discogsUrlString: String?
   var selectedAt: Date
-  // var barcode: String?
+
   var latitude: Double? = nil
   var longitude: Double? = nil
-  // var horizontalAccuracy: Double? = nil
-  // var locationCapturedAt: Date? = nil
-  // var locationLabel: String? = nil
 
   init(candidate: AlbumCandidate, selectedAt: Date = .now) {
     id = UUID()
@@ -35,24 +32,6 @@ class AlbumEntry {
     thumbnailUrlString = candidate.thumbnailUrl?.absoluteString
     coverImageUrlString = candidate.coverImageUrl?.absoluteString
     discogsUrlString = candidate.discogsUrl?.absoluteString
-    // barcode = selection.barcode
     self.selectedAt = selectedAt
   }
-
-  /*
-  var selection: AlbumSelection {
-    let candidate = AlbumCandidate(
-      id: discogsReleaseId,
-      artist: artist,
-      title: title,
-      year: year,
-      formats: formats,
-      labels: labels,
-      country: country,
-      thumbnailUrl: thumbnailUrlString.flatMap(URL.init(string:)),
-      discogsUrl: discogsUrlString.flatMap(URL.init(string:)))
-
-    return AlbumSelection(candidate: candidate, barcode: barcode)
-  }
-   */
 }

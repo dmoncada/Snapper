@@ -18,7 +18,7 @@ struct SnapperAppShell: View {
       }
     }
     .withSheetDestination($router.sheetItem)
-    .onAppear { locator.checkAuthorization() }
+    // .task { await locator.requestPermission() }
     .preferredColorScheme(preference.colorScheme)
     .modelContainer(for: AlbumEntry.self)
     .environment(locator)

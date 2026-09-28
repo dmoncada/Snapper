@@ -21,3 +21,9 @@ enum Radius {
   static let lg: CGFloat = 16
   static let full: CGFloat = .infinity
 }
+
+enum LineWidth {
+  static let sm: CGFloat = 1
+  static let md: CGFloat = 2
+  static let lg: CGFloat = 4
+}

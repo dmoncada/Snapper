@@ -14,9 +14,8 @@ struct HomeView: View {
     NavigationStack(path: $path) {
       VStack(alignment: .leading, spacing: Spacing.sm) {
 
-        SearchField(
-          text: $vm.searchText,
-          placeholder: "Artist, album, barcode, etc...")
+        SearchField(text: $vm.searchText, placeholder: "Artist, album, barcode")
+          .keyboardType(.webSearch)
 
         HStack(spacing: Spacing.sm) {
           LargeButton("Pick") {}
@@ -25,18 +24,23 @@ struct HomeView: View {
           LargeButton("Snap!") {}
         }
 
-        AlbumCandidateSection(vm: vm, action: onSelect)
+        AlbumCandidateSection(vm: vm) { candidate in
+          createEntry(candidate, location: nil)
+        }
       }
       .frame(
         maxWidth: .infinity,
         maxHeight: .infinity
       )
-      .padding()
+      .padding(Padding.xl)
+      .toolbarBackground(.thinMaterial, for: .navigationBar)
+      .toolbarBackgroundVisibility(.visible, for: .navigationBar)
       .toolbar {
         ToolbarTitle("MusicSnap")
         ToolbarItem(placement: .topBarTrailing) {
           Button("Settings", systemImage: "gearshape") {
             router.sheetItem = .settings
+            dismissKeyboard()
           }
         }
       }
@@ -44,19 +48,17 @@ struct HomeView: View {
         AlbumDetailView2(entry: destination)
       }
       .fullBackground(.themePrimary)
-    }
-    .onAppear {
-      vm.locator = locator  // Inject locator.
+      .dismissKeyboardOnTap()
     }
     .task(id: vm.searchText) {
       await vm.search()
     }
   }
 
-  private func onSelect(selected: AlbumCandidate) {
-    let entry = AlbumEntry(candidate: selected)
-    entry.latitude = vm.location?.coordinate.latitude
-    entry.longitude = vm.location?.coordinate.longitude
+  private func createEntry(_ candidate: AlbumCandidate, location: CLLocation?) {
+    let entry = AlbumEntry(candidate: candidate)
+    entry.latitude = location?.coordinate.latitude
+    entry.longitude = location?.coordinate.longitude
     path.append(entry)
 
     context.insert(entry)
@@ -110,7 +112,6 @@ private struct AlbumCandidateSection: View {
             }
           }
         }
-        .scrollBounceBehavior(.basedOnSize)
 
       case .error(let error):
         ContentUnavailableView {

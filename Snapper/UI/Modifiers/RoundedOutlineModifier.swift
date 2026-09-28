@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct RoundedOutlineModifier: ViewModifier {
-  var radius: CGFloat = 4
-  var lineWidth: CGFloat = 2
-  var color: Color = .primary
+  var radius: CGFloat = Radius.md
+  var lineWidth: CGFloat = LineWidth.md
+  var color: Color = .themePrimaryInverted
 
   func body(content: Content) -> some View {
     content
@@ -17,9 +17,9 @@ struct RoundedOutlineModifier: ViewModifier {
 
 extension View {
   func roundedOutline(
-    radius: CGFloat = 4,
-    lineWidth: CGFloat = 2,
-    color: Color = .primary
+    radius: CGFloat = Radius.md,
+    lineWidth: CGFloat = LineWidth.md,
+    color: Color = .themePrimaryInverted
   ) -> some View {
     modifier(
       RoundedOutlineModifier(
