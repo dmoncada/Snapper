@@ -306,32 +306,17 @@ private struct AlbumTrackRow2: View {
   }
 }
 
-#Preview {
-  let album = AlbumCandidate(
-    id: 21491,
-    artist: "Radiohead",
-    title: "OK Computer",
-    year: 1997,
-    formats: ["CD", "Vinyl", "Cassette"],
-    labels: ["Parlophone"],
-    country: "United Kingdom",
-    thumbnailUrl: URL(
-      string:
-        "https://i.discogs.com/OaKbbnsKGXwq2llV8ZlLi-QJgKz2S-Wm3NdJfmHKpgU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2NjQz/ODQtMTY5NzQ3NDg3/Ny0zMTYxLmpwZWc.jpeg",
-    ),
-    coverImageUrl: URL(
-      string:
-        "https://i.discogs.com/YTJxCXA7Z04Ve01kFU5EEsOVN6Xik62J7zgNbCtOBlk/rs:fit/g:sm/q:90/h:601/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2NjQz/ODQtMTY5NzQ3NDg3/Ny0zMTYxLmpwZWc.jpeg",
-    ),
-    discogsUrl: URL(string: "https://www.discogs.com/master/21491")
-  )
+#if DEBUG
+  import SwiftData
 
-  let entry = AlbumEntry(candidate: album)
+  #Preview(traits: .withSampleData) {
+    @Previewable @Query var entries: [AlbumEntry]
 
-  AlbumDetailView2(entry: entry)
-    .onAppear {
-      // New York City:
-      entry.latitude = 40.7128
-      entry.longitude = -74.0060
+    if entries.count > 0 {
+      AlbumDetailView2(entry: entries[0])
+
+    } else {
+      ProgressView()
     }
-}
+  }
+#endif

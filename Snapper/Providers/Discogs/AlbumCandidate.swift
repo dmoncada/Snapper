@@ -11,16 +11,4 @@ nonisolated struct AlbumCandidate: Identifiable, Sendable, Hashable {
   let thumbnailUrl: URL?
   let coverImageUrl: URL?
   let discogsUrl: URL?
-
-  /*
-  var displayMetadata: String {
-    [
-      year.map(String.init),
-      formats.first,
-      country,
-    ]
-    .compactMap(\.self)
-    .joined(separator: " • ")
-  }
-   */
 }

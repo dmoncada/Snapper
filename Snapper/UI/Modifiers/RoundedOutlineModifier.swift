@@ -7,6 +7,7 @@ struct RoundedOutlineModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
+      .clipShape(.rect(cornerRadius: radius))
       .overlay {
         RoundedRectangle(cornerRadius: radius, style: .continuous)
           .strokeBorder(color, lineWidth: lineWidth)

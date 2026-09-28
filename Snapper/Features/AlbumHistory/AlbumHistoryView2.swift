@@ -30,11 +30,11 @@ struct HistoryView: View {
           ScrollView(.vertical) {
             LazyVGrid(
               columns: [
-                GridItem(.flexible()),
-                GridItem(.flexible()),
+                .init(.flexible(), spacing: Spacing.md),
+                .init(.flexible(), spacing: Spacing.md),
               ],
               alignment: .leading,
-              spacing: Spacing.lg
+              spacing: Spacing.md
             ) {
               ForEach(history) { entry in
                 Button {
@@ -47,6 +47,7 @@ struct HistoryView: View {
               }
             }
           }
+          .asyncImageURLSession(.images)
           .scrollIndicators(.hidden)
         }
       }
@@ -90,12 +91,8 @@ struct HistoryView: View {
 
   private var currentOrder: Binding<SortOrder> {
     Binding(
-      get: {
-        sortOrders[sortCriterion] ?? sortCriterion.defaultOrder
-      },
-      set: {
-        sortOrders[sortCriterion] = $0
-      }
+      get: { sortOrders[sortCriterion] ?? sortCriterion.defaultOrder },
+      set: { sortOrders[sortCriterion] = $0 }
     )
   }
 }
@@ -104,11 +101,9 @@ private struct AlbumHistoryItem: View {
   let entry: AlbumEntry
 
   var body: some View {
-    VStack(alignment: .leading) {
-      AlbumCover2(url: URL(string: entry.coverImageUrlString ?? ""))
-        .frame(maxWidth: .infinity)
-        .aspectRatio(1, contentMode: .fit)
-        .clipShape(.rect(cornerRadius: Radius.md))
+    VStack(alignment: .leading, spacing: 0) {
+      AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
+        .roundedOutline(radius: Radius.md, lineWidth: 1)
 
       HStack {
         VStack(alignment: .leading, spacing: Spacing.xs) {
@@ -118,6 +113,7 @@ private struct AlbumHistoryItem: View {
           Text(entry.artist)
             .font(.sligoilMicro(.caption2))
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .minimumScaleFactor(0.5)
         .lineLimit(1)
 
@@ -127,6 +123,53 @@ private struct AlbumHistoryItem: View {
           .padding(Padding.md)
           .font(.sligoilMicroMedium(.caption2))
           .roundedOutline(radius: Radius.md, lineWidth: 1)
+      }
+      .frame(height: 40)
+    }
+  }
+}
+
+private struct AlbumCover: View {
+  let url: URL?
+
+  var body: some View {
+    Color.gray
+      .frame(maxWidth: .infinity)
+      .aspectRatio(1, contentMode: .fit)
+      .overlay {
+        AlbumCoverImage(url: url)
+          .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity
+          )
+          .clipped()
+      }
+  }
+}
+
+private struct AlbumCoverImage: View {
+  let url: URL?
+
+  var body: some View {
+    AsyncImage(url: url) { phase in
+      switch phase {
+      case .empty:
+        ZStack {
+          Color.gray
+          ProgressView()
+            .tint(.white)
+        }
+
+      case .success(let image):
+        image
+          .resizable()
+          .scaledToFill()
+
+      case .failure:
+        Color.gray
+
+      @unknown default:
+        Color.gray
       }
     }
   }
@@ -158,137 +201,12 @@ extension Date {
       return "\(Int(seconds / year))y"
     }
   }
-
 }
 
-private struct AlbumCover: View {
-  let url: URL?
-
-  var body: some View {
-    AsyncImage(url: url) { image in
-      image
-        .resizable()
-        .scaledToFill()
-
-    } placeholder: {
-      ProgressView()
-    }
-    .frame(maxWidth: .infinity)
-    .aspectRatio(1, contentMode: .fit)
-    .clipShape(.rect(cornerRadius: Radius.sm))
-  }
+#Preview("No data", traits: .modifier(NoData())) {
+  HistoryView()
 }
 
-private struct AlbumCover2: View {
-  let url: URL?
-
-  var body: some View {
-    AsyncImage(url: url) { phase in
-      switch phase {
-      case .empty:
-        ZStack {
-          Color.gray
-          ProgressView()
-            .tint(.white)
-        }
-
-      case .success(let image):
-        image
-          .resizable()
-          .scaledToFill()
-
-      case .failure:
-        Color.gray
-
-      @unknown default:
-        Color.gray
-      }
-    }
-    .asyncImageURLSession(.images)
-    .frame(maxWidth: .infinity)
-    .clipped()
-  }
-}
-
-enum SortCriterion: String, CaseIterable, Identifiable {
-  case dateFound, songTitle, artistName
-
-  var id: String { rawValue }
-
-  var displayName: String {
-    switch self {
-    case .dateFound: "Date Found"
-    case .songTitle: "Song Title"
-    case .artistName: "Artist Name"
-    }
-  }
-}
-
-enum SortOrder: String, CaseIterable, Identifiable {
-  case newestFirst, oldestFirst
-  case ascending, descending
-
-  var id: String { rawValue }
-
-  var displayName: String {
-    switch self {
-    case .newestFirst: "Newest First"
-    case .oldestFirst: "Oldest First"
-    case .ascending: "Ascending"
-    case .descending: "Descending"
-    }
-  }
-}
-
-extension SortCriterion {
-  fileprivate var defaultOrder: SortOrder {
-    switch self {
-    case .dateFound: .newestFirst
-    case .songTitle, .artistName: .ascending
-    }
-  }
-
-  fileprivate var orders: [SortOrder] {
-    switch self {
-    case .dateFound: [.newestFirst, .oldestFirst]
-    case .songTitle, .artistName: [.ascending, .descending]
-    }
-  }
-}
-
-#Preview {
-  let container = try? ModelContainer(
-    for: AlbumEntry.self,
-    configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-  )
-
-  guard let container else { return EmptyView() }
-
-  let album = AlbumCandidate(
-    id: 21491,
-    artist: "Radiohead",
-    title: "OK Computer",
-    year: 1997,
-    formats: ["CD", "Vinyl", "Cassette"],
-    labels: ["Parlophone"],
-    country: "United Kingdom",
-    thumbnailUrl: URL(
-      string:
-        "https://i.discogs.com/OaKbbnsKGXwq2llV8ZlLi-QJgKz2S-Wm3NdJfmHKpgU/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2NjQz/ODQtMTY5NzQ3NDg3/Ny0zMTYxLmpwZWc.jpeg",
-    ),
-    coverImageUrl: URL(
-      string:
-        "https://i.discogs.com/YTJxCXA7Z04Ve01kFU5EEsOVN6Xik62J7zgNbCtOBlk/rs:fit/g:sm/q:90/h:601/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTg2NjQz/ODQtMTY5NzQ3NDg3/Ny0zMTYxLmpwZWc.jpeg",
-    ),
-    discogsUrl: URL(string: "https://www.discogs.com/master/21491")
-  )
-
-  let context = container.mainContext
-
-  context.insert(AlbumEntry(candidate: album, selectedAt: .now.addingTimeInterval(-1)))
-  context.insert(AlbumEntry(candidate: album, selectedAt: .now.addingTimeInterval(-3 * 60)))
-  context.insert(AlbumEntry(candidate: album, selectedAt: .now.addingTimeInterval(-5 * 60 * 60)))
-
-  return HistoryView()
-    .modelContainer(container)
+#Preview("With data", traits: .modifier(SampleData())) {
+  HistoryView()
 }
