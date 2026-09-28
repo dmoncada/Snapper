@@ -98,17 +98,19 @@ struct AlbumDetailView2: View {
 
   var body: some View {
     ScrollView(.vertical) {
-      VStack(spacing: .zero) {
+      VStack(spacing: 0) {
         AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
 
         VStack(alignment: .leading, spacing: Spacing.sm) {
-          Text(entry.title)
-            .font(.sligoilMicroBold(.headline))
-            .foregroundStyle(.themePrimaryInverted)
+          VStack(alignment: .leading, spacing: Spacing.xs) {
+            Text(entry.title)
+              .font(.sligoilMicroBold(.headline))
+              .foregroundStyle(.themePrimaryInverted)
 
-          Text(entry.artist)
-            .font(.sligoilMicro(.subheadline))
-            .foregroundStyle(.themeRed)
+            Text(entry.artist)
+              .font(.sligoilMicro(.subheadline))
+              .foregroundStyle(.themeRed)
+          }
 
           Spacer(minLength: Spacing.md)
           AlbumDetailSection(entry: entry)
@@ -140,31 +142,10 @@ private struct AlbumCover: View {
   }
 
   var body: some View {
-    AsyncImage(url: url) { phase in
-      switch phase {
-      case .empty:
-        ZStack {
-          Color.gray
-          ProgressView()
-            .tint(.white)
-        }
-
-      case .success(let image):
-        image
-          .resizable()
-          .scaledToFill()
-
-      case .failure:
-        Color.gray
-
-      @unknown default:
-        Color.gray
-      }
-    }
-    .asyncImageURLSession(.images)
-    .frame(maxWidth: .infinity)
-    .frame(height: height)
-    .clipped()
+    CachedImage(url: url)
+      .frame(maxWidth: .infinity)
+      .frame(height: height)
+      .clipped()
   }
 }
 
@@ -173,7 +154,7 @@ private struct AlbumDetailSection: View {
 
   var body: some View {
     Section {
-      VStack(alignment: .leading) {
+      VStack(spacing: Spacing.sm) {
         if let label = entry.labels.first {
           AlbumDetailRow("Label", label)
           Divider()
@@ -265,9 +246,13 @@ struct AlbumTrackSection: View {
 
     } else {
       Section {
-        ForEach(tracks) { track in
-          AlbumTrackRow2(track)
-          Divider()
+        VStack(spacing: Spacing.sm) {
+          ForEach(tracks.enumerated(), id: \.offset) { i, track in
+            AlbumTrackRow2(track)
+            if i < tracks.count - 1 {
+              Divider()
+            }
+          }
         }
 
       } header: {
@@ -312,8 +297,8 @@ private struct AlbumTrackRow2: View {
   #Preview(traits: .withSampleData) {
     @Previewable @Query var entries: [AlbumEntry]
 
-    if entries.count > 0 {
-      AlbumDetailView2(entry: entries[0])
+    if let entry = entries.first {
+      AlbumDetailView2(entry: entry)
 
     } else {
       ProgressView()

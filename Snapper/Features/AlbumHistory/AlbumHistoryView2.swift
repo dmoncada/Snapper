@@ -35,8 +35,6 @@ struct HistoryView: View {
 
         } else {
           ScrollView(.vertical) {
-            Spacer(minLength: Padding.xl)
-
             LazyVGrid(columns: columns, alignment: .leading, spacing: Spacing.md) {
               ForEach(history) { entry in
                 Button {
@@ -48,6 +46,7 @@ struct HistoryView: View {
                 .buttonStyle(.plain)
               }
             }
+            .padding(.vertical, Padding.xl)
           }
         }
       }
@@ -55,7 +54,6 @@ struct HistoryView: View {
         maxWidth: .infinity,
         maxHeight: .infinity
       )
-      .padding(.bottom, Padding.xl)
       .padding(.horizontal, Padding.xl)
       .toolbarBackground(.thinMaterial, for: .navigationBar)
       .toolbarBackgroundVisibility(.visible, for: .navigationBar)

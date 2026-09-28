@@ -32,7 +32,8 @@ struct HomeView: View {
         maxWidth: .infinity,
         maxHeight: .infinity
       )
-      .padding(Padding.xl)
+      .padding(.top, Padding.xl)
+      .padding(.horizontal, Padding.xl)
       .toolbarBackground(.thinMaterial, for: .navigationBar)
       .toolbarBackgroundVisibility(.visible, for: .navigationBar)
       .toolbar {
@@ -111,6 +112,7 @@ private struct AlbumCandidateSection: View {
               .buttonStyle(.plain)
             }
           }
+          .padding(.bottom, Padding.xl)
         }
 
       case .error(let error):
