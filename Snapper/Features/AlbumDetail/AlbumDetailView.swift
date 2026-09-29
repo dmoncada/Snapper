@@ -102,6 +102,7 @@ struct AlbumDetailView: View {
     ScrollView(.vertical) {
       VStack(spacing: 0) {
         AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
+          .stretchable()
 
         VStack(alignment: .leading, spacing: Padding.xxl) {
           AlbumHeader(entry: entry, size: .lg)
