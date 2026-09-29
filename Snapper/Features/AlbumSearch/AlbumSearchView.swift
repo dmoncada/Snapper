@@ -34,8 +34,6 @@ struct HomeView: View {
         maxWidth: .infinity,
         maxHeight: .infinity
       )
-      .toolbarBackground(.thinMaterial, for: .navigationBar)
-      .toolbarBackgroundVisibility(.visible, for: .navigationBar)
       .toolbar {
         ToolbarTitle("MusicSnap")
         ToolbarItem(placement: .topBarTrailing) {

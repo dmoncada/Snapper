@@ -3,11 +3,13 @@ import SwiftUI
 
 struct HistoryView: View {
   @Environment(\.colorScheme) private var scheme
+  @Environment(\.isSearching) private var isSearching
 
   @Query private var history: [AlbumEntry]
 
   @State private var sort = SortModel()
   @State private var path = NavigationPath()
+  @State private var searchText = ""
 
   let columns: [GridItem] = [
     .init(.flexible(), spacing: Spacing.md),
@@ -16,7 +18,25 @@ struct HistoryView: View {
 
   var body: some View {
     NavigationStack(path: $path) {
-      Group {
+      ScrollView(.vertical) {
+        LazyVGrid(columns: columns, alignment: .leading, spacing: Spacing.md) {
+          ForEach(sortedHistory) { entry in
+            Button {
+              path.append(entry)
+
+            } label: {
+              AlbumHistoryCard(entry: entry)
+            }
+            .buttonStyle(.plain)
+          }
+        }
+        .padding(Padding.xl)
+      }
+      .frame(
+        maxWidth: .infinity,
+        maxHeight: .infinity
+      )
+      .overlay {
         if history.isEmpty {
           ContentUnavailableView {
             Text("No albums yet")
@@ -26,33 +46,17 @@ struct HistoryView: View {
             Text("Music will show up here when you start identifying songs with ")
               .font(.libreCaslonTextRegular(.subheadline))
           }
-
-        } else {
-          ScrollView(.vertical) {
-            LazyVGrid(columns: columns, alignment: .leading, spacing: Spacing.md) {
-              ForEach(sortedHistory) { entry in
-                Button {
-                  path.append(entry)
-
-                } label: {
-                  AlbumHistoryCard(entry: entry)
-                }
-                .buttonStyle(.plain)
-              }
-            }
-            .padding(Padding.xl)
-          }
+        } else if sortedHistory.isEmpty {
+          ContentUnavailableView.search
         }
       }
-      .frame(
-        maxWidth: .infinity,
-        maxHeight: .infinity
+      .searchable(
+        text: $searchText,
+        prompt: "Search for artists or albums"
       )
-      .toolbarBackground(.thinMaterial, for: .navigationBar)
-      .toolbarBackgroundVisibility(.visible, for: .navigationBar)
       .toolbar {
         ToolbarTitle("History")
-        ToolbarItemGroup {
+        ToolbarItem {
           Menu {
             Picker("Criteria", selection: $sort.criterion) {
               ForEach(SortCriterion.allCases) { criterion in
@@ -71,9 +75,6 @@ struct HistoryView: View {
           } label: {
             Label("Sort", systemImage: "arrow.up.arrow.down")
           }
-
-          Button("Search", systemImage: "magnifyingglass") {}
-            .labelStyle(.iconOnly)
         }
       }
       .navigationDestination(for: AlbumEntry.self) { destination in
@@ -91,11 +92,19 @@ struct HistoryView: View {
   }
 
   private var sortedHistory: [AlbumEntry] {
+    let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
     let order = sort.getOrder(for: sort.criterion)
 
-    return history.sorted {
-      sort.criterion.checkOrdered($0, $1, order: order)
-    }
+    return
+      history
+      .filter { entry in
+        query.isEmpty
+          || entry.title.localizedCaseInsensitiveContains(query)
+          || entry.artist.localizedCaseInsensitiveContains(query)
+      }
+      .sorted {
+        sort.criterion.checkOrdered($0, $1, order: order)
+      }
   }
 }
 
