@@ -3,7 +3,7 @@ import Observation
 
 @MainActor
 @Observable
-class AlbumSearchViewModel2 {
+class AlbumSearchViewModel {
   private let discogsClient: DiscogsClient
 
   private(set) var state: State = .idle
@@ -53,7 +53,7 @@ class AlbumSearchViewModel2 {
   }
 }
 
-extension AlbumSearchViewModel2 {
+extension AlbumSearchViewModel {
   enum State: Equatable {
     case idle
     case recognizing

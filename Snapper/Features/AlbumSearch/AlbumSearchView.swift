@@ -7,7 +7,7 @@ struct HomeView: View {
   @Environment(LocationManager.self) var locator
   @Environment(Router.self) var router
 
-  @State private var vm = AlbumSearchViewModel2()
+  @State private var vm = AlbumSearchViewModel()
   @State private var path: [AlbumEntry] = []
 
   var body: some View {
@@ -46,7 +46,7 @@ struct HomeView: View {
         }
       }
       .navigationDestination(for: AlbumEntry.self) { destination in
-        AlbumDetailView2(entry: destination)
+        AlbumDetailView(entry: destination)
       }
       .fullBackground(.themePrimary)
       .dismissKeyboardOnTap()
@@ -70,7 +70,7 @@ struct HomeView: View {
 }
 
 private struct AlbumCandidateSection: View {
-  let vm: AlbumSearchViewModel2
+  let vm: AlbumSearchViewModel
   let action: (AlbumCandidate) -> Void
 
   var body: some View {
@@ -88,7 +88,6 @@ private struct AlbumCandidateSection: View {
 
       case .searching:
         ProgressView()
-          .scaleEffect(2)
           .frame(
             maxWidth: .infinity,
             maxHeight: .infinity

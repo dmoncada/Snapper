@@ -29,7 +29,7 @@ struct SearchField: View {
     }
     .safeAreaInset(edge: .trailing) {
       if text.count > 0 {
-        Button("Clear", systemImage: "xmark.circle") {
+        Button("Clear", systemImage: "xmark.circle.fill") {
           text = ""
         }
         .foregroundStyle(fadedStyle)

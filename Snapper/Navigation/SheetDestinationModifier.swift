@@ -29,17 +29,18 @@ extension View {
   }
 }
 
-#Preview {
-  @Previewable @AppStorage(.storageKeys.colorScheme)
-  var preference: ColorSchemePreference = .system
+#if DEBUG
+  #Preview {
+    @Previewable @AppStorage(.storageKeys.colorScheme)
+    var preference: ColorSchemePreference = .system
 
-  @Previewable @State var sheetItem: SheetDestination?
+    @Previewable @State var sheetItem: SheetDestination?
 
-  VStack(spacing: 16) {
-    Button("Show settings") {
+    Button("Open sheet") {
       sheetItem = .settings
     }
+    .buttonStyle(.borderedProminent)
+    .withSheetDestination($sheetItem)
+    .preferredColorScheme(preference.colorScheme)
   }
-  .withSheetDestination($sheetItem)
-  .preferredColorScheme(preference.colorScheme)
-}
+#endif

@@ -4,16 +4,10 @@ import SwiftUI
 struct HistoryView: View {
   @Environment(\.colorScheme) private var scheme
 
-  @Query(sort: \AlbumEntry.selectedAt, order: .reverse)
-  private var history: [AlbumEntry]
+  @Query private var history: [AlbumEntry]
 
+  @State private var sort = SortModel()
   @State private var path = NavigationPath()
-  @State private var sortCriterion: SortCriterion = .dateFound
-  @State private var sortOrders: [SortCriterion: SortOrder] = [
-    .dateFound: .newestFirst,
-    .songTitle: .ascending,
-    .artistName: .ascending,
-  ]
 
   let columns: [GridItem] = [
     .init(.flexible(), spacing: Spacing.md),
@@ -36,7 +30,7 @@ struct HistoryView: View {
         } else {
           ScrollView(.vertical) {
             LazyVGrid(columns: columns, alignment: .leading, spacing: Spacing.md) {
-              ForEach(history) { entry in
+              ForEach(sortedHistory) { entry in
                 Button {
                   path.append(entry)
 
@@ -60,7 +54,7 @@ struct HistoryView: View {
         ToolbarTitle("History")
         ToolbarItemGroup {
           Menu {
-            Picker("Criteria", selection: $sortCriterion) {
+            Picker("Criteria", selection: $sort.criterion) {
               ForEach(SortCriterion.allCases) { criterion in
                 Text(criterion.displayName)
                   .tag(criterion)
@@ -68,7 +62,7 @@ struct HistoryView: View {
             }
 
             Picker("Order", selection: currentOrder) {
-              ForEach(sortCriterion.orders) { order in
+              ForEach(sort.criterion.orders) { order in
                 Text(order.displayName)
                   .tag(order)
               }
@@ -83,7 +77,7 @@ struct HistoryView: View {
         }
       }
       .navigationDestination(for: AlbumEntry.self) { destination in
-        AlbumDetailView2(entry: destination)
+        AlbumDetailView(entry: destination)
       }
       .fullBackground(.themePrimary)
     }
@@ -91,9 +85,17 @@ struct HistoryView: View {
 
   private var currentOrder: Binding<SortOrder> {
     Binding(
-      get: { sortOrders[sortCriterion] ?? sortCriterion.defaultOrder },
-      set: { sortOrders[sortCriterion] = $0 }
+      get: { sort.getOrder(for: sort.criterion) },
+      set: { sort.setOrder($0, for: sort.criterion) }
     )
+  }
+
+  private var sortedHistory: [AlbumEntry] {
+    let order = sort.getOrder(for: sort.criterion)
+
+    return history.sorted {
+      sort.criterion.checkOrdered($0, $1, order: order)
+    }
   }
 }
 

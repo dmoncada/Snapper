@@ -73,7 +73,7 @@ nonisolated struct AlbumTracklistResolver: Sendable {
 
 @MainActor
 @Observable
-private class AlbumDetailViewModel2 {
+private class AlbumDetailViewModel {
   private let resolver: AlbumTracklistResolver
 
   init() {
@@ -90,12 +90,12 @@ private class AlbumDetailViewModel2 {
   }
 }
 
-struct AlbumDetailView2: View {
+struct AlbumDetailView: View {
   @Environment(PreviewPlayer.self) private var player
 
   let entry: AlbumEntry
 
-  @State private var vm = AlbumDetailViewModel2()
+  @State private var vm = AlbumDetailViewModel()
   @State private var tracks: [AlbumTrack] = []
 
   var body: some View {
@@ -244,7 +244,7 @@ struct AlbumTrackSection: View {
         } else {
           VStack(spacing: Spacing.sm) {
             ForEach(tracks.enumerated(), id: \.offset) { i, track in
-              AlbumTrackRow2(track)
+              AlbumTrackRow(track)
               if i < tracks.count - 1 {
                 Divider()
               }
@@ -256,7 +256,7 @@ struct AlbumTrackSection: View {
   }
 }
 
-private struct AlbumTrackRow2: View {
+private struct AlbumTrackRow: View {
   @Environment(PreviewPlayer.self) private var player
 
   let track: AlbumTrack
@@ -311,7 +311,7 @@ private struct AlbumTrackRow2: View {
     @Previewable @State var player = PreviewPlayer()
 
     if let entry = entries.first {
-      AlbumDetailView2(entry: entry)
+      AlbumDetailView(entry: entry)
         .environment(player)
 
     } else {

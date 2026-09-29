@@ -31,10 +31,26 @@ struct SettingsSheet: View {
   }
 }
 
-#Preview {
-  @Previewable @AppStorage(.storageKeys.colorScheme)
-  var preference: ColorSchemePreference = .system
+#if DEBUG
+  #Preview("View") {
+    @Previewable @AppStorage(.storageKeys.colorScheme)
+    var preference: ColorSchemePreference = .system
 
-  SettingsSheet()
+    SettingsSheet()
+      .preferredColorScheme(preference.colorScheme)
+  }
+
+  #Preview("Sheet") {
+    @Previewable @AppStorage(.storageKeys.colorScheme)
+    var preference: ColorSchemePreference = .system
+
+    @Previewable @State var router = Router()
+
+    Button("Open settings") {
+      router.sheetItem = .settings
+    }
+    .buttonStyle(.borderedProminent)
+    .withSheetDestination($router.sheetItem)
     .preferredColorScheme(preference.colorScheme)
-}
+  }
+#endif

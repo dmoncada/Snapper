@@ -24,9 +24,11 @@ struct SchemeSelectionView: View {
   }
 }
 
-#Preview {
-  @Previewable @State var selection: ColorSchemePreference = .dark
+#if DEBUG
+  #Preview {
+    @Previewable @State var selection: ColorSchemePreference = .dark
 
-  SchemeSelectionView(selection: $selection)
-    .preferredColorScheme(selection.colorScheme)
-}
+    SchemeSelectionView(selection: $selection)
+      .preferredColorScheme(selection.colorScheme)
+  }
+#endif
