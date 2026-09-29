@@ -46,7 +46,7 @@ struct HistoryView: View {
                 .buttonStyle(.plain)
               }
             }
-            .padding(.vertical, Padding.xl)
+            .padding(Padding.xl)
           }
         }
       }
@@ -54,7 +54,6 @@ struct HistoryView: View {
         maxWidth: .infinity,
         maxHeight: .infinity
       )
-      .padding(.horizontal, Padding.xl)
       .toolbarBackground(.thinMaterial, for: .navigationBar)
       .toolbarBackgroundVisibility(.visible, for: .navigationBar)
       .toolbar {
@@ -103,7 +102,12 @@ struct HistoryView: View {
     HistoryView()
   }
 
-  #Preview("With data", traits: .modifier(SampleData())) {
-    HistoryView()
+  #Preview("With data, in tab", traits: .modifier(SampleData())) {
+    TabView {
+      Tab {
+        HistoryView()
+      }
+    }
+    .environment(PreviewPlayer())
   }
 #endif

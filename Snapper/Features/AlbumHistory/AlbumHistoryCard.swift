@@ -9,23 +9,18 @@ struct AlbumHistoryCard: View {
         .roundedOutline(lineWidth: 1)
 
       HStack {
-        VStack(alignment: .leading, spacing: Spacing.xs) {
-          Text(entry.title)
-            .font(.sligoilMicroBold(.caption))
-
-          Text(entry.artist)
-            .font(.sligoilMicro(.caption2))
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .minimumScaleFactor(0.5)
-        .lineLimit(1)
+        AlbumHeader(entry: entry)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .minimumScaleFactor(0.5)
+          .lineLimit(1)
 
         Spacer()
 
         Text((entry.selectedAt.shortRelativeTime(to: .now)))
           .padding(Padding.md)
           .font(.sligoilMicroMedium(.caption2))
-          .roundedOutline(lineWidth: 1)
+          .foregroundStyle(.themePrimaryInverted)
+          .roundedOutline(lineWidth: 1, color: .themePrimaryInverted)
       }
       .frame(height: 40)
     }
@@ -77,6 +72,7 @@ extension Date {
     }
   }
 }
+
 #if DEBUG
   import SwiftData
 

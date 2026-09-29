@@ -20,7 +20,6 @@ private struct CachedImageContent: View {
       ZStack {
         Color.gray
         ProgressView()
-          .tint(.white)
       }
 
     case .success(let image):

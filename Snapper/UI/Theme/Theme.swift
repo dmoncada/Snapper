@@ -5,6 +5,7 @@ enum Padding {
   static let md: CGFloat = 6
   static let lg: CGFloat = 8
   static let xl: CGFloat = 16
+  static let xxl: CGFloat = 32
 }
 
 enum Spacing {

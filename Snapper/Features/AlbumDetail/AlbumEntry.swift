@@ -35,3 +35,20 @@ class AlbumEntry {
     self.selectedAt = selectedAt
   }
 }
+
+extension AlbumEntry {
+  func toCandidate() -> AlbumCandidate {
+    AlbumCandidate(
+      id: discogsReleaseId,
+      artist: artist,
+      title: title,
+      year: year,
+      formats: formats,
+      labels: labels,
+      country: country,
+      thumbnailUrl: thumbnailUrlString.flatMap(URL.init(string:)),
+      coverImageUrl: coverImageUrlString.flatMap(URL.init(string:)),
+      discogsUrl: discogsUrlString.flatMap(URL.init(string:))
+    )
+  }
+}

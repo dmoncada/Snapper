@@ -91,6 +91,8 @@ private class AlbumDetailViewModel2 {
 }
 
 struct AlbumDetailView2: View {
+  @Environment(PreviewPlayer.self) private var player
+
   let entry: AlbumEntry
 
   @State private var vm = AlbumDetailViewModel2()
@@ -101,21 +103,9 @@ struct AlbumDetailView2: View {
       VStack(spacing: 0) {
         AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
 
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-          VStack(alignment: .leading, spacing: Spacing.xs) {
-            Text(entry.title)
-              .font(.sligoilMicroBold(.headline))
-              .foregroundStyle(.themePrimaryInverted)
-
-            Text(entry.artist)
-              .font(.sligoilMicro(.subheadline))
-              .foregroundStyle(.themeRed)
-          }
-
-          Spacer(minLength: Spacing.md)
+        VStack(alignment: .leading, spacing: Padding.xxl) {
+          AlbumHeader(entry: entry, size: .lg)
           AlbumDetailSection(entry: entry)
-
-          Spacer(minLength: Spacing.md)
           AlbumTrackSection(tracks: tracks)
         }
         .padding()
@@ -124,7 +114,13 @@ struct AlbumDetailView2: View {
     .task {
       if let tracks = try? await vm.resolveTracks(for: entry) {
         print("Resolved: \(tracks.tracks.count) tracks (\(tracks.source.title))")
+        for track in tracks.tracks { print(track.previewUrl ?? "") }
         self.tracks = tracks.tracks
+      }
+    }
+    .onDisappear {
+      Task {
+        await player.stopImmediately()
       }
     }
     .ignoresSafeArea(.all, edges: .top)
@@ -153,29 +149,27 @@ private struct AlbumDetailSection: View {
   let entry: AlbumEntry
 
   var body: some View {
-    Section {
-      VStack(spacing: Spacing.sm) {
-        if let label = entry.labels.first {
-          AlbumDetailRow("Label", label)
+    VStack(alignment: .leading, spacing: Padding.xl) {
+      SectionHeader("About")
+      Section {
+        VStack(spacing: Spacing.sm) {
+          if let label = entry.labels.first {
+            AlbumDetailRow("Label", label)
+            Divider()
+          }
+
+          if let year = entry.year?.description {
+            AlbumDetailRow("Released", year)
+            Divider()
+          }
+
+          AlbumDetailRow("Recognized", entry.selectedAt.abbreviated)
           Divider()
+
+          LocationSection(entry: entry)
+          // Divider()
         }
-
-        if let year = entry.year?.description {
-          AlbumDetailRow("Released", year)
-          Divider()
-        }
-
-        AlbumDetailRow("Recognized", entry.selectedAt.abbreviated)
-        Divider()
-
-        LocationSection(entry: entry)
-        // Divider()
       }
-
-    } header: {
-      Text("About")
-        .font(.libreCaslonTextBold(.headline))
-        .foregroundStyle(.themePrimaryInverted)
     }
   }
 }
@@ -241,30 +235,30 @@ struct AlbumTrackSection: View {
   let tracks: [AlbumTrack]
 
   var body: some View {
-    if tracks.isEmpty {
-      ProgressView()
-
-    } else {
+    VStack(alignment: .leading, spacing: Padding.xl) {
+      SectionHeader("Tracks")
       Section {
-        VStack(spacing: Spacing.sm) {
-          ForEach(tracks.enumerated(), id: \.offset) { i, track in
-            AlbumTrackRow2(track)
-            if i < tracks.count - 1 {
-              Divider()
+        if tracks.isEmpty {
+          ProgressView()
+
+        } else {
+          VStack(spacing: Spacing.sm) {
+            ForEach(tracks.enumerated(), id: \.offset) { i, track in
+              AlbumTrackRow2(track)
+              if i < tracks.count - 1 {
+                Divider()
+              }
             }
           }
         }
-
-      } header: {
-        Text("Tracks")
-          .font(.libreCaslonTextBold(.headline))
-          .foregroundStyle(.themePrimaryInverted)
       }
     }
   }
 }
 
 private struct AlbumTrackRow2: View {
+  @Environment(PreviewPlayer.self) private var player
+
   let track: AlbumTrack
 
   init(_ track: AlbumTrack) {
@@ -272,9 +266,19 @@ private struct AlbumTrackRow2: View {
   }
 
   var body: some View {
+    let disabled = track.previewUrl == nil
+    let isPlaying = track.title == player.preview?.title
+
     HStack {
-      Button("Play", systemImage: "play.circle") {}
-        .labelStyle(.iconOnly)
+      PlaybackButton(isPlaying: isPlaying) {
+        guard let url = track.previewUrl else { return }
+        Task {
+          isPlaying
+            ? await player.stopImmediately()
+            : await player.play(url, title: track.title)
+        }
+      }
+      .disabled(disabled)
 
       Text(track.title)
         .font(.sligoilMicroBold(.subheadline))
@@ -286,7 +290,15 @@ private struct AlbumTrackRow2: View {
       Text(track.duration ?? "N/A")
         .font(.sligoilMicro(.subheadline))
     }
-    .foregroundStyle(.themePrimaryInverted)
+    .foregroundStyle(
+      isPlaying
+        ? .themeRed
+        : .themePrimaryInverted
+    )
+    .animation(
+      .easeInOut(duration: 0.25),
+      value: isPlaying
+    )
     .opacity(0.625)
   }
 }
@@ -296,9 +308,11 @@ private struct AlbumTrackRow2: View {
 
   #Preview(traits: .withSampleData) {
     @Previewable @Query var entries: [AlbumEntry]
+    @Previewable @State var player = PreviewPlayer()
 
     if let entry = entries.first {
       AlbumDetailView2(entry: entry)
+        .environment(player)
 
     } else {
       ProgressView()

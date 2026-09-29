@@ -15,16 +15,26 @@ struct SearchField: View {
 
   var body: some View {
     let opacity = scheme == .light ? 0.25 : 0.5
+    let fadedStyle = AnyShapeStyle(.themePrimaryInverted.opacity(0.25))
 
     TextField(text: $text) {
       Text(placeholder)
+        .foregroundStyle(fadedStyle)
     }
     .autocorrectionDisabled(true)
     .textInputAutocapitalization(.never)
     .safeAreaInset(edge: .leading) {
       Image(systemName: "magnifyingglass")
-        .foregroundStyle(.themePrimaryInverted)
-        .imageScale(.large)
+        .foregroundStyle(fadedStyle)
+    }
+    .safeAreaInset(edge: .trailing) {
+      if text.count > 0 {
+        Button("Clear", systemImage: "xmark.circle") {
+          text = ""
+        }
+        .foregroundStyle(fadedStyle)
+        .labelStyle(.iconOnly)
+      }
     }
     .padding()
     .font(.sligoilMicro(.body))
@@ -35,12 +45,14 @@ struct SearchField: View {
 }
 
 #Preview {
+  @Previewable @State var text = "Filled"
+
   let placeholder = "Placeholder..."
 
   VStack(spacing: 0) {
     VStack {
       SearchField(text: .constant(""), placeholder: placeholder)
-      SearchField(text: .constant("Filled"), placeholder: placeholder)
+      SearchField(text: $text, placeholder: placeholder)
     }
     .padding()
     .frame(height: 200)
@@ -49,7 +61,7 @@ struct SearchField: View {
 
     VStack {
       SearchField(text: .constant(""), placeholder: placeholder)
-      SearchField(text: .constant("Filled"), placeholder: placeholder)
+      SearchField(text: $text, placeholder: placeholder)
     }
     .padding()
     .frame(height: 200)

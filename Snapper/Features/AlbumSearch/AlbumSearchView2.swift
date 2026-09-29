@@ -12,17 +12,19 @@ struct HomeView: View {
 
   var body: some View {
     NavigationStack(path: $path) {
-      VStack(alignment: .leading, spacing: Spacing.sm) {
+      VStack(alignment: .leading, spacing: 0) {
+        VStack(spacing: Spacing.md) {
+          SearchField(text: $vm.searchText, placeholder: "Artist, album, barcode")
+            .keyboardType(.webSearch)
 
-        SearchField(text: $vm.searchText, placeholder: "Artist, album, barcode")
-          .keyboardType(.webSearch)
+          HStack(spacing: Spacing.sm) {
+            LargeButton("Pick") {}
+              .frame(width: 100)
 
-        HStack(spacing: Spacing.sm) {
-          LargeButton("Pick") {}
-            .frame(width: 100)
-
-          LargeButton("Snap!") {}
+            LargeButton("Snap!") {}
+          }
         }
+        .padding(Padding.xl)
 
         AlbumCandidateSection(vm: vm) { candidate in
           createEntry(candidate, location: nil)
@@ -32,8 +34,6 @@ struct HomeView: View {
         maxWidth: .infinity,
         maxHeight: .infinity
       )
-      .padding(.top, Padding.xl)
-      .padding(.horizontal, Padding.xl)
       .toolbarBackground(.thinMaterial, for: .navigationBar)
       .toolbarBackgroundVisibility(.visible, for: .navigationBar)
       .toolbar {
@@ -112,7 +112,7 @@ private struct AlbumCandidateSection: View {
               .buttonStyle(.plain)
             }
           }
-          .padding(.bottom, Padding.xl)
+          .padding(Padding.xl)
         }
 
       case .error(let error):
@@ -128,24 +128,34 @@ private struct AlbumCandidateSection: View {
       default:
         EmptyView()
       }
-
-    } header: {
-      let prefix = vm.results.isEmpty ? "No" : "All"
-
-      Text("\(prefix) Candidates")
-        .font(.libreCaslonTextBold(.headline))
-        .padding(.vertical)
     }
   }
 }
 
-#Preview {
-  @Previewable @State var locator = LocationManager()
-  @Previewable @State var router = Router()
+#if DEBUG
+  #Preview("Default") {
+    @Previewable @State var router = Router()
 
-  HomeView()
+    HomeView()
+      .withSheetDestination($router.sheetItem)
+      .modelContainer(for: AlbumEntry.self)
+      .environment(LocationManager())
+      .environment(PreviewPlayer())
+      .environment(router)
+  }
+
+  #Preview("In tab") {
+    @Previewable @State var router = Router()
+
+    TabView {
+      Tab {
+        HomeView()
+      }
+    }
     .withSheetDestination($router.sheetItem)
     .modelContainer(for: AlbumEntry.self)
-    .environment(locator)
+    .environment(LocationManager())
+    .environment(PreviewPlayer())
     .environment(router)
-}
+  }
+#endif
