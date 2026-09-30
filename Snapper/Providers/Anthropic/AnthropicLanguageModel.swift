@@ -1,6 +1,7 @@
 import Foundation
 import FoundationModels
 
+@available(iOS 27, *)
 nonisolated struct AnthropicLanguageModel: LanguageModel {
   typealias Executor = AnthropicLanguageModelExecutor
 

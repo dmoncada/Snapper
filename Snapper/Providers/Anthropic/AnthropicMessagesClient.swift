@@ -34,6 +34,7 @@ nonisolated enum AnthropicClientError: Error, LocalizedError, Sendable {
   }
 }
 
+@available(iOS 27, *)
 nonisolated struct AnthropicMessagesClient: Sendable {
   private let apiKey: String
   private let modelID: String

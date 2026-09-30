@@ -4,10 +4,65 @@ struct CachedImage: View {
   let url: URL?
 
   var body: some View {
+    if #available(iOS 27, *) {
+      _CachedImage27(url: url)
+    } else {
+      _CachedImage(url: url)
+    }
+  }
+}
+
+@available(iOS 27, *)
+private struct _CachedImage27: View {
+  let url: URL?
+
+  var body: some View {
     AsyncImage(url: url) { phase in
       CachedImageContent(phase: phase)
     }
     .asyncImageURLSession(.images)
+  }
+}
+
+private struct _CachedImage: View {
+  let url: URL?
+
+  @State private var phase: AsyncImagePhase = .empty
+
+  var body: some View {
+    CachedImageContent(phase: phase)
+      .task(id: url) {
+        await loadImage()
+      }
+  }
+
+  private func loadImage() async {
+    guard let url else {
+      phase = .failure(URLError(.badURL))
+      return
+    }
+
+    phase = .empty
+
+    do {
+      let (data, response) = try await URLSession.images.data(from: url)
+
+      try Task.checkCancellation()
+
+      guard
+        let response = response as? HTTPURLResponse,
+        200 ..< 300 ~= response.statusCode,
+        let uiImage = UIImage(data: data)
+      else {
+        throw URLError(.badServerResponse)
+      }
+
+      phase = .success(Image(uiImage: uiImage))
+
+    } catch {
+      if Task.isCancelled { return }
+      phase = .failure(error)
+    }
   }
 }
 
