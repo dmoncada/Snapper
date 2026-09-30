@@ -43,7 +43,10 @@ struct HomeView: View {
         }
       }
       .navigationDestination(for: AlbumEntry.self) { destination in
-        AlbumDetailView(entry: destination)
+        AlbumDetailView(entry: destination) {
+          context.delete(destination)
+          path.removeLast()
+        }
       }
       .fullBackground(.themePrimary)
       .dismissKeyboardOnTap()

@@ -15,7 +15,6 @@ struct FavoriteButton: View {
             ? "star.slash"
             : "star"
         )
-        .tint(.themeYellow)
 
         Text(
           entry.isFavorited
@@ -44,7 +43,7 @@ private struct DeleteAlertModifier: ViewModifier {
 
   let onDelete: (AlbumEntry) -> Void
 
-  private var presented: Binding<Bool> {
+  private var isPresented: Binding<Bool> {
     Binding(
       get: { pendingDelete != nil },
       set: { if !$0 { pendingDelete = nil } }
@@ -52,25 +51,24 @@ private struct DeleteAlertModifier: ViewModifier {
   }
 
   func body(content: Content) -> some View {
-    content
-      .alert("Delete Album?", isPresented: presented) {
-        Button("Cancel", role: .cancel) {
-          pendingDelete = nil
-        }
+    content.alert(
+      "Delete Album?",
+      isPresented: isPresented,
+      presenting: pendingDelete
+    ) { entry in
 
-        Button("Delete", role: .destructive) {
-          guard let entry = pendingDelete else { return }
-
-          onDelete(entry)
-          pendingDelete = nil
-        }
-      } message: {
-        if let entry = pendingDelete {
-          Text(
-            "Are you sure you want to delete \"\(entry.title)\" from your history?"
-          )
-        }
+      Button("Cancel", role: .cancel) {
+        pendingDelete = nil
       }
+
+      Button("Delete", role: .destructive) {
+        pendingDelete = nil
+        onDelete(entry)
+      }
+
+    } message: { entry in
+      Text("Are you sure you want to delete \"\(entry.title)\" from your history?")
+    }
   }
 }
 

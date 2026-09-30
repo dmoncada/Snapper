@@ -94,9 +94,11 @@ struct AlbumDetailView: View {
   @Environment(PreviewPlayer.self) private var player
 
   let entry: AlbumEntry
+  let onDelete: () -> Void
 
   @State private var vm = AlbumDetailViewModel()
   @State private var tracks: [AlbumTrack] = []
+  @State private var pendingDelete: AlbumEntry?
 
   var body: some View {
     ScrollView(.vertical) {
@@ -111,6 +113,21 @@ struct AlbumDetailView: View {
         }
         .padding()
       }
+    }
+    .toolbar {
+      ToolbarItem(placement: .topBarTrailing) {
+        Menu {
+          FavoriteButton(entry: entry)
+          DeleteButton {
+            pendingDelete = entry
+          }
+        } label: {
+          Image(systemName: "ellipsis")
+        }
+      }
+    }
+    .deleteAlert(pendingDelete: $pendingDelete) { _ in
+      onDelete()
     }
     .task {
       if let tracks = try? await vm.resolveTracks(for: entry) {
@@ -318,8 +335,10 @@ private struct AlbumTrackRow: View {
 
     if let entry = entries.first {
       NavigationStack {
-        AlbumDetailView(entry: entry)
-          .environment(player)
+        AlbumDetailView(entry: entry) {
+          print("Album deleted")
+        }
+        .environment(player)
       }
 
     } else {

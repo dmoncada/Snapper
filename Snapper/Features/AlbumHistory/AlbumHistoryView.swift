@@ -93,7 +93,10 @@ struct HistoryView: View {
         }
       }
       .navigationDestination(for: AlbumEntry.self) { destination in
-        AlbumDetailView(entry: destination)
+        AlbumDetailView(entry: destination) {
+          context.delete(destination)
+          path.removeLast()
+        }
       }
       .deleteAlert(pendingDelete: $pendingDelete) { entry in
         context.delete(entry)
