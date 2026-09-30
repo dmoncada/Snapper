@@ -4,25 +4,31 @@ struct CachedImage: View {
   let url: URL?
 
   var body: some View {
-    if #available(iOS 27, *) {
-      _CachedImage27(url: url)
-    } else {
+    #if compiler(>=6.4)
+      if #available(iOS 27, *) {
+        _CachedImage27(url: url)
+      } else {
+        _CachedImage(url: url)
+      }
+    #else
       _CachedImage(url: url)
-    }
+    #endif
   }
 }
 
-@available(iOS 27, *)
-private struct _CachedImage27: View {
-  let url: URL?
+#if compiler(>=6.4)
+  @available(iOS 27, *)
+  private struct _CachedImage27: View {
+    let url: URL?
 
-  var body: some View {
-    AsyncImage(url: url) { phase in
-      CachedImageContent(phase: phase)
+    var body: some View {
+      AsyncImage(url: url) { phase in
+        CachedImageContent(phase: phase)
+      }
+      .asyncImageURLSession(.images)
     }
-    .asyncImageURLSession(.images)
   }
-}
+#endif
 
 private struct _CachedImage: View {
   let url: URL?

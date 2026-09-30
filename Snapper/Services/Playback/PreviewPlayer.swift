@@ -196,12 +196,15 @@ final class PreviewPlayer {
         try session.setCategory(.playback)
       }
 
-      if #available(iOS 27.0, *) {
-        try await session.activate()
-
-      } else {
+      #if compiler(>=6.4)
+        if #available(iOS 27.0, *) {
+          try await session.activate()
+        } else {
+          try session.setActive(true)
+        }
+      #else
         try session.setActive(true)
-      }
+      #endif
     #endif
   }
 
@@ -209,12 +212,15 @@ final class PreviewPlayer {
     #if os(iOS)
       let session = AVAudioSession.sharedInstance()
 
-      if #available(iOS 27.0, *) {
-        _ = try? await session.deactivate()
-
-      } else {
+      #if compiler(>=6.4)
+        if #available(iOS 27.0, *) {
+          _ = try? await session.deactivate()
+        } else {
+          try? session.setActive(false)
+        }
+      #else
         try? session.setActive(false)
-      }
+      #endif
     #endif
   }
 }
