@@ -1,3 +1,4 @@
+#if compiler(>=6.4) && canImport(FoundationModels)
 import Foundation
 import FoundationModels
 
@@ -68,3 +69,4 @@ nonisolated struct AnthropicLanguageModelExecutor: LanguageModelExecutor {
     )
   }
 }
+#endif
