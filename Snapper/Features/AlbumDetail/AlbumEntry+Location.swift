@@ -12,15 +12,13 @@ extension AlbumEntry {
       longitude: longitude
     )
   }
+}
 
-  var position: MapCameraPosition? {
-    guard let location else {
-      return nil
-    }
-
-    return .region(
+extension CLLocation {
+  var position: MapCameraPosition {
+    .region(
       MKCoordinateRegion(
-        center: location.coordinate,
+        center: coordinate,
         span: MKCoordinateSpan(
           latitudeDelta: 0.125,
           longitudeDelta: 0.125

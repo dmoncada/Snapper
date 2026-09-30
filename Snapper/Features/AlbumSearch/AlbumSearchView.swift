@@ -3,7 +3,6 @@ import SwiftUI
 
 struct HomeView: View {
   @Environment(\.modelContext) var context
-  @Environment(LocationManager.self) var locator
   @Environment(Router.self) var router
 
   @State private var vm = AlbumSearchViewModel()
@@ -138,7 +137,6 @@ private struct AlbumCandidateSection: View {
     HomeView()
       .withSheetDestination($router.sheetItem)
       .modelContainer(for: AlbumEntry.self)
-      .environment(LocationManager())
       .environment(PreviewPlayer())
       .environment(router)
   }
@@ -153,7 +151,6 @@ private struct AlbumCandidateSection: View {
     }
     .withSheetDestination($router.sheetItem)
     .modelContainer(for: AlbumEntry.self)
-    .environment(LocationManager())
     .environment(PreviewPlayer())
     .environment(router)
   }

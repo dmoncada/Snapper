@@ -21,7 +21,6 @@ struct SnapperAppShell: View {
     .onAppear { AVPlayer.isObservationEnabled = true }
     .preferredColorScheme(preference.colorScheme)
     .modelContainer(for: AlbumEntry.self)
-    .environment(LocationManager())
     .environment(PreviewPlayer())
     .environment(router)
   }

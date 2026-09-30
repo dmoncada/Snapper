@@ -53,7 +53,7 @@ nonisolated struct DiscogsClient: Sendable {
   }
 
   func tracklist(
-    forReleaseId releaseId: Int
+    for releaseId: Int
   ) async throws -> [AlbumTrack] {
 
     do {

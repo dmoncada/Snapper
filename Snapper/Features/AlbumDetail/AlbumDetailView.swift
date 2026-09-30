@@ -1,95 +1,6 @@
 import MapKit
 import SwiftUI
 
-nonisolated struct AlbumTracklist: Sendable, Hashable {
-  let tracks: [AlbumTrack]
-  let source: AlbumTracklistSource
-}
-
-nonisolated enum AlbumTracklistSource: Sendable, Hashable {
-  case itunes(URL?)
-  case discogs
-
-  var title: String {
-    switch self {
-    case .itunes:
-      "Tracks and previews from iTunes"
-    case .discogs:
-      "Tracklist from Discogs"
-    }
-  }
-
-  var itunesUrl: URL? {
-    guard case .itunes(let url) = self else { return nil }
-    return url
-  }
-}
-
-nonisolated struct AlbumTracklistResolver: Sendable {
-  private let discogsClient: DiscogsClient
-  private let itunesClient: ItunesClient
-
-  init(
-    discogsClient: DiscogsClient,
-    itunesClient: ItunesClient,
-  ) {
-    self.discogsClient = discogsClient
-    self.itunesClient = itunesClient
-  }
-
-  func resolve(_ entry: AlbumEntry) async throws -> AlbumTracklist {
-    let candidate = AlbumCandidate(
-      id: 0,
-      artist: entry.artist,
-      title: entry.title,
-      year: nil,
-      formats: [],
-      labels: [],
-      country: nil,
-      thumbnailUrl: nil,
-      coverImageUrl: nil,
-      discogsUrl: nil
-    )
-
-    if let tracklist = try await itunesClient.tracklist(for: candidate, barcode: nil) {
-      return AlbumTracklist(
-        tracks: tracklist.tracks.map { track in
-          AlbumTrack(
-            id: "itunes-\(track.id)",
-            position: "\(track.discNumber)-\(track.trackNumber)",
-            title: track.title,
-            duration: track.duration,
-            previewUrl: track.previewUrl)
-        },
-        source: .itunes(tracklist.collectionUrl)
-      )
-    }
-
-    let tracks = try await discogsClient.tracklist(forReleaseId: entry.discogsReleaseId)
-
-    return AlbumTracklist(tracks: tracks, source: .discogs)
-  }
-}
-
-@MainActor
-@Observable
-private class AlbumDetailViewModel {
-  private let resolver: AlbumTracklistResolver
-
-  init() {
-    let token = Bundle.main.object(forInfoDictionaryKey: "DISCOGS_TOKEN") as? String ?? ""
-
-    resolver = .init(
-      discogsClient: .init(token: token),
-      itunesClient: .init()
-    )
-  }
-
-  func resolveTracks(for entry: AlbumEntry) async throws -> AlbumTracklist {
-    return try await resolver.resolve(entry)
-  }
-}
-
 struct AlbumDetailView: View {
   @Environment(PreviewPlayer.self) private var player
 
@@ -97,7 +8,6 @@ struct AlbumDetailView: View {
   let onDelete: () -> Void
 
   @State private var vm = AlbumDetailViewModel()
-  @State private var tracks: [AlbumTrack] = []
   @State private var pendingDelete: AlbumEntry?
 
   var body: some View {
@@ -108,8 +18,8 @@ struct AlbumDetailView: View {
 
         VStack(alignment: .leading, spacing: Padding.xxl) {
           AlbumHeader(entry: entry, size: .lg)
-          AlbumDetailSection(entry: entry)
-          AlbumTrackSection(tracks: tracks)
+          AlbumDetailSection(entry: entry, vm: vm)
+          AlbumTrackSection(tracks: vm.tracks)
         }
         .padding()
       }
@@ -130,11 +40,7 @@ struct AlbumDetailView: View {
       onDelete()
     }
     .task {
-      if let tracks = try? await vm.resolveTracks(for: entry) {
-        print("Resolved: \(tracks.tracks.count) tracks (\(tracks.source.title))")
-        for track in tracks.tracks { print(track.previewUrl ?? "") }
-        self.tracks = tracks.tracks
-      }
+      await vm.materialize(entry)
     }
     .onDisappear {
       Task {
@@ -165,6 +71,7 @@ private struct AlbumCover: View {
 
 private struct AlbumDetailSection: View {
   let entry: AlbumEntry
+  let vm: AlbumDetailViewModel
 
   var body: some View {
     VStack(alignment: .leading, spacing: Padding.xl) {
@@ -184,8 +91,8 @@ private struct AlbumDetailSection: View {
           AlbumDetailRow("Recognized", entry.selectedAt.abbreviated)
           Divider()
 
-          LocationSection(entry: entry)
-          // Divider()
+          LocationSection(vm: vm)
+            .frame(minHeight: 12)  // TODO(dmoncada): figure out how to set all rows to the same height.
         }
       }
     }
@@ -198,28 +105,52 @@ extension Date {
   }
 }
 
-struct LocationSection: View {
-  let entry: AlbumEntry
+private struct LocationSection: View {
+  let vm: AlbumDetailViewModel
 
   @State private var isExpanded = false
+  @State private var mapPosition: MapCameraPosition = .automatic
 
   var body: some View {
-    if let location = entry.location, let position = entry.position {
+    switch vm.locationState {
+    case .resolving:
+      HStack {
+        Text("Location").font(.sligoilMicroBold(.subheadline))
+        Spacer()
+        ProgressView()
+      }
+      .foregroundStyle(.themePrimaryInverted)
+      .opacity(0.625)
+
+    case .resolved(let location):
       DisclosureGroup(isExpanded: $isExpanded) {
-        Map(position: .constant(position)) {
-          Marker("Location", coordinate: location.coordinate)
+        ZStack(alignment: .bottomTrailing) {
+          Map(position: $mapPosition) {
+            Marker("Location", coordinate: location.coordinate)
+          }
+          .frame(height: 200)
+          .clipShape(.rect(cornerRadius: Radius.md))
+
+          Button("Re-center", systemImage: "location.fill") {
+            withAnimation(.easeInOut(duration: 0.5)) {
+              mapPosition = location.position
+            }
+          }
+          .padding(Padding.md)
+          .labelStyle(.iconOnly)
+          .glassEffect(.regular.tint(.themeBlue.opacity(0.25)))
+          .offset(x: -8, y: -8)
         }
-        .frame(height: 200)
-        .clipShape(.rect(cornerRadius: Radius.md))
 
       } label: {
         Text("Location")
           .font(.sligoilMicroBold(.subheadline))
       }
+      .task { mapPosition = location.position }
       .disclosureGroupStyle(.plain)
       .opacity(0.625)
 
-    } else {
+    case .unavailable:
       AlbumDetailRow("Location", "No Location")
     }
   }
@@ -236,20 +167,16 @@ private struct AlbumDetailRow: View {
 
   var body: some View {
     HStack {
-      Text(key)
-        .font(.sligoilMicroBold(.subheadline))
-
+      Text(key).font(.sligoilMicroBold(.subheadline))
       Spacer()
-
-      Text(value)
-        .font(.sligoilMicro(.subheadline))
+      Text(value).font(.sligoilMicro(.subheadline))
     }
     .foregroundStyle(.themePrimaryInverted)
     .opacity(0.625)
   }
 }
 
-struct AlbumTrackSection: View {
+private struct AlbumTrackSection: View {
   let tracks: [AlbumTrack]
 
   var body: some View {

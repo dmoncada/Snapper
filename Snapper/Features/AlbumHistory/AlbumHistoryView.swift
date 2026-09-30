@@ -53,7 +53,7 @@ struct HistoryView: View {
               .font(.libreCaslonTextBold(.headline))
 
           } description: {
-            Text("Music will show up here when you start identifying songs with ")
+            Text("Music will show up here when you start identifying songs with MusicSnap")
               .font(.libreCaslonTextRegular(.subheadline))
           }
         } else if sortedHistory.isEmpty {
@@ -70,7 +70,6 @@ struct HistoryView: View {
           Menu {
             Toggle(isOn: $favoritesOnly) {
               Label("Favorites", systemImage: "star")
-                .tint(.themeYellow)
             }
 
             Picker("Criteria", selection: $sort.criterion) {
