@@ -3,13 +3,17 @@ import SwiftUI
 
 struct HistoryView: View {
   @Environment(\.colorScheme) private var scheme
+  @Environment(\.modelContext) private var context
   @Environment(\.isSearching) private var isSearching
 
   @Query private var history: [AlbumEntry]
 
   @State private var sort = SortModel()
   @State private var path = NavigationPath()
+
   @State private var searchText = ""
+  @State private var favoritesOnly = false
+  @State private var pendingDelete: AlbumEntry?
 
   let columns: [GridItem] = [
     .init(.flexible(), spacing: Spacing.md),
@@ -26,6 +30,12 @@ struct HistoryView: View {
 
             } label: {
               AlbumHistoryCard(entry: entry)
+                .contextMenu {
+                  FavoriteButton(entry: entry)
+                  DeleteButton {
+                    pendingDelete = entry
+                  }
+                }
             }
             .buttonStyle(.plain)
           }
@@ -58,6 +68,11 @@ struct HistoryView: View {
         ToolbarTitle("History")
         ToolbarItem {
           Menu {
+            Toggle(isOn: $favoritesOnly) {
+              Label("Favorites", systemImage: "star")
+                .tint(.themeYellow)
+            }
+
             Picker("Criteria", selection: $sort.criterion) {
               ForEach(SortCriterion.allCases) { criterion in
                 Text(criterion.displayName)
@@ -73,12 +88,15 @@ struct HistoryView: View {
             }
 
           } label: {
-            Label("Sort", systemImage: "arrow.up.arrow.down")
+            Image(systemName: "arrow.up.arrow.down")
           }
         }
       }
       .navigationDestination(for: AlbumEntry.self) { destination in
         AlbumDetailView(entry: destination)
+      }
+      .deleteAlert(pendingDelete: $pendingDelete) { entry in
+        context.delete(entry)
       }
       .fullBackground(.themePrimary)
     }
@@ -98,9 +116,14 @@ struct HistoryView: View {
     return
       history
       .filter { entry in
-        query.isEmpty
+        let matchesSearch =
+          query.isEmpty
           || entry.title.localizedCaseInsensitiveContains(query)
           || entry.artist.localizedCaseInsensitiveContains(query)
+
+        let matchesFavorite = favoritesOnly == false || entry.isFavorited
+
+        return matchesSearch && matchesFavorite
       }
       .sorted {
         sort.criterion.checkOrdered($0, $1, order: order)
@@ -110,10 +133,14 @@ struct HistoryView: View {
 
 #if DEBUG
   #Preview("No data", traits: .modifier(NoData())) {
-    HistoryView()
+    TabView {
+      Tab {
+        HistoryView()
+      }
+    }
   }
 
-  #Preview("With data, in tab", traits: .modifier(SampleData())) {
+  #Preview("With data", traits: .modifier(SampleData())) {
     TabView {
       Tab {
         HistoryView()

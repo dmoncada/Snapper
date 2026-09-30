@@ -1,3 +1,4 @@
+import AVFoundation
 import SwiftData
 import SwiftUI
 
@@ -17,6 +18,7 @@ struct SnapperAppShell: View {
       }
     }
     .withSheetDestination($router.sheetItem)
+    .onAppear { AVPlayer.isObservationEnabled = true }
     .preferredColorScheme(preference.colorScheme)
     .modelContainer(for: AlbumEntry.self)
     .environment(LocationManager())

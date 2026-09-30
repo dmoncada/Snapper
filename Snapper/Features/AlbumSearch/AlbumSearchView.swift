@@ -3,7 +3,6 @@ import SwiftUI
 
 struct HomeView: View {
   @Environment(\.modelContext) var context
-
   @Environment(LocationManager.self) var locator
   @Environment(Router.self) var router
 
@@ -13,7 +12,7 @@ struct HomeView: View {
   var body: some View {
     NavigationStack(path: $path) {
       VStack(alignment: .leading, spacing: 0) {
-        VStack(spacing: Spacing.md) {
+        VStack(spacing: Spacing.sm) {
           SearchField(text: $vm.searchText, placeholder: "Artist, album, barcode")
             .keyboardType(.webSearch)
 

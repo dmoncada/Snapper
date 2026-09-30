@@ -267,19 +267,24 @@ private struct AlbumTrackRow: View {
   }
 
   var body: some View {
-    let disabled = track.previewUrl == nil
     let isPlaying = track.title == player.preview?.title
 
     HStack {
-      PlaybackButton(isPlaying: isPlaying) {
-        guard let url = track.previewUrl else { return }
-        Task {
-          isPlaying
-            ? await player.stopImmediately()
-            : await player.play(url, title: track.title)
+      Group {
+        if let url = track.previewUrl {
+          PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
+            Task {
+              isPlaying
+                ? await player.stopImmediately()
+                : await player.play(url, title: track.title)
+            }
+          }
+
+        } else {
+          Image(systemName: "play.slash")
         }
       }
-      .disabled(disabled)
+      .frame(width: 24)
 
       Text(track.title)
         .font(.sligoilMicroBold(.subheadline))
@@ -312,8 +317,10 @@ private struct AlbumTrackRow: View {
     @Previewable @State var player = PreviewPlayer()
 
     if let entry = entries.first {
-      AlbumDetailView(entry: entry)
-        .environment(player)
+      NavigationStack {
+        AlbumDetailView(entry: entry)
+          .environment(player)
+      }
 
     } else {
       ProgressView()

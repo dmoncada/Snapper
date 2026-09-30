@@ -16,10 +16,18 @@ final class PreviewPlayer {
 
   private(set) var isPlaying = false
   private(set) var preview: Preview?
+  private(set) var duration: TimeInterval = 0
+  private(set) var currentTime: TimeInterval = 0
+
+  var progress: Double {
+    guard duration > 0 else { return 0 }
+    return min(max(currentTime / duration, 0), 1)
+  }
 
   @ObservationIgnored private var player: AVPlayer?
   @ObservationIgnored private var playbackId = UUID()
   @ObservationIgnored private var playbackTask: Task<Void, Never>?
+  @ObservationIgnored private var timeObserver: Any?
 
   func play(_ url: URL, title: String? = nil) async {
     let id = UUID()
@@ -82,12 +90,19 @@ final class PreviewPlayer {
     playbackTask?.cancel()
     playbackTask = nil
 
+    if let timeObserver, let player {
+      player.removeTimeObserver(timeObserver)
+      self.timeObserver = nil
+    }
+
     player?.pause()
     player?.replaceCurrentItem(with: nil)
     player = nil
 
     isPlaying = false
     preview = nil
+    duration = 0
+    currentTime = 0
 
     MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
 
@@ -124,6 +139,7 @@ final class PreviewPlayer {
   }
 
   private func observePlayback(of item: AVPlayerItem, id: UUID) {
+    playbackTask?.cancel()
     playbackTask = Task { @MainActor [weak self] in
       for await _ in NotificationCenter.default.notifications(
         named: AVPlayerItem.didPlayToEndTimeNotification,
@@ -132,6 +148,33 @@ final class PreviewPlayer {
         guard let self, self.playbackId == id else { return }
         await self.stopImmediately()
         return
+      }
+    }
+
+    guard let player else { return }
+
+    if let timeObserver {
+      player.removeTimeObserver(timeObserver)
+    }
+
+    timeObserver = player.addPeriodicTimeObserver(
+      forInterval: CMTime(seconds: 0.1, preferredTimescale: 600),
+      queue: .main
+    ) { [weak self, weak item] time in
+      guard let item else { return }
+
+      let current = time.seconds
+      let duration = item.duration.seconds
+
+      guard current.isFinite, duration.isFinite, duration > 0 else {
+        return
+      }
+
+      Task { @MainActor [weak self] in
+        guard let self else { return }
+
+        self.currentTime = current
+        self.duration = duration
       }
     }
   }
@@ -202,16 +245,14 @@ final class PreviewPlayer {
           let isPlaying = title == player.preview?.title
 
           LabeledContent(title) {
-            PlaybackButton(isPlaying: isPlaying) {
+            PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
               Task {
-                if isPlaying {
-                  await player.stopImmediately()
-
-                } else {
-                  await player.play(url, title: title)
-                }
+                isPlaying
+                  ? await player.stopImmediately()
+                  : await player.play(url, title: title)
               }
             }
+            .frame(width: 24)
           }
           .foregroundStyle(
             isPlaying
@@ -226,4 +267,5 @@ final class PreviewPlayer {
       ProgressView()
     }
   }
+
 #endif

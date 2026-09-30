@@ -3,6 +3,7 @@ import SwiftData
 
 @Model
 class AlbumEntry {
+  @Attribute(.unique)
   var id: UUID = UUID()
 
   var discogsReleaseId: Int
@@ -17,8 +18,9 @@ class AlbumEntry {
   var discogsUrlString: String?
   var selectedAt: Date
 
-  var latitude: Double? = nil
-  var longitude: Double? = nil
+  var latitude: Double?
+  var longitude: Double?
+  var isFavorited = false
 
   init(candidate: AlbumCandidate, selectedAt: Date = .now) {
     id = UUID()
