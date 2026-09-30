@@ -28,5 +28,8 @@ jobs:
       - name: Install xcbeautify
         run: brew install xcbeautify
 
+      - name: Create build configuration
+        run: cp Configuration/Settings.xcconfig.example Configuration/Settings.xcconfig
+
       - name: Build
         run: make build

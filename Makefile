@@ -19,7 +19,7 @@ format:
 
 .PHONY: build
 build:
-	@xcodebuild build \
+	@set -o pipefail; xcodebuild build \
 		CODE_SIGNING_ALLOWED='No' \
 		-project Snapper.xcodeproj \
 		-scheme Snapper \
