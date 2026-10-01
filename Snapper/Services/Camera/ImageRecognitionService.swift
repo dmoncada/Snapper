@@ -58,9 +58,7 @@ nonisolated struct ImageRecognitionService: Sendable {
             return nil
           }
 
-          let digits = String(payload.filter { "0" <= $0 && $0 <= "9" })
-
-          return digits.count >= 8 ? digits : nil
+          return BarcodeNormalizer.digits(in: payload)
         }
         .first
 

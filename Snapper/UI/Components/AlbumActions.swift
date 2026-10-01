@@ -51,22 +51,23 @@ private struct DeleteAlertModifier: ViewModifier {
   }
 
   func body(content: Content) -> some View {
-    content.alert(
-      "Delete Album?",
-      isPresented: isPresented,
-      presenting: pendingDelete,
-    ) { entry in
-      Button("Cancel", role: .cancel) {
-        pendingDelete = nil
-      }
+    content
+      .alert(
+        "Delete Album?",
+        isPresented: isPresented,
+        presenting: pendingDelete,
+      ) { entry in
+        Button("Cancel", role: .cancel) {
+          pendingDelete = nil
+        }
 
-      Button("Delete", role: .destructive) {
-        pendingDelete = nil
-        onDelete(entry)
+        Button("Delete", role: .destructive) {
+          pendingDelete = nil
+          onDelete(entry)
+        }
+      } message: { entry in
+        Text("Are you sure you want to delete \"\(entry.title)\" from your history?")
       }
-    } message: { entry in
-      Text("Are you sure you want to delete \"\(entry.title)\" from your history?")
-    }
   }
 }
 

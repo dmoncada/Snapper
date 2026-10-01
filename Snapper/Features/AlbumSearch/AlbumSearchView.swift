@@ -2,14 +2,13 @@ import CoreLocation
 import SwiftData
 import SwiftUI
 
-private typealias PhotoCaptureButton = LargeButton
-
 struct HomeView: View {
   @Environment(\.modelContext) private var context
   @Environment(Router.self) private var router
 
   @State private var vm = AlbumSearchViewModel()
   @State private var path: [AlbumEntry] = []
+  @State private var isPresented = false
 
   var body: some View {
     NavigationStack(path: $path) {
@@ -19,7 +18,8 @@ struct HomeView: View {
             PhotoPickerButton("Pick", onData: onData) { _ in }
               .frame(width: 100)
 
-            PhotoCaptureButton("Snap") {}
+            Button("Snap") { isPresented = true }
+              .buttonStyle(.large)
           }
 
           SearchField(text: $vm.searchText, placeholder: "Or search by artist, album")
@@ -36,6 +36,19 @@ struct HomeView: View {
         maxWidth: .infinity,
         maxHeight: .infinity,
       )
+      .fullScreenCover(isPresented: $isPresented) {
+        CameraScanScreen(
+          onBarcode: { barcode in
+            isPresented = false
+            vm.searchText = barcode
+          },
+          onPhoto: { data in
+            isPresented = false
+            onData(data: data)
+          },
+        )
+        .presentationDetents([.large])
+      }
       .toolbar {
         ToolbarTitle("MusicSnap")
         ToolbarItem(placement: .topBarTrailing) {
