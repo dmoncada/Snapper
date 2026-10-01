@@ -9,6 +9,8 @@ struct HomeView: View {
   @State private var vm = AlbumSearchViewModel()
   @State private var path: [AlbumEntry] = []
 
+  private var recognizer = ImageRecognitionService()
+
   var body: some View {
     NavigationStack(path: $path) {
       VStack(alignment: .leading, spacing: 0) {
@@ -17,8 +19,10 @@ struct HomeView: View {
             .keyboardType(.webSearch)
 
           HStack(spacing: Spacing.sm) {
-            LargeButton("Pick") {}
-              .frame(width: 100)
+            PhotoPickerButton(onData: onData) { _ in
+              // handle error
+            }
+            .frame(width: 100)
 
             LargeButton("Snap!") {}
           }
@@ -53,6 +57,24 @@ struct HomeView: View {
     }
     .task(id: vm.searchText) {
       await vm.search()
+    }
+  }
+
+  private func onData(data: Data) {
+    Task {
+      do {
+        let result = try await recognizer.recognize(in: data)
+
+        if let textQuery = result.textQuery {
+          vm.searchText = textQuery
+        }
+
+        if let barcode = result.barcode {
+          vm.searchText = barcode
+        }
+      } catch {
+        print("Error recognizing image.")
+      }
     }
   }
 
