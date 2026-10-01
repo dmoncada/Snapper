@@ -15,9 +15,13 @@ struct SheetDestinationModifier: ViewModifier {
           switch destination {
           case .settings:
             SettingsSheet()
+              .presentationDetents([.medium])
+
+          case .create(let entry):
+            AlbumCreation(entry: entry)
+              .presentationDetents([.large])
           }
         }
-        .presentationDetents([.medium])
         .preferredColorScheme(preference.colorScheme ?? systemScheme)
       }
   }

@@ -4,24 +4,39 @@ import Observation
 @MainActor
 @Observable
 class AlbumSearchViewModel {
-  private let discogsClient: DiscogsClient
+  var searchText = ""
 
   private(set) var state: State = .idle
   private(set) var results: [AlbumCandidate] = []
 
-  var searchText = ""
+  private let discogsClient: DiscogsClient
+  private var recognizer = ImageRecognitionService()
 
-  convenience init() {
+  init() {
     let token = Bundle.main.object(forInfoDictionaryKey: "DISCOGS_TOKEN") as? String ?? ""
-    self.init(discogsClient: .init(token: token))
+    self.discogsClient = .init(token: token)
   }
 
-  init(discogsClient: DiscogsClient) {
-    self.discogsClient = discogsClient
+  func recognize(in data: Data) async throws {
+    state = .recognizing
+
+    let result = try await recognizer.recognize(in: data)
+    try Task.checkCancellation()
+
+    guard let barcode = result.barcode else {
+      state = .unreadable
+      return
+    }
+
+    return await search(barcode, debounceDuration: .zero)
   }
 
   func search(debounceDuration: Duration = .seconds(1)) async {
-    let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+    await search(searchText, debounceDuration: debounceDuration)
+  }
+
+  private func search(_ query: String, debounceDuration: Duration) async {
+    let query = query.trimmingCharacters(in: .whitespacesAndNewlines)
 
     if query.isEmpty {
       state = .idle
@@ -38,10 +53,7 @@ class AlbumSearchViewModel {
       results = try await discogsClient.searchAlbums(matching: query, limit: 10)
       try Task.checkCancellation()
 
-      state =
-        results.isEmpty
-        ? .empty
-        : .results
+      state = results.isEmpty ? .empty : .results
     } catch is CancellationError {
       // A newer input replaces this request.
     } catch {
@@ -52,7 +64,7 @@ class AlbumSearchViewModel {
 }
 
 extension AlbumSearchViewModel {
-  enum State: Equatable {
+  enum State: Equatable, CustomStringConvertible {
     case idle
     case recognizing
     case searching
@@ -60,5 +72,17 @@ extension AlbumSearchViewModel {
     case empty
     case unreadable
     case error(String)
+
+    var description: String {
+      switch self {
+      case .idle: return "Idle"
+      case .recognizing: return "Recognizing"
+      case .searching: return "Searching"
+      case .results: return "Results"
+      case .empty: return "No results"
+      case .unreadable: return "Unreadable"
+      case .error(let message): return "Error: \(message)"
+      }
+    }
   }
 }

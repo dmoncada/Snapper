@@ -5,10 +5,8 @@ struct AlbumDetailView: View {
   @Environment(PreviewPlayer.self) private var player
 
   let entry: AlbumEntry
-  let onDelete: () -> Void
 
   @State private var vm = AlbumDetailViewModel()
-  @State private var pendingDelete: AlbumEntry?
 
   var body: some View {
     ScrollView(.vertical) {
@@ -23,21 +21,6 @@ struct AlbumDetailView: View {
         }
         .padding()
       }
-    }
-    .toolbar {
-      ToolbarItem(placement: .topBarTrailing) {
-        Menu {
-          FavoriteButton(entry: entry)
-          DeleteButton {
-            pendingDelete = entry
-          }
-        } label: {
-          Image(systemName: "ellipsis")
-        }
-      }
-    }
-    .deleteAlert(pendingDelete: $pendingDelete) { _ in
-      onDelete()
     }
     .task {
       await vm.materialize(entry)
@@ -109,7 +92,6 @@ private struct LocationSection: View {
   let vm: AlbumDetailViewModel
 
   @State private var isExpanded = false
-  @State private var mapPosition: MapCameraPosition = .automatic
 
   var body: some View {
     switch vm.locationState {
@@ -124,34 +106,50 @@ private struct LocationSection: View {
 
     case .resolved(let location):
       DisclosureGroup(isExpanded: $isExpanded) {
-        ZStack(alignment: .bottomTrailing) {
-          Map(position: $mapPosition) {
-            Marker("Location", coordinate: location.coordinate)
-          }
-          .frame(height: 200)
-          .clipShape(.rect(cornerRadius: Radius.md))
-
-          Button("Re-center", systemImage: "location.fill") {
-            withAnimation(.easeInOut(duration: 0.5)) {
-              mapPosition = location.position
-            }
-          }
-          .padding(Padding.md)
-          .labelStyle(.iconOnly)
-          .glassEffect(.regular.tint(.themeBlue.opacity(0.25)))
-          .offset(x: -8, y: -8)
-        }
+        MapView(location: location)
       } label: {
         Text("Location")
           .font(.sligoilMicroBold(.subheadline))
       }
-      .task { mapPosition = location.position }
       .disclosureGroupStyle(.plain)
       .opacity(0.625)
 
     case .unavailable:
       AlbumDetailRow("Location", "No Location")
     }
+  }
+}
+
+private struct MapView: View {
+  let location: CLLocation
+
+  @State private var position: MapCameraPosition = .automatic
+
+  var body: some View {
+    ZStack(alignment: .bottomTrailing) {
+      Map(position: $position) {
+        Marker("Location", coordinate: location.coordinate)
+      }
+      .frame(height: 200)
+      .clipShape(.rect(cornerRadius: Radius.md))
+
+      Button("Re-center", systemImage: "location.fill") {
+        withAnimation(.easeInOut(duration: 0.5)) {
+          recenter()
+        }
+      }
+      .padding(Padding.md)
+      .labelStyle(.iconOnly)
+      .glassEffect(.regular.tint(.themeBlue.opacity(0.25)))
+      .offset(x: -8, y: -8)
+    }
+    .onAppear {
+      recenter()
+    }
+  }
+
+  private func recenter() {
+    position = location.position
   }
 }
 
@@ -259,10 +257,8 @@ import SwiftData
 
   if let entry = entries.first {
     NavigationStack {
-      AlbumDetailView(entry: entry) {
-        print("Album deleted")
-      }
-      .environment(player)
+      AlbumDetailView(entry: entry)
+        .environment(player)
     }
   } else {
     ProgressView()

@@ -2,7 +2,6 @@ import SwiftData
 import SwiftUI
 
 struct HistoryView: View {
-  @Environment(\.colorScheme) private var scheme
   @Environment(\.modelContext) private var context
   @Environment(\.isSearching) private var isSearching
 
@@ -89,7 +88,7 @@ struct HistoryView: View {
         }
       }
       .navigationDestination(for: AlbumEntry.self) { destination in
-        AlbumDetailView(entry: destination) {
+        AlbumDetailWithActions(entry: destination) { _ in
           context.delete(destination)
           path.removeLast()
         }

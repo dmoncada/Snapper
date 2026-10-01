@@ -2,35 +2,34 @@ import CoreLocation
 import SwiftData
 import SwiftUI
 
+private typealias PhotoCaptureButton = LargeButton
+
 struct HomeView: View {
-  @Environment(\.modelContext) var context
-  @Environment(Router.self) var router
+  @Environment(\.modelContext) private var context
+  @Environment(Router.self) private var router
 
   @State private var vm = AlbumSearchViewModel()
   @State private var path: [AlbumEntry] = []
-
-  private var recognizer = ImageRecognitionService()
 
   var body: some View {
     NavigationStack(path: $path) {
       VStack(alignment: .leading, spacing: 0) {
         VStack(spacing: Spacing.sm) {
-          SearchField(text: $vm.searchText, placeholder: "Artist, album, barcode")
-            .keyboardType(.webSearch)
-
           HStack(spacing: Spacing.sm) {
-            PhotoPickerButton(onData: onData) { _ in
-              // handle error
-            }
-            .frame(width: 100)
+            PhotoPickerButton("Pick", onData: onData) { _ in }
+              .frame(width: 100)
 
-            LargeButton("Snap!") {}
+            PhotoCaptureButton("Snap") {}
           }
+
+          SearchField(text: $vm.searchText, placeholder: "Or search by artist, album")
+            .keyboardType(.webSearch)
         }
         .padding(Padding.xl)
 
         AlbumCandidateSection(vm: vm) { candidate in
-          createEntry(candidate, location: nil)
+          let entry = AlbumEntry(candidate: candidate)
+          router.sheetItem = .create(entry)
         }
       }
       .frame(
@@ -46,12 +45,6 @@ struct HomeView: View {
           }
         }
       }
-      .navigationDestination(for: AlbumEntry.self) { destination in
-        AlbumDetailView(entry: destination) {
-          context.delete(destination)
-          path.removeLast()
-        }
-      }
       .fullBackground(.themePrimary)
       .dismissKeyboardOnTap()
     }
@@ -63,30 +56,10 @@ struct HomeView: View {
   private func onData(data: Data) {
     Task {
       do {
-        let result = try await recognizer.recognize(in: data)
-
-        if let textQuery = result.textQuery {
-          vm.searchText = textQuery
-        }
-
-        if let barcode = result.barcode {
-          vm.searchText = barcode
-        }
+        try await vm.recognize(in: data)
       } catch {
-        print("Error recognizing image.")
+        print(error.localizedDescription)
       }
-    }
-  }
-
-  private func createEntry(_ candidate: AlbumCandidate, location: CLLocation?) {
-    let entry = AlbumEntry(candidate: candidate)
-    entry.latitude = location?.coordinate.latitude
-    entry.longitude = location?.coordinate.longitude
-    path.append(entry)
-
-    context.insert(entry)
-    if context.hasChanges {
-      try? context.save()
     }
   }
 }
@@ -99,20 +72,16 @@ private struct AlbumCandidateSection: View {
     Section {
       switch vm.state {
       case .idle:
-        ContentUnavailableView {
-          Text("Snap away!")
-            .font(.libreCaslonTextBold(.headline))
-        } description: {
-          Text("Search artists, albums and more...")
-            .font(.libreCaslonTextRegular(.subheadline))
-        }
+        ContentUnavailableView.search
 
-      case .searching:
-        ProgressView()
-          .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity,
-          )
+      case .searching, .recognizing:
+        ProgressView(vm.state.description).frame(maxWidth: .infinity, maxHeight: .infinity)
+
+      case .unreadable:
+        ContentUnavailableView("Unreadable", systemImage: "xmark.circle")
+
+      case .error(let error):
+        ContentUnavailableView(error, systemImage: "xmark.circle")
 
       case .results:
         ScrollView(.vertical) {
@@ -133,15 +102,7 @@ private struct AlbumCandidateSection: View {
           }
           .padding(Padding.xl)
         }
-
-      case .error(let error):
-        ContentUnavailableView {
-          Text("Oh no!")
-            .font(.libreCaslonTextBold(.headline))
-        } description: {
-          Text(error)
-            .font(.libreCaslonTextRegular(.subheadline))
-        }
+        .scrollDismissesKeyboard(.interactively)
 
       default:
         EmptyView()

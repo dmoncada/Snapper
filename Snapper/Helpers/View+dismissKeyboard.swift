@@ -15,13 +15,20 @@ struct DismissKeyboardGestureModifier: ViewModifier {
     content
       .gesture(
         TapGesture()
-          .onEnded { UIApplication.shared.resignCurrentResponder() }
+          .onEnded {
+            UIApplication.shared.resignCurrentResponder()
+          }
       )
   }
 }
 
 extension UIApplication {
   func resignCurrentResponder() {
-    sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    sendAction(
+      #selector(UIResponder.resignFirstResponder),
+      to: nil,
+      from: nil,
+      for: nil,
+    )
   }
 }

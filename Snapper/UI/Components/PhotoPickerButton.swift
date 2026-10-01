@@ -2,15 +2,26 @@ import PhotosUI
 import SwiftUI
 
 struct PhotoPickerButton: View {
+  let label: String
   let onData: (Data) -> Void
   let onError: (String) -> Void
+
+  init(
+    _ label: String,
+    onData: @escaping (Data) -> Void,
+    onError: @escaping (String) -> Void,
+  ) {
+    self.label = label
+    self.onData = onData
+    self.onError = onError
+  }
 
   @State private var selection: PhotosPickerItem?
   @State private var selectionId = UUID()
 
   var body: some View {
     PhotosPicker(selection: $selection, matching: .images) {
-      Text("Pick")
+      Text(label)
     }
     .buttonStyle(.large)
     .task(id: selectionId) {
@@ -43,11 +54,13 @@ struct PhotoPickerButton: View {
   }
 }
 
+#if DEBUG
 #Preview {
-  PhotoPickerButton { _ in
+  PhotoPickerButton("Pick") { _ in
     // on data
   } onError: { _ in
     // on error
   }
   .frame(width: 300)
 }
+#endif

@@ -1,6 +1,7 @@
 import Observation
 import SwiftUI
 
+@MainActor
 @Observable
 final class Router {
   var path = NavigationPath()
