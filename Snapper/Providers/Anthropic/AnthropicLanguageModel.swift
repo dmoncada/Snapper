@@ -22,7 +22,7 @@ nonisolated struct AnthropicLanguageModel: LanguageModel {
 
   init(
     apiKey: String? = Bundle.main.object(forInfoDictionaryKey: "ANTHROPIC_API_KEY") as? String,
-    modelID: String = Self.defaultModelId
+    modelID: String = Self.defaultModelId,
   ) {
     configuration = Configuration(apiKey: apiKey, modelID: modelID)
   }

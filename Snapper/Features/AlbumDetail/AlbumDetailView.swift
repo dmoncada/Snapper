@@ -101,7 +101,7 @@ private struct AlbumDetailSection: View {
 
 extension Date {
   fileprivate var abbreviated: String {
-    return self.formatted(date: .abbreviated, time: .shortened)
+    formatted(date: .abbreviated, time: .shortened)
   }
 }
 
@@ -141,7 +141,6 @@ private struct LocationSection: View {
           .glassEffect(.regular.tint(.themeBlue.opacity(0.25)))
           .offset(x: -8, y: -8)
         }
-
       } label: {
         Text("Location")
           .font(.sligoilMicroBold(.subheadline))
@@ -185,7 +184,6 @@ private struct AlbumTrackSection: View {
       Section {
         if tracks.isEmpty {
           ProgressView()
-
         } else {
           VStack(spacing: Spacing.sm) {
             ForEach(tracks.enumerated(), id: \.offset) { i, track in
@@ -223,7 +221,6 @@ private struct AlbumTrackRow: View {
                 : await player.play(url, title: track.title)
             }
           }
-
         } else {
           Image(systemName: "play.slash")
         }
@@ -247,29 +244,28 @@ private struct AlbumTrackRow: View {
     )
     .animation(
       .easeInOut(duration: 0.25),
-      value: isPlaying
+      value: isPlaying,
     )
     .opacity(0.625)
   }
 }
 
 #if DEBUG
-  import SwiftData
+import SwiftData
 
-  #Preview(traits: .withSampleData) {
-    @Previewable @Query var entries: [AlbumEntry]
-    @Previewable @State var player = PreviewPlayer()
+#Preview(traits: .withSampleData) {
+  @Previewable @Query var entries: [AlbumEntry]
+  @Previewable @State var player = PreviewPlayer()
 
-    if let entry = entries.first {
-      NavigationStack {
-        AlbumDetailView(entry: entry) {
-          print("Album deleted")
-        }
-        .environment(player)
+  if let entry = entries.first {
+    NavigationStack {
+      AlbumDetailView(entry: entry) {
+        print("Album deleted")
       }
-
-    } else {
-      ProgressView()
+      .environment(player)
     }
+  } else {
+    ProgressView()
   }
+}
 #endif

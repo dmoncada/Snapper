@@ -42,10 +42,8 @@ class AlbumSearchViewModel {
         results.isEmpty
         ? .empty
         : .results
-
     } catch is CancellationError {
       // A newer input replaces this request.
-
     } catch {
       state = .error(error.localizedDescription)
       results = []

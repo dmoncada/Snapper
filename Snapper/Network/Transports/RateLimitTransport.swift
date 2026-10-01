@@ -6,7 +6,7 @@ nonisolated struct RateLimitTransport: HttpTransport {
 
   init(
     transport: any HttpTransport,
-    rateLimiter: RateLimiter
+    rateLimiter: RateLimiter,
   ) {
     self.transport = transport
     self.rateLimiter = rateLimiter
@@ -24,7 +24,7 @@ extension HttpTransport {
   ) -> RateLimitTransport {
     RateLimitTransport(
       transport: self,
-      rateLimiter: RateLimiter(policy: policy)
+      rateLimiter: RateLimiter(policy: policy),
     )
   }
 }

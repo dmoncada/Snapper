@@ -9,7 +9,7 @@ extension AlbumEntry {
 
     return CLLocation(
       latitude: latitude,
-      longitude: longitude
+      longitude: longitude,
     )
   }
 }
@@ -21,8 +21,8 @@ extension CLLocation {
         center: coordinate,
         span: MKCoordinateSpan(
           latitudeDelta: 0.125,
-          longitudeDelta: 0.125
-        )
+          longitudeDelta: 0.125,
+        ),
       )
     )
   }

@@ -4,9 +4,8 @@ import SwiftUI
 extension View {
   func stretchable(
     axis: Axis = .vertical,
-    uniform: Bool = true
+    uniform: Bool = true,
   ) -> some View {
-
     visualEffect { effect, geometry in
       let frame = geometry.frame(in: .scrollView)
 
@@ -30,16 +29,15 @@ extension View {
         return effect.scaleEffect(
           x: scale,
           y: scale,
-          anchor: anchor
-        )
-      } else {
-        return effect.scaleEffect(
-          x: axis == .horizontal ? scale : 1,
-          y: axis == .vertical ? scale : 1,
-          anchor: anchor
+          anchor: anchor,
         )
       }
+
+      return effect.scaleEffect(
+        x: axis == .horizontal ? scale : 1,
+        y: axis == .vertical ? scale : 1,
+        anchor: anchor,
+      )
     }
   }
-
 }

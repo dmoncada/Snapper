@@ -19,14 +19,14 @@ nonisolated struct AnthropicLanguageModelExecutor: LanguageModelExecutor {
     client = AnthropicMessagesClient(
       apiKey: apiKey,
       modelID: configuration.modelID,
-      transport: UrlSessionTransport()
+      transport: UrlSessionTransport(),
     )
   }
 
   func respond(
     to request: LanguageModelExecutorGenerationRequest,
     model: AnthropicLanguageModel,
-    streamingInto channel: LanguageModelExecutorGenerationChannel
+    streamingInto channel: LanguageModelExecutorGenerationChannel,
   ) async throws {
     try Task.checkCancellation()
     let response = try await client.respond(to: request)
@@ -36,7 +36,7 @@ nonisolated struct AnthropicLanguageModelExecutor: LanguageModelExecutor {
       await channel.send(
         .response(
           entryID: nil,
-          action: .appendText(response.text, tokenCount: response.outputTokens)
+          action: .appendText(response.text, tokenCount: response.outputTokens),
         )
       )
     }
@@ -52,8 +52,8 @@ nonisolated struct AnthropicLanguageModelExecutor: LanguageModelExecutor {
           action: .toolCall(
             id: toolCall.id,
             name: toolCall.name,
-            action: .appendArguments(toolCall.input, tokenCount: 0)
-          )
+            action: .appendArguments(toolCall.input, tokenCount: 0),
+          ),
         )
       )
     }
@@ -63,8 +63,8 @@ nonisolated struct AnthropicLanguageModelExecutor: LanguageModelExecutor {
         entryID: nil,
         action: .updateUsage(
           input: .init(totalTokenCount: response.inputTokens, cachedTokenCount: 0),
-          output: .init(totalTokenCount: response.outputTokens, reasoningTokenCount: 0)
-        )
+          output: .init(totalTokenCount: response.outputTokens, reasoningTokenCount: 0),
+        ),
       )
     )
   }

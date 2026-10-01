@@ -9,7 +9,7 @@ struct NavigationToolbarModifier: ViewModifier {
     content
       .navigationTitle(title)
       #if os(iOS)
-        .navigationBarTitleDisplayMode(.inline)
+    .navigationBarTitleDisplayMode(.inline)
       #endif
       .toolbar {
         ToolbarItem(placement: .topBarLeading) {

@@ -27,7 +27,6 @@ struct HistoryView: View {
           ForEach(sortedHistory) { entry in
             Button {
               path.append(entry)
-
             } label: {
               AlbumHistoryCard(entry: entry)
                 .contextMenu {
@@ -44,14 +43,13 @@ struct HistoryView: View {
       }
       .frame(
         maxWidth: .infinity,
-        maxHeight: .infinity
+        maxHeight: .infinity,
       )
       .overlay {
         if history.isEmpty {
           ContentUnavailableView {
             Text("No albums yet")
               .font(.libreCaslonTextBold(.headline))
-
           } description: {
             Text("Music will show up here when you start identifying songs with MusicSnap")
               .font(.libreCaslonTextRegular(.subheadline))
@@ -62,7 +60,7 @@ struct HistoryView: View {
       }
       .searchable(
         text: $searchText,
-        prompt: "Search for artists or albums"
+        prompt: "Search for artists or albums",
       )
       .toolbar {
         ToolbarTitle("History")
@@ -85,7 +83,6 @@ struct HistoryView: View {
                   .tag(order)
               }
             }
-
           } label: {
             Image(systemName: "arrow.up.arrow.down")
           }
@@ -107,7 +104,7 @@ struct HistoryView: View {
   private var currentOrder: Binding<SortOrder> {
     Binding(
       get: { sort.getOrder(for: sort.criterion) },
-      set: { sort.setOrder($0, for: sort.criterion) }
+      set: { sort.setOrder($0, for: sort.criterion) },
     )
   }
 
@@ -134,20 +131,20 @@ struct HistoryView: View {
 }
 
 #if DEBUG
-  #Preview("No data", traits: .modifier(NoData())) {
-    TabView {
-      Tab {
-        HistoryView()
-      }
+#Preview("No data", traits: .modifier(NoData())) {
+  TabView {
+    Tab {
+      HistoryView()
     }
   }
+}
 
-  #Preview("With data", traits: .modifier(SampleData())) {
-    TabView {
-      Tab {
-        HistoryView()
-      }
+#Preview("With data", traits: .modifier(SampleData())) {
+  TabView {
+    Tab {
+      HistoryView()
     }
-    .environment(PreviewPlayer())
   }
+  .environment(PreviewPlayer())
+}
 #endif

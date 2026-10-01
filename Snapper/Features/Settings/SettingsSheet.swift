@@ -11,7 +11,6 @@ struct SettingsSheet: View {
           NavigationLink {
             SchemeSelectionView(selection: $preference)
               .navigationTitle("Theme")
-
           } label: {
             HStack {
               Text("Theme")
@@ -21,7 +20,6 @@ struct SettingsSheet: View {
               // .foregroundStyle(.themeSecondary)
             }
           }
-
         } footer: {
           Text("Controls the app's theme preference.")
         }
@@ -32,25 +30,25 @@ struct SettingsSheet: View {
 }
 
 #if DEBUG
-  #Preview("View") {
-    @Previewable @AppStorage(.storageKeys.colorScheme)
-    var preference: ColorSchemePreference = .system
+#Preview("View") {
+  @Previewable @AppStorage(.storageKeys.colorScheme)
+  var preference: ColorSchemePreference = .system
 
-    SettingsSheet()
-      .preferredColorScheme(preference.colorScheme)
-  }
-
-  #Preview("Sheet") {
-    @Previewable @AppStorage(.storageKeys.colorScheme)
-    var preference: ColorSchemePreference = .system
-
-    @Previewable @State var router = Router()
-
-    Button("Open settings") {
-      router.sheetItem = .settings
-    }
-    .buttonStyle(.borderedProminent)
-    .withSheetDestination($router.sheetItem)
+  SettingsSheet()
     .preferredColorScheme(preference.colorScheme)
+}
+
+#Preview("Sheet") {
+  @Previewable @AppStorage(.storageKeys.colorScheme)
+  var preference: ColorSchemePreference = .system
+
+  @Previewable @State var router = Router()
+
+  Button("Open settings") {
+    router.sheetItem = .settings
   }
+  .buttonStyle(.borderedProminent)
+  .withSheetDestination($router.sheetItem)
+  .preferredColorScheme(preference.colorScheme)
+}
 #endif

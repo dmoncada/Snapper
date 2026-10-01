@@ -91,7 +91,6 @@ final class LocationService: NSObject {
         locationContinuation = continuation
         locationManager.requestLocation()
       }
-
     } onCancel: {
       Task { @MainActor [weak self] in
         self?.cancelLocationRequest()

@@ -44,30 +44,29 @@ struct AlbumThumbnail: View {
 }
 
 #if DEBUG
-  import SwiftData
+import SwiftData
 
-  #Preview(traits: .withSampleData) {
-    @Previewable @Query var entries: [AlbumEntry]
+#Preview(traits: .withSampleData) {
+  @Previewable @Query var entries: [AlbumEntry]
 
-    if let entry = entries.first {
-      let album = entry.toCandidate()
+  if let entry = entries.first {
+    let album = entry.toCandidate()
 
-      VStack(spacing: 0) {
-        AlbumCandidateRow(candidate: album)
-          .padding()
-          .frame(height: 150)
-          .background(.themePrimary)
-          .colorScheme(.light)
+    VStack(spacing: 0) {
+      AlbumCandidateRow(candidate: album)
+        .padding()
+        .frame(height: 150)
+        .background(.themePrimary)
+        .colorScheme(.light)
 
-        AlbumCandidateRow(candidate: album)
-          .padding()
-          .frame(height: 150)
-          .background(.themePrimary)
-          .colorScheme(.dark)
-      }
-
-    } else {
-      EmptyView()
+      AlbumCandidateRow(candidate: album)
+        .padding()
+        .frame(height: 150)
+        .background(.themePrimary)
+        .colorScheme(.dark)
     }
+  } else {
+    EmptyView()
   }
+}
 #endif

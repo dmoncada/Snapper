@@ -17,7 +17,9 @@ struct NoData: PreviewModifier {
 struct SampleData: PreviewModifier {
   static func makeSharedContext() throws -> ModelContainer {
     let container = try ModelContainer(
-      for: AlbumEntry.self, configurations: .init(isStoredInMemoryOnly: true))
+      for: AlbumEntry.self,
+      configurations: .init(isStoredInMemoryOnly: true),
+    )
 
     guard let url = Bundle.main.url(forResource: "albums", withExtension: "json") else {
       fatalError("Unable to find sample data file in bundle.")

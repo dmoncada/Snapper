@@ -19,7 +19,7 @@ struct PhotoImagePickerButton: View {
       await loadSelectedPhoto()
     }
     .onChange(of: selectedItem) { _, item in
-      guard item != nil else { return }
+      if item == nil { return }
       loadGeneration = UUID()
     }
   }
@@ -35,10 +35,8 @@ struct PhotoImagePickerButton: View {
       try Task.checkCancellation()
       onImage(imageData)
       self.selectedItem = nil
-
     } catch is CancellationError {
       // A new photo selection replaced this load.
-
     } catch {
       onError(error.localizedDescription)
     }

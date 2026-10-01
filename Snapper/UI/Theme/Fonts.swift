@@ -18,9 +18,9 @@ enum CustomFont: String, CaseIterable, Identifiable {
 }
 
 #if canImport(AppKit)
-  typealias PlatformFont = NSFont
+typealias PlatformFont = NSFont
 #elseif canImport(UIKit)
-  typealias PlatformFont = UIFont
+typealias PlatformFont = UIFont
 #endif
 
 extension PlatformFont.TextStyle {
@@ -28,9 +28,9 @@ extension PlatformFont.TextStyle {
     switch textStyle {
     case .largeTitle:
       #if os(tvOS)
-        self = .title1
+      self = .title1
       #else
-        self = .largeTitle
+      self = .largeTitle
       #endif
     case .title:
       self = .title1
@@ -53,10 +53,10 @@ extension PlatformFont.TextStyle {
     case .caption2:
       self = .caption2
     #if os(visionOS)
-      case .extraLargeTitle:
-        self = .extraLargeTitle
-      case .extraLargeTitle2:
-        self = .extraLargeTitle2
+    case .extraLargeTitle:
+      self = .extraLargeTitle
+    case .extraLargeTitle2:
+      self = .extraLargeTitle2
     #endif
     @unknown default:
       self = .body
@@ -71,19 +71,17 @@ extension Font {
 
   static func baseSize(for textStyle: Font.TextStyle) -> CGFloat {
     #if canImport(AppKit)
-      NSFontDescriptor
-        .preferredFontDescriptor(forTextStyle: .init(textStyle))
-        .pointSize
+    NSFontDescriptor
+      .preferredFontDescriptor(forTextStyle: .init(textStyle))
+      .pointSize
 
     #else
-      UIFontDescriptor
-        .preferredFontDescriptor(
-          withTextStyle: .init(textStyle),
-          compatibleWith: UITraitCollection(
-            preferredContentSizeCategory: .large
-          )
-        )
-        .pointSize
+    UIFontDescriptor
+      .preferredFontDescriptor(
+        withTextStyle: .init(textStyle),
+        compatibleWith: UITraitCollection(preferredContentSizeCategory: .large),
+      )
+      .pointSize
     #endif
   }
 }
@@ -127,56 +125,56 @@ extension Font {
 }
 
 #if DEBUG
-  private func installedFontNames(matching queries: [String]) -> [String] {
-    #if canImport(AppKit)
-      let installed = NSFontManager.shared.availableFonts
-    #elseif canImport(UIKit)
-      let installed = PlatformFont.familyNames
-        .flatMap(PlatformFont.fontNames(forFamilyName:))
-    #endif
+private func installedFontNames(matching queries: [String]) -> [String] {
+  #if canImport(AppKit)
+  let installed = NSFontManager.shared.availableFonts
+  #elseif canImport(UIKit)
+  let installed = PlatformFont.familyNames
+    .flatMap(PlatformFont.fontNames(forFamilyName:))
+  #endif
 
-    return
-      installed
-      .filter { font in
-        queries.isEmpty || queries.contains { font.localizedStandardContains($0) }
-      }
-      .sorted()
+  return
+    installed
+    .filter { font in
+      queries.isEmpty || queries.contains { font.localizedStandardContains($0) }
+    }
+    .sorted()
+}
+
+private struct InstalledFontsList: View {
+  let fontNames = installedFontNames(matching: CustomFont.allCases.map(\.id))
+
+  var body: some View {
+    List(fontNames, id: \.self) { name in
+      Text(name)
+        .font(.custom(name, size: 32, relativeTo: .title))
+        .minimumScaleFactor(0.5)
+        .scaledToFit()
+    }
   }
+}
 
-  private struct InstalledFontsList: View {
-    let fontNames = installedFontNames(matching: CustomFont.allCases.map(\.id))
+private struct FontSpecimenView: View {
+  private let specimens = CustomFont.allCases
 
-    var body: some View {
-      List(fontNames, id: \.self) { name in
-        Text(name)
-          .font(.custom(name, size: 32, relativeTo: .title))
-          .minimumScaleFactor(0.5)
-          .scaledToFit()
+  var body: some View {
+    List(specimens) { font in
+      VStack(alignment: .leading) {
+        Text("Hello, world!")
+          .font(.custom(font, .title))
+        Text(font.id)
+          .font(.caption)
+          .foregroundStyle(.secondary)
       }
     }
   }
+}
 
-  private struct FontSpecimenView: View {
-    private let specimens = CustomFont.allCases
+#Preview("Installed") {
+  InstalledFontsList()
+}
 
-    var body: some View {
-      List(specimens) { font in
-        VStack(alignment: .leading) {
-          Text("Hello, world!")
-            .font(.custom(font, .title))
-          Text(font.id)
-            .font(.caption)
-            .foregroundStyle(.secondary)
-        }
-      }
-    }
-  }
-
-  #Preview("Installed") {
-    InstalledFontsList()
-  }
-
-  #Preview("Specimens") {
-    FontSpecimenView()
-  }
+#Preview("Specimens") {
+  FontSpecimenView()
+}
 #endif

@@ -8,7 +8,6 @@ struct SchemeSelectionView: View {
       ForEach(ColorSchemePreference.allCases) { option in
         Button {
           selection = option
-
         } label: {
           HStack {
             Text(option.displayName)
@@ -25,10 +24,10 @@ struct SchemeSelectionView: View {
 }
 
 #if DEBUG
-  #Preview {
-    @Previewable @State var selection: ColorSchemePreference = .dark
+#Preview {
+  @Previewable @State var selection: ColorSchemePreference = .dark
 
-    SchemeSelectionView(selection: $selection)
-      .preferredColorScheme(selection.colorScheme)
-  }
+  SchemeSelectionView(selection: $selection)
+    .preferredColorScheme(selection.colorScheme)
+}
 #endif

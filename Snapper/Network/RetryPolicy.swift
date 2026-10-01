@@ -19,7 +19,7 @@ nonisolated struct RetryPolicy: Sendable {
       .networkConnectionLost,
       .dnsLookupFailed,
       .notConnectedToInternet,
-    ]
+    ],
   ) {
     precondition(maximumRetries >= 0, "maximumRetries cannot be negative")
     precondition(initialBackoff >= .zero, "initialBackoff cannot be negative")
@@ -34,9 +34,10 @@ nonisolated struct RetryPolicy: Sendable {
 
   func delay(beforeRetry retryNumber: Int) -> Duration {
     let exponent = max(0, retryNumber - 1)
-    let multiplier = (0 ..< exponent).reduce(1) { result, _ in
-      result * backoffMultiplier
-    }
+    let multiplier = (0 ..< exponent)
+      .reduce(1) { result, _ in
+        result * backoffMultiplier
+      }
     return initialBackoff * multiplier
   }
 

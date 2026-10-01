@@ -12,7 +12,8 @@ nonisolated struct DiscogsClient: Sendable {
       token: token,
       transport: UrlSessionTransport()
         .withRateLimit()
-        .withRetry())
+        .withRetry(),
+    )
   }
 
   init(token: String, transport: any HttpTransport) {
@@ -22,9 +23,8 @@ nonisolated struct DiscogsClient: Sendable {
 
   func searchAlbums(
     matching searchTerm: String,
-    limit: Int = 5
+    limit: Int = 5,
   ) async throws -> [AlbumCandidate] {
-
     let trimmedSearchTerm = searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
     if trimmedSearchTerm.isEmpty {
       throw DiscogsClientError.emptySearchTerm
@@ -33,14 +33,14 @@ nonisolated struct DiscogsClient: Sendable {
     return try await search(
       queryName: "q",
       queryValue: trimmedSearchTerm,
-      limit: limit)
+      limit: limit,
+    )
   }
 
   func searchAlbums(
     withBarcode barcode: String,
-    limit: Int = 5
+    limit: Int = 5,
   ) async throws -> [AlbumCandidate] {
-
     let trimmedBarcode = barcode.trimmingCharacters(in: .whitespacesAndNewlines)
     if trimmedBarcode.isEmpty {
       throw DiscogsClientError.emptySearchTerm
@@ -49,13 +49,13 @@ nonisolated struct DiscogsClient: Sendable {
     return try await search(
       queryName: "barcode",
       queryValue: trimmedBarcode,
-      limit: limit)
+      limit: limit,
+    )
   }
 
   func tracklist(
     for releaseId: Int
   ) async throws -> [AlbumTrack] {
-
     do {
       var components = URLComponents()
       components.scheme = "https"
@@ -74,7 +74,8 @@ nonisolated struct DiscogsClient: Sendable {
       let httpResponse = try await transport.send(request)
       let statusCode = httpResponse.response.statusCode
       Self.logger.info(
-        "Discogs release response: HTTP \(statusCode), \(httpResponse.data.count) bytes.")
+        "Discogs release response: HTTP \(statusCode), \(httpResponse.data.count) bytes."
+      )
 
       guard (200 ..< 300).contains(statusCode) else {
         throw DiscogsClientError.unexpectedStatusCode(statusCode)
@@ -85,11 +86,9 @@ nonisolated struct DiscogsClient: Sendable {
       Self.logger.debug("Mapped \(tracks.count) Discogs tracks.")
 
       return tracks
-
     } catch is CancellationError {
       Self.logger.debug("Discogs release tracklist request cancelled.")
       throw CancellationError()
-
     } catch {
       Self.logger.error(
         "Discogs release tracklist failed with \(String(reflecting: type(of: error)), privacy: .public)."
@@ -101,9 +100,8 @@ nonisolated struct DiscogsClient: Sendable {
   private func search(
     queryName: String,
     queryValue: String,
-    limit: Int
+    limit: Int,
   ) async throws -> [AlbumCandidate] {
-
     do {
       if token.isEmpty {
         throw DiscogsClientError.invalidToken
@@ -126,14 +124,13 @@ nonisolated struct DiscogsClient: Sendable {
       let response = try JSONDecoder().decode(DiscogsSearchResponse.self, from: httpResponse.data)
       Self.logger.debug("Mapped \(response.results.count) Discogs candidates.")
       return response.results.map(AlbumCandidate.init)
-
     } catch is CancellationError {
       Self.logger.debug("Discogs search cancelled.")
       throw CancellationError()
-
     } catch {
       Self.logger.error(
-        "Discogs search failed with \(String(reflecting: type(of: error)), privacy: .public).")
+        "Discogs search failed with \(String(reflecting: type(of: error)), privacy: .public)."
+      )
       throw error
     }
   }
@@ -141,9 +138,8 @@ nonisolated struct DiscogsClient: Sendable {
   private func makeRequest(
     queryName: String,
     queryValue: String,
-    limit: Int
+    limit: Int,
   ) throws -> URLRequest {
-
     var components = URLComponents()
     components.scheme = "https"
     components.host = "api.discogs.com"
@@ -173,7 +169,8 @@ extension AlbumTrack {
       position: track.position,
       title: track.title,
       duration: track.duration,
-      previewUrl: nil)
+      previewUrl: nil,
+    )
   }
 }
 
@@ -182,7 +179,6 @@ extension AlbumCandidate {
     if let separatorRange = searchResult.title.range(of: " - ") {
       artist = String(searchResult.title[..<separatorRange.lowerBound])
       title = String(searchResult.title[separatorRange.upperBound...])
-
     } else {
       artist = ""
       title = searchResult.title

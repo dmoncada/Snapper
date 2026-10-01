@@ -54,7 +54,7 @@ nonisolated struct AlbumTracklistResolver: Sendable {
       country: nil,
       thumbnailUrl: nil,
       coverImageUrl: nil,
-      discogsUrl: nil
+      discogsUrl: nil,
     )
 
     if let tracklist = try await itunesClient.tracklist(for: candidate, barcode: nil) {
@@ -65,9 +65,10 @@ nonisolated struct AlbumTracklistResolver: Sendable {
             position: "\(track.discNumber)-\(track.trackNumber)",
             title: track.title,
             duration: track.duration,
-            previewUrl: track.previewUrl)
+            previewUrl: track.previewUrl,
+          )
         },
-        source: .itunes(tracklist.collectionUrl)
+        source: .itunes(tracklist.collectionUrl),
       )
     }
 
@@ -98,7 +99,7 @@ final class AlbumDetailViewModel {
 
     resolver = .init(
       discogsClient: .init(token: token),
-      itunesClient: .init()
+      itunesClient: .init(),
     )
 
     locator = .init()
@@ -121,7 +122,6 @@ final class AlbumDetailViewModel {
 
     if let location = await location {
       locationState = .resolved(location)
-
     } else {
       locationState = .unavailable
     }
@@ -140,7 +140,6 @@ final class AlbumDetailViewModel {
 
     do {
       return try await locator.getLocation()
-
     } catch { return nil }
   }
 

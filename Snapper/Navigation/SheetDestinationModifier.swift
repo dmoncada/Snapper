@@ -30,17 +30,17 @@ extension View {
 }
 
 #if DEBUG
-  #Preview {
-    @Previewable @AppStorage(.storageKeys.colorScheme)
-    var preference: ColorSchemePreference = .system
+#Preview {
+  @Previewable @AppStorage(.storageKeys.colorScheme)
+  var preference: ColorSchemePreference = .system
 
-    @Previewable @State var sheetItem: SheetDestination?
+  @Previewable @State var sheetItem: SheetDestination?
 
-    Button("Open sheet") {
-      sheetItem = .settings
-    }
-    .buttonStyle(.borderedProminent)
-    .withSheetDestination($sheetItem)
-    .preferredColorScheme(preference.colorScheme)
+  Button("Open sheet") {
+    sheetItem = .settings
   }
+  .buttonStyle(.borderedProminent)
+  .withSheetDestination($sheetItem)
+  .preferredColorScheme(preference.colorScheme)
+}
 #endif

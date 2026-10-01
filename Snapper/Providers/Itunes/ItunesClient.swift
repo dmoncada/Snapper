@@ -12,7 +12,8 @@ nonisolated struct ItunesClient: Sendable {
       storefront: storefront,
       transport: UrlSessionTransport()
         .withRateLimit()
-        .withRetry())
+        .withRetry(),
+    )
   }
 
   init(storefront: ItunesStorefront, transport: any HttpTransport) {
@@ -22,9 +23,8 @@ nonisolated struct ItunesClient: Sendable {
 
   func tracklist(
     for candidate: AlbumCandidate,
-    barcode: String?
+    barcode: String?,
   ) async throws -> ItunesTracklist? {
-
     do {
       if let barcode, barcode.count > 0, let collection = try await collection(forUpc: barcode) {
         Self.logger.info("Resolved iTunes collection through UPC lookup.")
@@ -38,7 +38,8 @@ nonisolated struct ItunesClient: Sendable {
           URLQueryItem(name: "media", value: "music"),
           URLQueryItem(name: "entity", value: "album"),
           URLQueryItem(name: "limit", value: "25"),
-        ])
+        ],
+      )
 
       if let collection = RecordLinkage.bestCollection(from: albumResults.results, for: candidate) {
         Self.logger.info("Resolved iTunes collection through album search.")
@@ -52,10 +53,14 @@ nonisolated struct ItunesClient: Sendable {
           URLQueryItem(name: "media", value: "music"),
           URLQueryItem(name: "entity", value: "musicArtist"),
           URLQueryItem(name: "limit", value: "10"),
-        ])
+        ],
+      )
 
       guard
-        let artist = RecordLinkage.bestArtist(from: artistResults.results, named: candidate.artist),
+        let artist = RecordLinkage.bestArtist(
+          from: artistResults.results,
+          named: candidate.artist,
+        ),
         let artistId = artist.artistId
       else {
         Self.logger.info("No confident iTunes artist match; using Discogs fallback.")
@@ -68,26 +73,27 @@ nonisolated struct ItunesClient: Sendable {
           URLQueryItem(name: "id", value: String(artistId)),
           URLQueryItem(name: "entity", value: "album"),
           URLQueryItem(name: "limit", value: "200"),
-        ])
+        ],
+      )
 
       guard
         let collection = RecordLinkage.bestCollection(from: artistAlbums.results, for: candidate)
       else {
         Self.logger.info(
-          "No confident iTunes album match after artist lookup; using Discogs fallback.")
+          "No confident iTunes album match after artist lookup; using Discogs fallback."
+        )
         return nil
       }
 
       Self.logger.info("Resolved iTunes collection through artist album lookup.")
       return try await tracks(for: collection)
-
     } catch is CancellationError {
       Self.logger.debug("iTunes tracklist resolution cancelled.")
       throw CancellationError()
-
     } catch {
       Self.logger.error(
-        "iTunes resolution failed with \(String(reflecting: type(of: error)), privacy: .public).")
+        "iTunes resolution failed with \(String(reflecting: type(of: error)), privacy: .public)."
+      )
       throw error
     }
   }
@@ -98,7 +104,8 @@ nonisolated struct ItunesClient: Sendable {
       queryItems: [
         URLQueryItem(name: "upc", value: barcode),
         URLQueryItem(name: "entity", value: "song"),
-      ])
+      ],
+    )
 
     return response.results.first { $0.collectionId != nil }
   }
@@ -106,7 +113,6 @@ nonisolated struct ItunesClient: Sendable {
   private func tracks(
     for collection: ItunesSearchResult
   ) async throws -> ItunesTracklist? {
-
     guard let collectionId = collection.collectionId else { return nil }
 
     let response = try await request(
@@ -114,11 +120,13 @@ nonisolated struct ItunesClient: Sendable {
       queryItems: [
         URLQueryItem(name: "id", value: String(collectionId)),
         URLQueryItem(name: "entity", value: "song"),
-      ])
+      ],
+    )
 
-    let tracks = response.results.compactMap(ItunesTrack.init).sorted {
-      ($0.discNumber, $0.trackNumber) < ($1.discNumber, $1.trackNumber)
-    }
+    let tracks = response.results.compactMap(ItunesTrack.init)
+      .sorted {
+        ($0.discNumber, $0.trackNumber) < ($1.discNumber, $1.trackNumber)
+      }
 
     if tracks.isEmpty {
       Self.logger.info("iTunes collection returned no tracks; using Discogs fallback.")
@@ -130,14 +138,14 @@ nonisolated struct ItunesClient: Sendable {
       artist: collection.artistName ?? "",
       title: collection.collectionName ?? "",
       collectionUrl: collection.collectionViewUrl,
-      tracks: tracks)
+      tracks: tracks,
+    )
   }
 
   private func request(
     path: String,
-    queryItems: [URLQueryItem]
+    queryItems: [URLQueryItem],
   ) async throws -> ItunesSearchResponse {
-
     var components = URLComponents()
     components.scheme = "https"
     components.host = "itunes.apple.com"
@@ -146,7 +154,8 @@ nonisolated struct ItunesClient: Sendable {
       queryItems + [
         URLQueryItem(
           name: "country",
-          value: storefront.countryCode)
+          value: storefront.countryCode,
+        )
       ]
 
     guard let url = components.url else {
@@ -188,7 +197,8 @@ extension ItunesTrack {
         let seconds = milliseconds / 1_000
         return "\(seconds / 60):\(String(seconds % 60).padded(to: 2, with: "0"))"
       },
-      previewUrl: result.previewUrl)
+      previewUrl: result.previewUrl,
+    )
   }
 }
 

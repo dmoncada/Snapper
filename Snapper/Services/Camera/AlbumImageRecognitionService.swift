@@ -14,7 +14,6 @@ nonisolated struct AlbumImageRecognitionService: Sendable {
 
     do {
       barcodeObservations = try await requestHandler.perform(barcodeRequest)
-
     } catch {
       try Task.checkCancellation()
       barcodeObservations = []
@@ -53,6 +52,7 @@ nonisolated struct AlbumImageRecognitionService: Sendable {
 
     return AlbumImageRecognition(
       barcode: barcode,
-      textQuery: textQuery.count > 0 ? textQuery : nil)
+      textQuery: textQuery.count > 0 ? textQuery : nil,
+    )
   }
 }

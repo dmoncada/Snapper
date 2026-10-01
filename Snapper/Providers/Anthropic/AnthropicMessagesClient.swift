@@ -44,16 +44,16 @@ nonisolated struct AnthropicMessagesClient: Sendable {
   init(
     apiKey: String,
     modelID: String,
-    transport: any HttpTransport = UrlSessionTransport()
+    transport: any HttpTransport = UrlSessionTransport(),
   ) {
     self.apiKey = apiKey
     self.modelID = modelID
     self.transport = transport
   }
 
-  func respond(to request: LanguageModelExecutorGenerationRequest) async throws
-    -> AnthropicMessageResponse
-  {
+  func respond(
+    to request: LanguageModelExecutorGenerationRequest
+  ) async throws -> AnthropicMessageResponse {
     try Task.checkCancellation()
 
     let payload = try makePayload(for: request)
@@ -88,10 +88,12 @@ nonisolated struct AnthropicMessagesClient: Sendable {
       throw AnthropicClientError.invalidResponse
     }
 
-    let text = content.compactMap { block -> String? in
-      guard block["type"] as? String == "text" else { return nil }
-      return block["text"] as? String
-    }.joined()
+    let text =
+      content.compactMap { block -> String? in
+        guard block["type"] as? String == "text" else { return nil }
+        return block["text"] as? String
+      }
+      .joined()
 
     let toolCalls = content.compactMap { block -> AnthropicToolCall? in
       guard
@@ -99,7 +101,10 @@ nonisolated struct AnthropicMessagesClient: Sendable {
         let id = block["id"] as? String,
         let name = block["name"] as? String,
         let input = block["input"],
-        let inputData = try? JSONSerialization.data(withJSONObject: input, options: [.sortedKeys]),
+        let inputData = try? JSONSerialization.data(
+          withJSONObject: input,
+          options: [.sortedKeys],
+        ),
         let inputString = String(data: inputData, encoding: .utf8)
       else {
         return nil
@@ -113,11 +118,13 @@ nonisolated struct AnthropicMessagesClient: Sendable {
       text: text,
       toolCalls: toolCalls,
       inputTokens: usage?["input_tokens"] as? Int ?? 0,
-      outputTokens: usage?["output_tokens"] as? Int ?? 0
+      outputTokens: usage?["output_tokens"] as? Int ?? 0,
     )
   }
 
-  private func makePayload(for request: LanguageModelExecutorGenerationRequest) throws
+  private func makePayload(
+    for request: LanguageModelExecutorGenerationRequest
+  ) throws
     -> [String: Any]
   {
     var systemText = ""

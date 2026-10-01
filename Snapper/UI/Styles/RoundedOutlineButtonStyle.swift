@@ -8,7 +8,7 @@ struct RoundedOutlineButtonStyle: PrimitiveButtonStyle {
   init(
     radius: CGFloat = 4,
     lineWidth: CGFloat = 2,
-    color: Color = .themePrimaryInverted
+    color: Color = .themePrimaryInverted,
   ) {
     self.radius = radius
     self.lineWidth = lineWidth
@@ -21,7 +21,7 @@ struct RoundedOutlineButtonStyle: PrimitiveButtonStyle {
       .roundedOutline(
         radius: radius,
         lineWidth: lineWidth,
-        color: color
+        color: color,
       )
   }
 }
@@ -31,12 +31,12 @@ extension PrimitiveButtonStyle where Self == RoundedOutlineButtonStyle {
   static func roundedOutline(
     radius: CGFloat = 4,
     lineWidth: CGFloat = 2,
-    color: Color = .primary
+    color: Color = .primary,
   ) -> Self {
     Self(
       radius: radius,
       lineWidth: lineWidth,
-      color: color
+      color: color,
     )
   }
 }

@@ -31,7 +31,7 @@ struct HomeView: View {
       }
       .frame(
         maxWidth: .infinity,
-        maxHeight: .infinity
+        maxHeight: .infinity,
       )
       .toolbar {
         ToolbarTitle("MusicSnap")
@@ -80,7 +80,6 @@ private struct AlbumCandidateSection: View {
         ContentUnavailableView {
           Text("Snap away!")
             .font(.libreCaslonTextBold(.headline))
-
         } description: {
           Text("Search artists, albums and more...")
             .font(.libreCaslonTextRegular(.subheadline))
@@ -90,7 +89,7 @@ private struct AlbumCandidateSection: View {
         ProgressView()
           .frame(
             maxWidth: .infinity,
-            maxHeight: .infinity
+            maxHeight: .infinity,
           )
 
       case .results:
@@ -99,7 +98,6 @@ private struct AlbumCandidateSection: View {
             ForEach(vm.results.enumerated(), id: \.offset) { i, candidate in
               Button {
                 action(candidate)
-
               } label: {
                 VStack {
                   AlbumCandidateRow(candidate: candidate)
@@ -118,7 +116,6 @@ private struct AlbumCandidateSection: View {
         ContentUnavailableView {
           Text("Oh no!")
             .font(.libreCaslonTextBold(.headline))
-
         } description: {
           Text(error)
             .font(.libreCaslonTextRegular(.subheadline))
@@ -132,27 +129,27 @@ private struct AlbumCandidateSection: View {
 }
 
 #if DEBUG
-  #Preview("Default") {
-    @Previewable @State var router = Router()
+#Preview("Default") {
+  @Previewable @State var router = Router()
 
-    HomeView()
-      .withSheetDestination($router.sheetItem)
-      .modelContainer(for: AlbumEntry.self)
-      .environment(PreviewPlayer())
-      .environment(router)
-  }
-
-  #Preview("In tab") {
-    @Previewable @State var router = Router()
-
-    TabView {
-      Tab {
-        HomeView()
-      }
-    }
+  HomeView()
     .withSheetDestination($router.sheetItem)
     .modelContainer(for: AlbumEntry.self)
     .environment(PreviewPlayer())
     .environment(router)
+}
+
+#Preview("In tab") {
+  @Previewable @State var router = Router()
+
+  TabView {
+    Tab {
+      HomeView()
+    }
   }
+  .withSheetDestination($router.sheetItem)
+  .modelContainer(for: AlbumEntry.self)
+  .environment(PreviewPlayer())
+  .environment(router)
+}
 #endif

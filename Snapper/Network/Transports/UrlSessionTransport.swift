@@ -6,11 +6,11 @@ nonisolated final class UrlSessionTransport: HttpTransport, Sendable {
   init(
     memoryCacheCapacity: Int = 20 * 1_024 * 1_024,
     diskCacheCapacity: Int = 100 * 1_024 * 1_024,
-    timeout: TimeInterval = 15
+    timeout: TimeInterval = 15,
   ) {
     let cache = URLCache(
       memoryCapacity: memoryCacheCapacity,
-      diskCapacity: diskCacheCapacity
+      diskCapacity: diskCacheCapacity,
     )
     let configuration = URLSessionConfiguration.default
     configuration.urlCache = cache

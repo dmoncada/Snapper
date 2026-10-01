@@ -50,7 +50,7 @@ extension AlbumEntry {
       country: country,
       thumbnailUrl: thumbnailUrlString.flatMap(URL.init(string:)),
       coverImageUrl: coverImageUrlString.flatMap(URL.init(string:)),
-      discogsUrl: discogsUrlString.flatMap(URL.init(string:))
+      discogsUrl: discogsUrlString.flatMap(URL.init(string:)),
     )
   }
 }

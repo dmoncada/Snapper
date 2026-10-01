@@ -19,13 +19,13 @@ extension View {
   func roundedOutline(
     radius: CGFloat = Radius.md,
     lineWidth: CGFloat = LineWidth.md,
-    color: Color = .themePrimaryInverted
+    color: Color = .themePrimaryInverted,
   ) -> some View {
     modifier(
       RoundedOutlineModifier(
         radius: radius,
         lineWidth: lineWidth,
-        color: color
+        color: color,
       )
     )
   }

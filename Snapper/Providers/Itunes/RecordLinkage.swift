@@ -3,24 +3,25 @@ import Foundation
 nonisolated enum RecordLinkage {
   static func bestCollection(
     from results: [ItunesSearchResult],
-    for candidate: AlbumCandidate
+    for candidate: AlbumCandidate,
   ) -> ItunesSearchResult? {
-    let scoredResults = results.compactMap { result -> (ItunesSearchResult, Double)? in
-      guard
-        let artist = result.artistName,
-        let title = result.collectionName,
-        let collectionId = result.collectionId,
-        collectionId > 0,
-        isCompatibleEdition(candidate.title, title)
-      else { return nil }
+    let scoredResults =
+      results.compactMap { result -> (ItunesSearchResult, Double)? in
+        guard
+          let artist = result.artistName,
+          let title = result.collectionName,
+          let collectionId = result.collectionId,
+          collectionId > 0,
+          isCompatibleEdition(candidate.title, title)
+        else { return nil }
 
-      let artistScore = jaroWinkler(normalize(candidate.artist), normalize(artist))
-      let titleScore = jaroWinkler(normalize(candidate.title), normalize(title))
-      guard artistScore >= 0.92, titleScore >= 0.90 else { return nil }
+        let artistScore = jaroWinkler(normalize(candidate.artist), normalize(artist))
+        let titleScore = jaroWinkler(normalize(candidate.title), normalize(title))
+        guard artistScore >= 0.92, titleScore >= 0.90 else { return nil }
 
-      return (result, (artistScore * 0.4) + (titleScore * 0.6))
-    }
-    .sorted { $0.1 > $1.1 }
+        return (result, (artistScore * 0.4) + (titleScore * 0.6))
+      }
+      .sorted { $0.1 > $1.1 }
 
     guard let best = scoredResults.first, best.1 >= 0.93 else { return nil }
     guard scoredResults.count == 1 || best.1 - scoredResults[1].1 >= 0.05 else { return nil }
@@ -29,14 +30,15 @@ nonisolated enum RecordLinkage {
 
   static func bestArtist(
     from results: [ItunesSearchResult],
-    named artist: String
+    named artist: String,
   ) -> ItunesSearchResult? {
     let normalizedArtist = normalize(artist)
-    let scoredResults = results.compactMap { result -> (ItunesSearchResult, Double)? in
-      guard let name = result.artistName, result.artistId != nil else { return nil }
-      return (result, jaroWinkler(normalizedArtist, normalize(name)))
-    }
-    .sorted { $0.1 > $1.1 }
+    let scoredResults =
+      results.compactMap { result -> (ItunesSearchResult, Double)? in
+        guard let name = result.artistName, result.artistId != nil else { return nil }
+        return (result, jaroWinkler(normalizedArtist, normalize(name)))
+      }
+      .sorted { $0.1 > $1.1 }
 
     guard let best = scoredResults.first, best.1 >= 0.96 else { return nil }
     guard scoredResults.count == 1 || best.1 - scoredResults[1].1 >= 0.05 else { return nil }
@@ -63,7 +65,8 @@ nonisolated enum RecordLinkage {
   private static func normalize(_ value: String) -> String {
     value
       .folding(
-        options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: .current
+        options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive],
+        locale: .current,
       )
       .unicodeScalars
       .map { CharacterSet.alphanumerics.contains($0) ? String($0) : " " }
@@ -102,9 +105,10 @@ nonisolated enum RecordLinkage {
     if matches == 0 { return 0 }
 
     let matchedLeft = leftCharacters.indices.filter { leftMatches[$0] }.map { leftCharacters[$0] }
-    let matchedRight = rightCharacters.indices.filter { rightMatches[$0] }.map {
-      rightCharacters[$0]
-    }
+    let matchedRight = rightCharacters.indices.filter { rightMatches[$0] }
+      .map {
+        rightCharacters[$0]
+      }
 
     let transpositions = zip(matchedLeft, matchedRight).filter(!=).count / 2
     let matchCount = Double(matches)

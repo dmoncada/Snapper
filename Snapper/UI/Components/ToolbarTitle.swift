@@ -12,7 +12,7 @@ struct ToolbarTitle: ToolbarContent {
       Text(title)
         .frame(
           maxWidth: .infinity,
-          alignment: .leading
+          alignment: .leading,
         )
         .font(.basteleurBold(.title))
         .foregroundStyle(.themePrimaryInverted)
@@ -22,14 +22,14 @@ struct ToolbarTitle: ToolbarContent {
 }
 
 #if DEBUG
-  #Preview {
-    NavigationStack {
-      ScrollView {
-        Text("Hello, world!")
-      }
-      .toolbar { ToolbarTitle("Hello") }
-      .toolbarBackground(.thinMaterial, for: .navigationBar)
-      .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+#Preview {
+  NavigationStack {
+    ScrollView {
+      Text("Hello, world!")
     }
+    .toolbar { ToolbarTitle("Hello") }
+    .toolbarBackground(.thinMaterial, for: .navigationBar)
+    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
   }
+}
 #endif

@@ -35,7 +35,6 @@ final class PreviewPlayer {
 
     do {
       try await Self.activateSession()
-
     } catch {
       guard playbackId == id else { return }
       await stopImmediately()
@@ -54,7 +53,9 @@ final class PreviewPlayer {
     }
 
     preview = Preview(
-      url: url, title: title ?? url.deletingPathExtension().lastPathComponent)
+      url: url,
+      title: title ?? url.deletingPathExtension().lastPathComponent,
+    )
 
     player?.play()
     isPlaying = true
@@ -143,7 +144,7 @@ final class PreviewPlayer {
     playbackTask = Task { @MainActor [weak self] in
       for await _ in NotificationCenter.default.notifications(
         named: AVPlayerItem.didPlayToEndTimeNotification,
-        object: item
+        object: item,
       ) {
         guard let self, self.playbackId == id else { return }
         await self.stopImmediately()
@@ -159,16 +160,18 @@ final class PreviewPlayer {
 
     timeObserver = player.addPeriodicTimeObserver(
       forInterval: CMTime(seconds: 0.1, preferredTimescale: 600),
-      queue: .main
+      queue: .main,
     ) { [weak self, weak item] time in
       guard let item else { return }
 
       let current = time.seconds
       let duration = item.duration.seconds
 
-      guard current.isFinite, duration.isFinite, duration > 0 else {
-        return
-      }
+      guard
+        current.isFinite,
+        duration.isFinite,
+        duration > 0
+      else { return }
 
       Task { @MainActor [weak self] in
         guard let self else { return }
@@ -190,88 +193,86 @@ final class PreviewPlayer {
 
   private static func activateSession() async throws {
     #if os(iOS)
-      let session = AVAudioSession.sharedInstance()
+    let session = AVAudioSession.sharedInstance()
 
-      if session.category != .playback {
-        try session.setCategory(.playback)
-      }
+    if session.category != .playback {
+      try session.setCategory(.playback)
+    }
 
-      #if compiler(>=6.4)
-        if #available(iOS 27.0, *) {
-          try await session.activate()
-        } else {
-          try session.setActive(true)
-        }
-      #else
-        try session.setActive(true)
-      #endif
+    #if compiler(>=6.4)
+    if #available(iOS 27.0, *) {
+      try await session.activate()
+    } else {
+      try session.setActive(true)
+    }
+    #else
+    try session.setActive(true)
+    #endif
     #endif
   }
 
   private static func deactivateSession() async {
     #if os(iOS)
-      let session = AVAudioSession.sharedInstance()
+    let session = AVAudioSession.sharedInstance()
 
-      #if compiler(>=6.4)
-        if #available(iOS 27.0, *) {
-          _ = try? await session.deactivate()
-        } else {
-          try? session.setActive(false)
-        }
-      #else
-        try? session.setActive(false)
-      #endif
+    #if compiler(>=6.4)
+    if #available(iOS 27.0, *) {
+      _ = try? await session.deactivate()
+    } else {
+      try? session.setActive(false)
+    }
+    #else
+    try? session.setActive(false)
+    #endif
     #endif
   }
 }
 
 #if DEBUG
-  import SwiftUI
+import SwiftUI
 
-  #Preview {
-    @Previewable @State var player = PreviewPlayer()
+#Preview {
+  @Previewable @State var player = PreviewPlayer()
 
-    let titles = [
-      "Take a Bow",
-      "Starlight",
-      "Supermassive Black Hole",
-    ]
+  let titles = [
+    "Take a Bow",
+    "Starlight",
+    "Supermassive Black Hole",
+  ]
 
-    let urls = [
-      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b1/37/d2/b137d288-04c0-bdaf-9c93-e895a3931394/mzaf_8273800498014466621.plus.aac.p.m4a",
-      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/00/2c/2a/002c2a41-d59f-92a6-740a-35641b4e1e48/mzaf_9814325723002930170.plus.aac.p.m4a",
-      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/76/4a/63/764a63c0-9533-97ce-51a5-31a23b57f2eb/mzaf_3187296926844362175.plus.aac.p.m4a",
-    ]
-    .compactMap(URL.init(string:))
+  let urls = [
+    "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b1/37/d2/b137d288-04c0-bdaf-9c93-e895a3931394/mzaf_8273800498014466621.plus.aac.p.m4a",
+    "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/00/2c/2a/002c2a41-d59f-92a6-740a-35641b4e1e48/mzaf_9814325723002930170.plus.aac.p.m4a",
+    "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/76/4a/63/764a63c0-9533-97ce-51a5-31a23b57f2eb/mzaf_3187296926844362175.plus.aac.p.m4a",
+  ]
+  .compactMap(URL.init(string:))
 
-    if titles.count == urls.count {
-      VStack {
-        ForEach(Array(zip(titles, urls)).enumerated(), id: \.offset) { _, pair in
-          let (title, url) = pair
-          let isPlaying = title == player.preview?.title
+  if titles.count == urls.count {
+    VStack {
+      ForEach(Array(zip(titles, urls)).enumerated(), id: \.offset) { _, pair in
+        let (title, url) = pair
+        let isPlaying = title == player.preview?.title
 
-          LabeledContent(title) {
-            PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
-              Task {
-                isPlaying
-                  ? await player.stopImmediately()
-                  : await player.play(url, title: title)
-              }
+        LabeledContent(title) {
+          PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
+            Task {
+              isPlaying
+                ? await player.stopImmediately()
+                : await player.play(url, title: title)
             }
-            .frame(width: 24)
           }
-          .foregroundStyle(
-            isPlaying
-              ? .themeRed
-              : .themeSeafoam
-          )
+          .frame(width: 24)
         }
+        .foregroundStyle(
+          isPlaying
+            ? .themeRed
+            : .themeSeafoam
+        )
       }
-      .padding()
-
-    } else {
-      ProgressView()
     }
+    .padding()
+  } else {
+    ProgressView()
   }
-
+}
 #endif

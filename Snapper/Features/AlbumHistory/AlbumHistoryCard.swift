@@ -38,7 +38,7 @@ private struct AlbumCover: View {
         CachedImage(url: url)
           .frame(
             maxWidth: .infinity,
-            maxHeight: .infinity
+            maxHeight: .infinity,
           )
           .clipped()
       }
@@ -74,23 +74,22 @@ extension Date {
 }
 
 #if DEBUG
-  import SwiftData
+import SwiftData
 
-  #Preview(traits: .modifier(SampleData())) {
-    @Previewable @Query var entries: [AlbumEntry]
+#Preview(traits: .modifier(SampleData())) {
+  @Previewable @Query var entries: [AlbumEntry]
 
-    if let entry = entries.first {
-      ScrollView(.vertical) {
-        ForEach([300, 200, 100], id: \.self) { size in
-          AlbumHistoryCard(entry: entry)
-            .frame(width: size)
-        }
+  if let entry = entries.first {
+    ScrollView(.vertical) {
+      ForEach([300, 200, 100], id: \.self) { size in
+        AlbumHistoryCard(entry: entry)
+          .frame(width: size)
       }
-      .padding()
-      .background(.gray.opacity(0.5))
-
-    } else {
-      EmptyView()
     }
+    .padding()
+    .background(.gray.opacity(0.5))
+  } else {
+    EmptyView()
   }
+}
 #endif

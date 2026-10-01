@@ -53,7 +53,7 @@ extension SortCriterion {
   func checkOrdered(
     _ lhs: AlbumEntry,
     _ rhs: AlbumEntry,
-    order: SortOrder
+    order: SortOrder,
   ) -> Bool {
     switch self {
     case .albumTitle:
@@ -70,7 +70,7 @@ extension SortCriterion {
   fileprivate func compare<T: Comparable>(
     _ lhs: T,
     _ rhs: T,
-    order: SortOrder
+    order: SortOrder,
   ) -> Bool {
     switch order {
     case .ascending, .oldestFirst: lhs < rhs
@@ -89,7 +89,7 @@ struct SortConfiguration: Codable, Equatable {
       .dateFound: .newestFirst,
       .albumTitle: .ascending,
       .artistName: .ascending,
-    ]
+    ],
   )
 
   func getOrder(for criterion: SortCriterion) -> SortOrder {

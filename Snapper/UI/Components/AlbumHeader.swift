@@ -9,7 +9,7 @@ struct AlbumHeader: View {
     self.init(
       title: entry.title,
       artist: entry.artist,
-      size: size
+      size: size,
     )
   }
 

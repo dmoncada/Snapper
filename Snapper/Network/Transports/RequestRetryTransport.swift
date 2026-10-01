@@ -6,7 +6,7 @@ nonisolated struct RequestRetryTransport: HttpTransport {
 
   init(
     transport: any HttpTransport,
-    policy: RetryPolicy = RetryPolicy()
+    policy: RetryPolicy = RetryPolicy(),
   ) {
     self.transport = transport
     self.policy = policy
@@ -28,10 +28,8 @@ nonisolated struct RequestRetryTransport: HttpTransport {
           for: policy.delay(beforeRetry: retryNumber, retryAfter: retryAfter)
         )
         continue
-
       } catch is CancellationError {
         throw CancellationError()
-
       } catch {
         guard
           attempt < policy.maximumRetries,
@@ -53,6 +51,7 @@ extension HttpTransport {
   ) -> RequestRetryTransport {
     RequestRetryTransport(
       transport: self,
-      policy: policy)
+      policy: policy,
+    )
   }
 }

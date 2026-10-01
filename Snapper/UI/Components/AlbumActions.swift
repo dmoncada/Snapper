@@ -46,7 +46,7 @@ private struct DeleteAlertModifier: ViewModifier {
   private var isPresented: Binding<Bool> {
     Binding(
       get: { pendingDelete != nil },
-      set: { if !$0 { pendingDelete = nil } }
+      set: { if !$0 { pendingDelete = nil } },
     )
   }
 
@@ -54,9 +54,8 @@ private struct DeleteAlertModifier: ViewModifier {
     content.alert(
       "Delete Album?",
       isPresented: isPresented,
-      presenting: pendingDelete
+      presenting: pendingDelete,
     ) { entry in
-
       Button("Cancel", role: .cancel) {
         pendingDelete = nil
       }
@@ -65,7 +64,6 @@ private struct DeleteAlertModifier: ViewModifier {
         pendingDelete = nil
         onDelete(entry)
       }
-
     } message: { entry in
       Text("Are you sure you want to delete \"\(entry.title)\" from your history?")
     }
@@ -75,12 +73,12 @@ private struct DeleteAlertModifier: ViewModifier {
 extension View {
   func deleteAlert(
     pendingDelete: Binding<AlbumEntry?>,
-    onDelete: @escaping (AlbumEntry) -> Void
+    onDelete: @escaping (AlbumEntry) -> Void,
   ) -> some View {
     modifier(
       DeleteAlertModifier(
         pendingDelete: pendingDelete,
-        onDelete: onDelete
+        onDelete: onDelete,
       )
     )
   }

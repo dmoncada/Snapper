@@ -7,7 +7,6 @@ struct PlainDisclosureGroupStyle: DisclosureGroupStyle {
         withAnimation {
           configuration.isExpanded.toggle()
         }
-
       } label: {
         HStack {
           configuration.label
