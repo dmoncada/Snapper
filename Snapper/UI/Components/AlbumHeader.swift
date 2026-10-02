@@ -38,7 +38,7 @@ struct AlbumHeader: View {
 
       Text(artist)
         .font(.sligoilMicro(artistStyle))
-        .foregroundStyle(.themeRed)
+        .foregroundStyle(.accent)
     }
   }
 }

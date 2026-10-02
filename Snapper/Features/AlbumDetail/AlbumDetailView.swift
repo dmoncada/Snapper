@@ -279,7 +279,7 @@ private struct AlbumTrackRow: View {
     // .disabled(track.previewUrl == nil)
     .foregroundStyle(
       isPlaying
-        ? .themeRed
+        ? .accent
         : .themePrimaryInverted
     )
     .animation(

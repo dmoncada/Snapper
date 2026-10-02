@@ -17,7 +17,6 @@ struct SettingsSheet: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
               Text(preference.displayName)
-              // .foregroundStyle(.themeSecondary)
             }
           }
         } footer: {

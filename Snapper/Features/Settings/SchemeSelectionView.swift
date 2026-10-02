@@ -15,9 +15,10 @@ struct SchemeSelectionView: View {
 
             Image(systemName: "checkmark")
               .opacity(selection == option ? 1 : 0)
+              .foregroundStyle(.secondary)
           }
         }
-        // .foregroundStyle(.themePrimary)
+        .buttonStyle(.plain)
       }
     }
   }
