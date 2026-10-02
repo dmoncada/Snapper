@@ -24,6 +24,8 @@ final class PreviewPlayer {
     return min(max(currentTime / duration, 0), 1)
   }
 
+  private static let fadeDuration: TimeInterval = 1
+
   @ObservationIgnored private var player: AVPlayer?
   @ObservationIgnored private var playbackId = UUID()
   @ObservationIgnored private var playbackTask: Task<Void, Never>?
@@ -57,11 +59,13 @@ final class PreviewPlayer {
       title: title ?? url.deletingPathExtension().lastPathComponent,
     )
 
+    observePlayback(of: item, id: id)
+
+    player?.volume = 0
     player?.play()
     isPlaying = true
-    updateNowPlayingInfo()
 
-    observePlayback(of: item, id: id)
+    updateNowPlayingInfo()
   }
 
   func pause() async {
@@ -174,12 +178,19 @@ final class PreviewPlayer {
       else { return }
 
       Task { @MainActor [weak self] in
-        guard let self else { return }
+        guard let self, self.playbackId == id else { return }
 
+        self.player?.volume = Self.fadeVolume(at: current, duration: duration)
         self.currentTime = current
         self.duration = duration
       }
     }
+  }
+
+  private static func fadeVolume(at time: TimeInterval, duration: TimeInterval) -> Float {
+    let fadeIn = time / fadeDuration
+    let fadeOut = (duration - time) / fadeDuration
+    return Float(min(max(min(fadeIn, fadeOut), 0), 1))
   }
 
   private func updateNowPlayingInfo() {

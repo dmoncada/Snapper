@@ -244,32 +244,39 @@ private struct AlbumTrackRow: View {
   var body: some View {
     let isPlaying = track.title == player.preview?.title
 
-    HStack {
-      Group {
-        if let url = track.previewUrl {
-          PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
-            Task {
-              isPlaying
-                ? await player.stopImmediately()
-                : await player.play(url, title: track.title)
-            }
-          }
-        } else {
-          Image(systemName: "play.slash")
-        }
+    Button {
+      guard let url = track.previewUrl else { return }
+      Task {
+        isPlaying
+          ? await player.stopImmediately()
+          : await player.play(url, title: track.title)
       }
-      .frame(width: 24)
+    } label: {
+      HStack {
+        Group {
+          if track.previewUrl == nil {
+            Image(systemName: "play.slash")
+          } else {
+            PlaybackIndicator(isPlaying: isPlaying, progress: player.progress)
+          }
+        }
+        .frame(width: 24)
 
-      Text(track.title)
-        .font(.sligoilMicroBold(.subheadline))
-        .minimumScaleFactor(0.75)
-        .lineLimit(1)
+        Text(track.title)
+          .font(.sligoilMicroBold(.subheadline))
+          .minimumScaleFactor(0.75)
+          .lineLimit(1)
 
-      Spacer()
+        Spacer()
 
-      Text(track.duration ?? "N/A")
-        .font(.sligoilMicro(.subheadline))
+        Text(track.duration ?? "N/A")
+          .font(.sligoilMicro(.subheadline))
+      }
+      .contentShape(.rect)
     }
+    .buttonStyle(.plain)
+    .allowsHitTesting(track.previewUrl != nil)
+    // .disabled(track.previewUrl == nil)
     .foregroundStyle(
       isPlaying
         ? .themeRed
