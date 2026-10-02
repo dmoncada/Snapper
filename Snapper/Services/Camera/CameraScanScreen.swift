@@ -36,7 +36,6 @@ struct CameraScanScreen: View {
                 || isCompleted
             )
         }
-        .padding()
       }
       .navigationTitle("Snap a photo")
       .navigationBarTitleDisplayMode(.inline)
@@ -144,51 +143,8 @@ private struct TriggerButton: View {
   }
 }
 
-struct ErrorAlertModifier: ViewModifier {
-  @Binding var error: Error?
-
-  func body(content: Content) -> some View {
-    if #available(iOS 27.0, *) {
-      content
-        .alert(error: $error) { _ in
-          Button(role: .cancel) {}
-          Button("Settings", role: .confirm) {
-            error = nil
-          }
-        } message: { error in
-          Text(error.localizedDescription)
-        }
-    } else {
-      content
-        .alert(
-          "Error",
-          isPresented: Binding(
-            get: { error != nil },
-            set: { if !$0 { error = nil } },
-          ),
-        ) {
-          Button(role: .cancel) {}
-          Button("Settings", role: .confirm) {
-            error = nil
-          }
-        } message: {
-          Text(error?.localizedDescription ?? "")
-        }
-    }
-  }
-}
-
-extension View {
-  func errorAlert(for error: Binding<Error?>) -> some View {
-    modifier(ErrorAlertModifier(error: error))
-  }
-}
-
+#if DEBUG
 #Preview {
-  @Previewable @State var error: Error?
-
-  TriggerButton {
-    error = URLError(.badURL)
-  }
-  .errorAlert(for: $error)
+  TriggerButton {}
 }
+#endif

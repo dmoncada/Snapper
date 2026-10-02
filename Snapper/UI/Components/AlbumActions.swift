@@ -38,49 +38,28 @@ struct DeleteButton: View {
   }
 }
 
-private struct DeleteAlertModifier: ViewModifier {
-  @Binding var pendingDelete: AlbumEntry?
+#if DEBUG
+import SwiftData
 
-  let onDelete: (AlbumEntry) -> Void
+#Preview(traits: .withSampleData) {
+  @Previewable @Query var entries: [AlbumEntry]
 
-  private var isPresented: Binding<Bool> {
-    Binding(
-      get: { pendingDelete != nil },
-      set: { if !$0 { pendingDelete = nil } },
-    )
-  }
-
-  func body(content: Content) -> some View {
-    content
-      .alert(
-        "Delete Album?",
-        isPresented: isPresented,
-        presenting: pendingDelete,
-      ) { entry in
-        Button("Cancel", role: .cancel) {
-          pendingDelete = nil
+  if let entry = entries.first {
+    NavigationStack {
+      Text("Hello, world!")
+        .toolbar {
+          ToolbarItem(placement: .topBarTrailing) {
+            Menu {
+              FavoriteButton(entry: entry)
+              DeleteButton {}
+            } label: {
+              Image(systemName: "ellipsis")
+            }
+          }
         }
-
-        Button("Delete", role: .destructive) {
-          pendingDelete = nil
-          onDelete(entry)
-        }
-      } message: { entry in
-        Text("Are you sure you want to delete \"\(entry.title)\" from your history?")
-      }
+    }
+  } else {
+    ProgressView()
   }
 }
-
-extension View {
-  func deleteAlert(
-    pendingDelete: Binding<AlbumEntry?>,
-    onDelete: @escaping (AlbumEntry) -> Void,
-  ) -> some View {
-    modifier(
-      DeleteAlertModifier(
-        pendingDelete: pendingDelete,
-        onDelete: onDelete,
-      )
-    )
-  }
-}
+#endif

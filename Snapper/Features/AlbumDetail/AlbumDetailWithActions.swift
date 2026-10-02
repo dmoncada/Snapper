@@ -20,7 +20,7 @@ struct AlbumDetailWithActions: View {
           }
         }
       }
-      .deleteAlert(pendingDelete: $pendingDelete) { entry in
+      .deleteAlert(for: $pendingDelete) { entry in
         onDelete(entry)
       }
   }

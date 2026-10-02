@@ -93,7 +93,7 @@ struct HistoryView: View {
           path.removeLast()
         }
       }
-      .deleteAlert(pendingDelete: $pendingDelete) { entry in
+      .deleteAlert(for: $pendingDelete) { entry in
         context.delete(entry)
       }
       .fullBackground(.themePrimary)
