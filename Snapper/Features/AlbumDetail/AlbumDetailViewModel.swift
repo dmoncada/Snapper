@@ -1,4 +1,3 @@
-import CoreLocation
 import SwiftUI
 
 nonisolated struct AlbumTracklistRequest: Sendable {
@@ -81,18 +80,10 @@ nonisolated struct AlbumTracklistResolver: Sendable {
 @MainActor
 @Observable
 final class AlbumDetailViewModel {
-  enum LocationState: Sendable, Equatable {
-    case unavailable
-    case resolving
-    case resolved(CLLocation)
-  }
-
   private let resolver: AlbumTracklistResolver
-  private let locator: LocationService
 
   private(set) var tracks: [AlbumTrack] = []
   private(set) var tracklistSource: AlbumTracklistSource?
-  private(set) var locationState: LocationState = .unavailable
 
   init() {
     let token = Bundle.main.object(forInfoDictionaryKey: "DISCOGS_TOKEN") as? String ?? ""
@@ -101,8 +92,6 @@ final class AlbumDetailViewModel {
       discogsClient: .init(token: token),
       itunesClient: .init(),
     )
-
-    locator = .init()
   }
 
   func materialize(_ entry: AlbumEntry) async {
@@ -112,18 +101,9 @@ final class AlbumDetailViewModel {
       title: entry.title,
     )
 
-    async let tracklist = resolveTracks(for: request)
-    async let location = resolveLocation()
-
-    if let tracklist = await tracklist {
+    if let tracklist = await resolveTracks(for: request) {
       tracklistSource = tracklist.source
       tracks = tracklist.tracks
-    }
-
-    if let location = await location {
-      locationState = .resolved(location)
-    } else {
-      locationState = .unavailable
     }
   }
 
@@ -133,31 +113,5 @@ final class AlbumDetailViewModel {
     } catch {
       return nil
     }
-  }
-
-  private func resolveLocation() async -> CLLocation? {
-    locationState = .resolving
-
-    do {
-      return try await locator.getLocation()
-    } catch { return nil }
-  }
-
-  private func consumeTracks(_ task: Task<AlbumTracklist?, Never>) async {
-    guard let tracklist = await task.value else {
-      return
-    }
-
-    tracklistSource = tracklist.source
-    tracks = tracklist.tracks
-  }
-
-  private func consumeLocation(_ task: Task<CLLocation?, Never>) async {
-    guard let location = await task.value else {
-      locationState = .unavailable
-      return
-    }
-
-    locationState = .resolved(location)
   }
 }

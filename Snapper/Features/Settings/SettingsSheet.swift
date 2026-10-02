@@ -23,6 +23,29 @@ struct SettingsSheet: View {
         } footer: {
           Text("Controls the app's theme preference.")
         }
+
+        Section {
+          Button {
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+              UIApplication.shared.open(url)
+            }
+          } label: {
+            HStack {
+              Text("Location")
+              Spacer()
+              Image(systemName: "chevron.right")
+                .foregroundStyle(.secondary)
+            }
+          }
+          .buttonStyle(.plain)
+        } footer: {
+          Text(
+            """
+            Grant permission to access the device location in Settings, \
+            to allow capturing the approximate location when adding an album.
+            """
+          )
+        }
       }
       .navigationToolbar(title: "Settings")
     }

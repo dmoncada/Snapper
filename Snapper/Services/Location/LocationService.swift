@@ -17,14 +17,14 @@ enum LocationError: Error, Sendable {
   case requestInProgress
 }
 
-// @MainActor
-// @Observable
+@MainActor
 final class LocationService: NSObject {
   private(set) var authorization: LocationAuthorization = .unknown
 
   private var authorizationContinuation: CheckedContinuation<LocationAuthorization, Never>?
   private var locationContinuation: CheckedContinuation<CLLocation, Error>?
   private let locationManager = CLLocationManager()
+  private var locationTimeout: Task<Void, Never>?
 
   override init() {
     super.init()
@@ -90,6 +90,11 @@ final class LocationService: NSObject {
       try await withCheckedThrowingContinuation { continuation in
         locationContinuation = continuation
         locationManager.requestLocation()
+        locationTimeout = Task {
+          try? await Task.sleep(for: .seconds(20))
+          if Task.isCancelled { return }
+          resumeLocation(with: .failure(LocationError.unavailable))
+        }
       }
     } onCancel: {
       Task { @MainActor [weak self] in
@@ -99,10 +104,7 @@ final class LocationService: NSObject {
   }
 
   private func cancelLocationRequest() {
-    guard let continuation = locationContinuation else { return }
-
-    locationContinuation = nil
-    continuation.resume(throwing: CancellationError())
+    resumeLocation(with: .failure(CancellationError()))
   }
 
   private func updateAuthorization() {
@@ -124,8 +126,9 @@ final class LocationService: NSObject {
 
   private func resumeLocation(with result: Result<CLLocation, Error>) {
     guard let continuation = locationContinuation else { return }
-
     locationContinuation = nil
+    locationTimeout?.cancel()
+    locationTimeout = nil
 
     switch result {
     case .success(let location): continuation.resume(returning: location)

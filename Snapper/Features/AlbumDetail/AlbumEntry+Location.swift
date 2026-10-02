@@ -12,6 +12,16 @@ extension AlbumEntry {
       longitude: longitude,
     )
   }
+
+  var locationStatus: AlbumLocationStatus {
+    if let raw = locationCaptureStatusRaw, let status = AlbumLocationStatus(rawValue: raw) {
+      return status
+    }
+
+    return location == nil
+      ? .unavailable
+      : .captured
+  }
 }
 
 extension CLLocation {

@@ -6,7 +6,11 @@ struct SnapperAppShell: View {
   @AppStorage(.storageKeys.colorScheme)
   private var preference: ColorSchemePreference = .system
 
+  @Environment(\.modelContext) private var context
+  @Environment(\.scenePhase) private var scenePhase
+
   @State private var router = Router()
+  @State private var locationCapture = AlbumLocationCaptureCoordinator()
 
   var body: some View {
     TabView {
@@ -20,12 +24,21 @@ struct SnapperAppShell: View {
     .withSheetDestination($router.sheetItem)
     .onAppear { AVPlayer.isObservationEnabled = true }
     .preferredColorScheme(preference.colorScheme)
-    .modelContainer(for: AlbumEntry.self)
+    .environment(locationCapture)
     .environment(PreviewPlayer())
     .environment(router)
+    .task {
+      locationCapture.resumePending(in: context)
+    }
+    .onChange(of: scenePhase) { _, phase in
+      if phase == .active {
+        locationCapture.resumePending(in: context)
+      }
+    }
   }
 }
 
 #Preview {
   SnapperAppShell()
+    .modelContainer(for: AlbumEntry.self)
 }

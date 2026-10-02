@@ -131,6 +131,7 @@ private struct AlbumCandidateSection: View {
   HomeView()
     .withSheetDestination($router.sheetItem)
     .modelContainer(for: AlbumEntry.self)
+    .environment(AlbumLocationCaptureCoordinator())
     .environment(PreviewPlayer())
     .environment(router)
 }
@@ -145,6 +146,7 @@ private struct AlbumCandidateSection: View {
   }
   .withSheetDestination($router.sheetItem)
   .modelContainer(for: AlbumEntry.self)
+  .environment(AlbumLocationCaptureCoordinator())
   .environment(PreviewPlayer())
   .environment(router)
 }

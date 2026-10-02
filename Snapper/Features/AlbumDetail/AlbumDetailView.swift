@@ -6,6 +6,8 @@ struct AlbumDetailView: View {
 
   let entry: AlbumEntry
 
+  var showMetadata = true
+
   @State private var vm = AlbumDetailViewModel()
 
   var body: some View {
@@ -16,7 +18,7 @@ struct AlbumDetailView: View {
 
         VStack(alignment: .leading, spacing: Padding.xxl) {
           AlbumHeader(entry: entry, size: .lg)
-          AlbumDetailSection(entry: entry, vm: vm)
+          AlbumDetailSection(entry: entry, showMetadata: showMetadata)
           AlbumTrackSection(tracks: vm.tracks)
         }
         .padding()
@@ -54,7 +56,7 @@ private struct AlbumCover: View {
 
 private struct AlbumDetailSection: View {
   let entry: AlbumEntry
-  let vm: AlbumDetailViewModel
+  let showMetadata: Bool
 
   var body: some View {
     VStack(alignment: .leading, spacing: Padding.xl) {
@@ -71,11 +73,13 @@ private struct AlbumDetailSection: View {
             Divider()
           }
 
-          AlbumDetailRow("Recognized", entry.selectedAt.abbreviated)
-          Divider()
+          if showMetadata {
+            AlbumDetailRow("Recognized", entry.selectedAt.abbreviated)
+            Divider()
 
-          LocationSection(vm: vm)
-            .frame(minHeight: 12)  // TODO(dmoncada): figure out how to set all rows to the same height.
+            LocationSection(entry: entry)
+              .frame(minHeight: 12)  // TODO(dmoncada): figure out how to set all rows to the same height.
+          }
         }
       }
     }
@@ -89,13 +93,13 @@ extension Date {
 }
 
 private struct LocationSection: View {
-  let vm: AlbumDetailViewModel
+  let entry: AlbumEntry
 
   @State private var isExpanded = false
 
   var body: some View {
-    switch vm.locationState {
-    case .resolving:
+    switch entry.locationStatus {
+    case .pending:
       HStack {
         Text("Location").font(.sligoilMicroBold(.subheadline))
         Spacer()
@@ -104,17 +108,30 @@ private struct LocationSection: View {
       .foregroundStyle(.themePrimaryInverted)
       .opacity(0.625)
 
-    case .resolved(let location):
-      DisclosureGroup(isExpanded: $isExpanded) {
-        MapView(location: location)
-      } label: {
-        Text("Location")
+    case .captured:
+      if let location = entry.location {
+        DisclosureGroup(isExpanded: $isExpanded) {
+          MapView(
+            location: location,
+            accuracyRadius: entry.locationHorizontalAccuracy,
+          )
+        } label: {
+          Group {
+            if (entry.locationHorizontalAccuracy ?? 0) >= 1_000 {
+              Text("Approximate Location")
+            } else {
+              Text("Location")
+            }
+          }
           .font(.sligoilMicroBold(.subheadline))
+        }
+        .disclosureGroupStyle(.plain)
+        .opacity(0.625)
+      } else {
+        AlbumDetailRow("Location", "No Location")
       }
-      .disclosureGroupStyle(.plain)
-      .opacity(0.625)
 
-    case .unavailable:
+    case .denied, .unavailable:
       AlbumDetailRow("Location", "No Location")
     }
   }
@@ -122,12 +139,18 @@ private struct LocationSection: View {
 
 private struct MapView: View {
   let location: CLLocation
+  let accuracyRadius: Double?
 
   @State private var position: MapCameraPosition = .automatic
 
   var body: some View {
     ZStack(alignment: .bottomTrailing) {
       Map(position: $position) {
+        if let accuracyRadius, accuracyRadius > 0 {
+          MapCircle(center: location.coordinate, radius: accuracyRadius)
+            .foregroundStyle(.themeBlue.opacity(0.15))
+            .stroke(.themeBlue.opacity(0.55), lineWidth: 1)
+        }
         Marker("Location", coordinate: location.coordinate)
       }
       .frame(height: 200)
@@ -149,7 +172,19 @@ private struct MapView: View {
   }
 
   private func recenter() {
-    position = location.position
+    if let accuracyRadius, accuracyRadius > 0 {
+      let visibleDistance = max(15_000, accuracyRadius * 3)
+
+      position = .region(
+        MKCoordinateRegion(
+          center: location.coordinate,
+          latitudinalMeters: visibleDistance,
+          longitudinalMeters: visibleDistance,
+        )
+      )
+    } else {
+      position = location.position
+    }
   }
 }
 

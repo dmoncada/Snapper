@@ -20,6 +20,11 @@ class AlbumEntry {
 
   var latitude: Double?
   var longitude: Double?
+
+  // Nil identifies entries saved before location capture status was introduced.
+  var locationCaptureStatusRaw: String?
+  var locationHorizontalAccuracy: Double?
+
   var isFavorited = false
 
   init(candidate: AlbumCandidate, selectedAt: Date = .now) {
