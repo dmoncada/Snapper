@@ -6,6 +6,9 @@ on:
       - main
     paths-ignore:
       - "**.md"
+      - '**.gif'
+      - '**.png'
+      - '**.jpg'
       - ".gitignore"
       - ".editorconfig"
       - ".swift-format"
