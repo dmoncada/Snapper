@@ -18,7 +18,7 @@ struct AlbumHistoryCard: View {
 
         if entry.isFavorited {
           Image(systemName: "star.fill")
-            .foregroundStyle(.themeYellow)
+            .foregroundStyle(.accent)
             .frame(width: 20)
         }
 
