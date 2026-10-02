@@ -7,8 +7,9 @@ on:
     paths-ignore:
       - "**.md"
       - '**.gif'
-      - '**.png'
       - '**.jpg'
+      - '**.png'
+      - '**.webp'
       - ".gitignore"
       - ".editorconfig"
       - ".swift-format"
