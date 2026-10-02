@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct AlbumDetailWithActions: View {
+  @Environment(Router.self) private var router
+
   let entry: AlbumEntry
   let onDelete: (AlbumEntry) -> Void
-
-  @State private var pendingDelete: AlbumEntry?
 
   var body: some View {
     AlbumDetailView(entry: entry)
@@ -13,15 +13,19 @@ struct AlbumDetailWithActions: View {
           Menu {
             FavoriteButton(entry: entry)
             DeleteButton {
-              pendingDelete = entry
+              router.alertItem = AlertDestination(
+                title: "Delete Album?",
+                message: "Are you sure you want to delete \"\(entry.title)\" from your history?",
+                primary: .init(title: "Delete", role: .destructive) {
+                  onDelete(entry)
+                },
+                secondary: .init(title: "Cancel", role: .cancel),
+              )
             }
           } label: {
             Image(systemName: "ellipsis")
           }
         }
-      }
-      .deleteAlert(for: $pendingDelete) { entry in
-        onDelete(entry)
       }
   }
 }
@@ -32,13 +36,16 @@ import SwiftData
 #Preview(traits: .withSampleData) {
   @Previewable @Query var entries: [AlbumEntry]
   @Previewable @State var player = PreviewPlayer()
+  @Previewable @State var router = Router()
 
   if let entry = entries.first {
     NavigationStack {
       AlbumDetailWithActions(entry: entry) { _ in
         print("Album deleted")
       }
+      .withAlertDestination($router.alertItem)
       .environment(player)
+      .environment(router)
     }
   } else {
     ProgressView()

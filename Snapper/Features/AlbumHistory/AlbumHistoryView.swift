@@ -4,6 +4,7 @@ import SwiftUI
 struct HistoryView: View {
   @Environment(\.modelContext) private var context
   @Environment(\.isSearching) private var isSearching
+  @Environment(Router.self) private var router
 
   @Query private var history: [AlbumEntry]
 
@@ -12,7 +13,6 @@ struct HistoryView: View {
 
   @State private var searchText = ""
   @State private var favoritesOnly = false
-  @State private var pendingDelete: AlbumEntry?
 
   let columns: [GridItem] = [
     .init(.flexible(), spacing: Spacing.md),
@@ -31,7 +31,15 @@ struct HistoryView: View {
                 .contextMenu {
                   FavoriteButton(entry: entry)
                   DeleteButton {
-                    pendingDelete = entry
+                    router.alertItem = AlertDestination(
+                      title: "Delete Album?",
+                      message:
+                        "Are you sure you want to delete \"\(entry.title)\" from your history?",
+                      primary: .init(title: "Delete", role: .destructive) {
+                        context.delete(entry)
+                      },
+                      secondary: .init(title: "Cancel", role: .cancel),
+                    )
                   }
                 }
             }
@@ -93,9 +101,6 @@ struct HistoryView: View {
           path.removeLast()
         }
       }
-      .deleteAlert(for: $pendingDelete) { entry in
-        context.delete(entry)
-      }
       .fullBackground(.themePrimary)
     }
   }
@@ -131,19 +136,27 @@ struct HistoryView: View {
 
 #if DEBUG
 #Preview("No data", traits: .modifier(NoData())) {
+  @Previewable @State var router = Router()
+
   TabView {
     Tab {
       HistoryView()
     }
   }
+  .withAlertDestination($router.alertItem)
+  .environment(router)
 }
 
 #Preview("With data", traits: .modifier(SampleData())) {
+  @Previewable @State var router = Router()
+
   TabView {
     Tab {
       HistoryView()
     }
   }
+  .withAlertDestination($router.alertItem)
   .environment(PreviewPlayer())
+  .environment(router)
 }
 #endif

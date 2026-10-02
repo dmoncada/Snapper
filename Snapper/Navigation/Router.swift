@@ -6,6 +6,7 @@ import SwiftUI
 final class Router {
   var path = NavigationPath()
   var sheetItem: SheetDestination? = nil
+  var alertItem: AlertDestination? = nil
 
   func showSheet(destination: SheetDestination) {
     sheetItem = destination

@@ -7,7 +7,7 @@ struct CameraScanScreen: View {
   @Environment(\.dismiss) private var dismiss
 
   @State private var camera = PhotoCaptureService()
-  @State private var cameraError: Error?
+  @State private var alertItem: AlertDestination?
 
   @State private var isReady = false
   @State private var isCapturing = false
@@ -26,6 +26,7 @@ struct CameraScanScreen: View {
           Spacer()
 
           Text("Point at a barcode or snap a photo")
+            .padding(.bottom, Spacing.lg)
             .foregroundStyle(.white)
 
           TriggerButton(action: requestPhoto)
@@ -37,16 +38,10 @@ struct CameraScanScreen: View {
             )
         }
       }
-      .navigationTitle("Snap a photo")
-      .navigationBarTitleDisplayMode(.inline)
-      .toolbar {
-        ToolbarItem(placement: .topBarLeading) {
-          Button(role: .close) {
-            requestClose()
-          }
-        }
+      .navigationToolbar(title: "Snap a photo") {
+        requestClose()
       }
-      .errorAlert(for: $cameraError)
+      .withAlertDestination($alertItem)
     }
     .task {
       await scan()
@@ -77,7 +72,11 @@ struct CameraScanScreen: View {
     } catch is CancellationError {
       await camera.stop()
     } catch {
-      cameraError = error
+      alertItem = AlertDestination(
+        title: "Error",
+        message: "Camera error: \(error.localizedDescription)",
+        primary: .init(title: "OK"),
+      )
     }
   }
 
@@ -113,7 +112,11 @@ struct CameraScanScreen: View {
       await camera.stop()
       onPhoto(data)
     } catch {
-      cameraError = error
+      alertItem = AlertDestination(
+        title: "Error",
+        message: "Camera error: \(error.localizedDescription)",
+        primary: .init(title: "OK"),
+      )
     }
   }
 }
@@ -145,6 +148,16 @@ private struct TriggerButton: View {
 
 #if DEBUG
 #Preview {
-  TriggerButton {}
+  @Previewable @State var router = Router()
+
+  TriggerButton {
+    router.alertItem = AlertDestination(
+      title: "Photo snapped",
+      message: "You snapped a photo!",
+      primary: .init(title: "OK"),
+    )
+  }
+  .withAlertDestination($router.alertItem)
+  .environment(router)
 }
 #endif

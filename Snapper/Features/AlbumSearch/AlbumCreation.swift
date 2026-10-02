@@ -9,8 +9,7 @@ struct AlbumCreation: View {
   let entry: AlbumEntry
 
   @State private var saveContext: ModelContext?
-  @State private var saveError: String?
-  @State private var showsSaveError = false
+  @State private var alertItem: AlertDestination?
 
   var body: some View {
     NavigationStack {
@@ -31,12 +30,7 @@ struct AlbumCreation: View {
         }
     }
     .interactiveDismissDisabled()
-    .alert("Couldn't add album", isPresented: $showsSaveError) {
-      Button(role: .cancel) {}
-      Button("Retry") { save() }
-    } message: {
-      Text(saveError ?? "The album could not be saved.")
-    }
+    .withAlertDestination($alertItem)
   }
 
   private func save() {
@@ -57,8 +51,12 @@ struct AlbumCreation: View {
       locationCapture.resumePending(in: context)
       dismiss()
     } catch {
-      saveError = error.localizedDescription
-      showsSaveError = true
+      alertItem = AlertDestination(
+        title: "Could not add album",
+        message: "The album could not be saved: \(error.localizedDescription)",
+        primary: .init(title: "Retry", action: save),
+        secondary: .init(title: "Cancel", role: .cancel),
+      )
     }
   }
 }

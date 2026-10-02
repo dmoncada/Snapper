@@ -1,9 +1,8 @@
 import SwiftUI
 
 struct NavigationToolbarModifier: ViewModifier {
-  @Environment(\.dismiss) var dismiss
-
   let title: String
+  var onClose: () -> Void = {}
 
   func body(content: Content) -> some View {
     content
@@ -14,7 +13,7 @@ struct NavigationToolbarModifier: ViewModifier {
       .toolbar {
         ToolbarItem(placement: .topBarLeading) {
           Button(role: .close) {
-            dismiss()
+            onClose()
           }
         }
       }
@@ -22,14 +21,16 @@ struct NavigationToolbarModifier: ViewModifier {
 }
 
 extension View {
-  func navigationToolbar(title: String) -> some View {
-    modifier(NavigationToolbarModifier(title: title))
+  func navigationToolbar(title: String, onClose: @escaping () -> Void = {}) -> some View {
+    modifier(NavigationToolbarModifier(title: title, onClose: onClose))
   }
 }
 
+#if DEBUG
 #Preview {
   NavigationStack {
     Text("Hello, world!")
       .navigationToolbar(title: "Title")
   }
 }
+#endif

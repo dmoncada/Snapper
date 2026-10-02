@@ -4,6 +4,8 @@ struct SettingsSheet: View {
   @AppStorage(.storageKeys.colorScheme)
   private var preference: ColorSchemePreference = .system
 
+  @Environment(\.dismiss) private var dismiss
+
   var body: some View {
     NavigationStack {
       Form {
@@ -46,7 +48,9 @@ struct SettingsSheet: View {
           )
         }
       }
-      .navigationToolbar(title: "Settings")
+      .navigationToolbar(title: "Settings") {
+        dismiss()
+      }
     }
   }
 }
