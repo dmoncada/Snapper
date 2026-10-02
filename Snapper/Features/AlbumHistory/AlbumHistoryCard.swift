@@ -8,13 +8,19 @@ struct AlbumHistoryCard: View {
       AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
         .roundedOutline(lineWidth: 1)
 
-      HStack {
+      HStack(alignment: .center) {
         AlbumHeader(entry: entry)
           .frame(maxWidth: .infinity, alignment: .leading)
-          .minimumScaleFactor(0.5)
+          .minimumScaleFactor(0.75)
           .lineLimit(1)
 
         Spacer()
+
+        if entry.isFavorited {
+          Image(systemName: "star.fill")
+            .foregroundStyle(.themeYellow)
+            .frame(width: 20)
+        }
 
         Text((entry.selectedAt.shortRelativeTime(to: .now)))
           .padding(Padding.md)
