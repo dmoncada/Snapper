@@ -48,7 +48,7 @@ struct SettingsSheet: View {
           )
         }
 
-        Text("Made with ❤️ for 🎵 in 🇲🇽")
+        Text("Made for the ❤️ of 🎵 in 🇲🇽")
           .frame(maxWidth: .infinity, alignment: .trailing)
           .listRowBackground(Color.clear)
       }

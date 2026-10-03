@@ -66,7 +66,7 @@ import SwiftData
         .colorScheme(.dark)
     }
   } else {
-    EmptyView()
+    ProgressView()
   }
 }
 #endif

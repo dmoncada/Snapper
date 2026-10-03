@@ -6,11 +6,11 @@ extension View {
   }
 
   func dismissKeyboardOnTap() -> some View {
-    modifier(DismissKeyboardGestureModifier())
+    modifier(DismissKeyboardModifier())
   }
 }
 
-struct DismissKeyboardGestureModifier: ViewModifier {
+struct DismissKeyboardModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .gesture(
