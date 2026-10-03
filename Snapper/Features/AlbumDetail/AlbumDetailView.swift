@@ -5,8 +5,12 @@ struct AlbumDetailView: View {
   @Environment(PreviewPlayer.self) private var player
 
   let entry: AlbumEntry
+  let showMetadata: Bool
 
-  var showMetadata = true
+  init(entry: AlbumEntry, showMetadata: Bool = false) {
+    self.entry = entry
+    self.showMetadata = showMetadata
+  }
 
   @State private var vm = AlbumDetailViewModel()
 
@@ -21,8 +25,9 @@ struct AlbumDetailView: View {
           AlbumDetailSection(entry: entry, showMetadata: showMetadata)
           AlbumTrackSection(tracks: vm.tracks)
         }
-        .padding()
+        .padding(Padding.xl)
       }
+      .containerRelativeFrame(.horizontal)
     }
     .task {
       await vm.materialize(entry)
@@ -294,10 +299,11 @@ private struct AlbumTrackRow: View {
 import SwiftData
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query var entries: [AlbumEntry]
+  @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
   @Previewable @State var player = PreviewPlayer()
 
-  if let entry = entries.first {
+  if entries.count > 0 {
+    let entry = entries[0]
     NavigationStack {
       AlbumDetailView(entry: entry)
         .environment(player)
