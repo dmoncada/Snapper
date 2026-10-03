@@ -39,7 +39,8 @@ struct SnapperAppShell: View {
   }
 }
 
-#Preview {
+#if DEBUG
+#Preview(traits: .withSampleData) {
   SnapperAppShell()
-    .modelContainer(for: AlbumEntry.self)
 }
+#endif
