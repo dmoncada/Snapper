@@ -5,7 +5,11 @@ struct AlertDestinationModifier: ViewModifier {
 
   func body(content: Content) -> some View {
     content
-      .alert(item.wrappedValue?.title ?? "", item: item) { destination in
+      .alert(
+        item.wrappedValue?.title ?? "",
+        isPresented: .isPresented(for: item),
+        presenting: item.wrappedValue,
+      ) { destination in
         if let secondary = destination.secondary {
           Button(
             secondary.title,
