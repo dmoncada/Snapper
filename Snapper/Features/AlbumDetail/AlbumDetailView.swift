@@ -7,7 +7,7 @@ struct AlbumDetailView: View {
   let entry: AlbumEntry
   let showMetadata: Bool
 
-  init(entry: AlbumEntry, showMetadata: Bool = false) {
+  init(entry: AlbumEntry, showMetadata: Bool = true) {
     self.entry = entry
     self.showMetadata = showMetadata
   }
