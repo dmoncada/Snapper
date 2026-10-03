@@ -47,6 +47,10 @@ struct SettingsSheet: View {
             """
           )
         }
+
+        Text("Made with ❤️ for 🎵 in 🇲🇽")
+          .frame(maxWidth: .infinity, alignment: .trailing)
+          .listRowBackground(Color.clear)
       }
       .navigationToolbar(title: "Settings") {
         dismiss()
