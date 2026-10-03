@@ -1,6 +1,7 @@
 import SwiftUI
 
 enum AppStorageKeys {
+  static let firstLaunch = "firstLaunch"
   static let colorScheme = "colorSchemePreference"
   static let sortConfiguration = "sortConfiguration"
 }

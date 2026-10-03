@@ -11,6 +11,8 @@ final class PreviewPlayer {
   }
 
   init() {
+    AVPlayer.isObservationEnabled = true
+
     configureRemoteCommands()
   }
 

@@ -23,7 +23,6 @@ struct SnapperAppShell: View {
     }
     .withSheetDestination($router.sheetItem)
     .withAlertDestination($router.alertItem)
-    .onAppear { AVPlayer.isObservationEnabled = true }
     .preferredColorScheme(preference.colorScheme)
     .environment(locationCapture)
     .environment(PreviewPlayer())

@@ -47,7 +47,6 @@ struct HomeView: View {
             onData(data: data)
           },
         )
-        .presentationDetents([.large])
       }
       .toolbar {
         ToolbarTitle("MusicSnap")
