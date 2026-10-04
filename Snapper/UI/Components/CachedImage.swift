@@ -74,11 +74,13 @@ private struct _CachedImage: View {
 private struct CachedImageContent: View {
   let phase: AsyncImagePhase
 
+  let placeholder = Rectangle().fill(.placeholder)
+
   var body: some View {
     switch phase {
     case .empty:
       ZStack {
-        Color.gray
+        placeholder
         ProgressView()
       }
 
@@ -88,10 +90,10 @@ private struct CachedImageContent: View {
         .scaledToFill()
 
     case .failure:
-      Color.gray
+      placeholder
 
     @unknown default:
-      Color.gray
+      placeholder
     }
   }
 }

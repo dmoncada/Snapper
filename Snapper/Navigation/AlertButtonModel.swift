@@ -24,4 +24,11 @@ extension AlertButtonModel {
   static func cancel(title: LocalizedStringResource = "Cancel") -> Self {
     .init(title: title, role: .cancel)
   }
+
+  static func delete(
+    title: LocalizedStringResource = "Delete",
+    action: @escaping @MainActor () -> Void = {},
+  ) -> Self {
+    .init(title: title, role: .destructive, action: action)
+  }
 }

@@ -14,32 +14,46 @@ struct HistoryView: View {
   @State private var searchText = ""
   @State private var favoritesOnly = false
 
+  @State private var isSelecting = false
+  @State private var selectedIds: Set<UUID> = []
+
+  static let spacing = Spacing.sm
+
   let columns: [GridItem] = [
-    .init(.flexible(), spacing: Spacing.md),
-    .init(.flexible(), spacing: Spacing.md),
+    .init(.flexible(), spacing: spacing),
+    .init(.flexible(), spacing: spacing),
   ]
 
   var body: some View {
     NavigationStack(path: $path) {
       ScrollView(.vertical) {
-        LazyVGrid(columns: columns, alignment: .leading, spacing: Spacing.md) {
+        LazyVGrid(columns: columns, alignment: .leading, spacing: Self.spacing) {
           ForEach(sortedHistory) { entry in
             Button {
-              path.append(entry)
+              if isSelecting {
+                toggleSelection(for: entry)
+              } else {
+                path.append(entry)
+              }
             } label: {
               AlbumHistoryCard(entry: entry)
+                .overlay(alignment: .topTrailing) {
+                  if isSelecting {
+                    let isSelected = selectedIds.contains(entry.id)
+                    SelectionIndicator(isSelected: isSelected)
+                  }
+                }
                 .contextMenu {
-                  FavoriteButton(entry: entry)
-                  DeleteButton {
-                    router.alertItem = AlertDestination(
-                      title: "Delete Album?",
-                      message:
-                        "Are you sure you want to delete \"\(entry.title)\" from your history?",
-                      primary: .init(title: "Delete", role: .destructive) {
-                        context.delete(entry)
-                      },
-                      secondary: .init(title: "Cancel", role: .cancel),
-                    )
+                  if isSelecting == false {
+                    FavoriteButton(entry: entry)
+                    DeleteButton {
+                      router.alertItem = AlertDestination(
+                        title: "Delete Album?",
+                        message: "Do you want to delete \"\(entry.title)\" from your history?",
+                        primary: .delete { context.delete(entry) },
+                        secondary: .cancel,
+                      )
+                    }
                   }
                 }
             }
@@ -71,27 +85,51 @@ struct HistoryView: View {
       )
       .toolbar {
         ToolbarTitle("History")
-        ToolbarItem {
-          Menu {
-            Toggle(isOn: $favoritesOnly) {
-              Label("Favorites", systemImage: "star")
+
+        if isSelecting {
+          ToolbarItemGroup {
+            Button(role: .cancel) {
+              selectedIds.removeAll()
+              isSelecting = false
             }
 
-            Picker("Criteria", selection: $sort.criterion) {
-              ForEach(SortCriterion.allCases) { criterion in
-                Text(criterion.displayName)
-                  .tag(criterion)
-              }
+            Button(role: .destructive) {
+              confirmBatchDelete()
             }
+            .disabled(selectedIds.isEmpty)
+          }
+        } else {
+          ToolbarItem {
+            Button("Select") {
+              isSelecting = true
+            }
+            .disabled(history.isEmpty)
+          }
 
-            Picker("Order", selection: currentOrder) {
-              ForEach(sort.criterion.orders) { order in
-                Text(order.displayName)
-                  .tag(order)
+          ToolbarSpacer(.fixed)
+
+          ToolbarItem {
+            Menu {
+              Toggle(isOn: $favoritesOnly) {
+                Label("Favorites", systemImage: "star")
               }
+
+              Picker("Criteria", selection: $sort.criterion) {
+                ForEach(SortCriterion.allCases) { criterion in
+                  Text(criterion.displayName)
+                    .tag(criterion)
+                }
+              }
+
+              Picker("Order", selection: currentOrder) {
+                ForEach(sort.criterion.orders) { order in
+                  Text(order.displayName)
+                    .tag(order)
+                }
+              }
+            } label: {
+              Image(systemName: "ellipsis")
             }
-          } label: {
-            Image(systemName: "arrow.up.arrow.down")
           }
         }
       }
@@ -103,6 +141,31 @@ struct HistoryView: View {
       }
       .fullBackground(.themePrimary)
     }
+  }
+
+  private func toggleSelection(for entry: AlbumEntry) {
+    if selectedIds.insert(entry.id).inserted == false {
+      selectedIds.remove(entry.id)
+    }
+  }
+
+  private func confirmBatchDelete() {
+    let ids = selectedIds
+
+    router.alertItem = AlertDestination(
+      title: "Delete Albums?",
+      message: "Delete all \(ids.count) selected album(s) from your history?",
+      primary: .delete { batchDelete(ids: ids) },
+      secondary: .cancel,
+    )
+  }
+
+  private func batchDelete(ids: Set<UUID>) {
+    for entry in history where ids.contains(entry.id) {
+      context.delete(entry)
+    }
+    selectedIds.removeAll()
+    isSelecting = false
   }
 
   private var currentOrder: Binding<SortOrder> {

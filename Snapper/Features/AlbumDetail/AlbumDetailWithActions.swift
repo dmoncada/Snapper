@@ -15,11 +15,9 @@ struct AlbumDetailWithActions: View {
             DeleteButton {
               router.alertItem = AlertDestination(
                 title: "Delete Album?",
-                message: "Are you sure you want to delete \"\(entry.title)\" from your history?",
-                primary: .init(title: "Delete", role: .destructive) {
-                  onDelete(entry)
-                },
-                secondary: .init(title: "Cancel", role: .cancel),
+                message: "Do you want to delete \"\(entry.title)\" from your history?",
+                primary: .delete { onDelete(entry) },
+                secondary: .cancel,
               )
             }
           } label: {

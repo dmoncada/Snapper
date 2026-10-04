@@ -18,11 +18,13 @@ struct AlbumHistoryCard: View {
 
         if entry.isFavorited {
           Image(systemName: "star.fill")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 20, height: 20)
             .foregroundStyle(.accent)
-            .frame(width: 20)
         }
 
-        Text((entry.selectedAt.shortRelativeTime(to: .now)))
+        Text((entry.selectedAt.shortRelative(to: .now)))
           .padding(Padding.md)
           .font(.sligoilMicroMedium(.caption2))
           .foregroundStyle(.themePrimaryInverted)
@@ -51,51 +53,44 @@ private struct AlbumCover: View {
   }
 }
 
-extension Date {
-  fileprivate func shortRelativeTime(to now: Date = .now) -> String {
-    let seconds = max(0, now.timeIntervalSince(self))
-
-    let minute = 60.0
-    let hour = 60.0 * minute
-    let day = 24.0 * hour
-    let week = 7.0 * day
-    let month = 30.0 * day
-    let year = 365.0 * day
-
-    switch seconds {
-    case 0 ..< hour:
-      return "\(max(1, Int(seconds / minute)))m"
-    case 0 ..< day:
-      return "\(Int(seconds / hour))h"
-    case 0 ..< week:
-      return "\(Int(seconds / day))d"
-    case 0 ..< month:
-      return "\(Int(seconds / week))w"
-    case 0 ..< year:
-      return "\(Int(seconds / month))mo"
-    default:
-      return "\(Int(seconds / year))y"
-    }
-  }
-}
-
 #if DEBUG
 import SwiftData
 
-#Preview(traits: .modifier(SampleData())) {
-  @Previewable @Query var entries: [AlbumEntry]
+#Preview(traits: .withSampleData) {
+  @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
 
-  if let entry = entries.first {
+  if entries.count > 3 {
+    let sizes: [(CGFloat, CGFloat)] = [
+      (300, 32),
+      (200, 24),
+      (100, 16),
+    ]
+
+    let tuples = Array(zip(entries, sizes))
+
     ScrollView(.vertical) {
-      ForEach([300, 200, 100], id: \.self) { size in
+      ForEach(tuples.enumerated(), id: \.offset) { _, tuple in
+        let (entry, (card, icon)) = tuple
+
         AlbumHistoryCard(entry: entry)
-          .frame(width: size)
+          .frame(width: card)
+          .overlay(alignment: .topTrailing) {
+            SelectionIndicator(
+              isSelected: true,
+              size: icon,
+            )
+          }
       }
     }
-    .padding()
-    .background(.gray.opacity(0.5))
+    .onAppear {
+      for i in 0 ..< 3 {
+        let entry = entries[i]
+        entry.isFavorited = true
+      }
+    }
+    .fullBackground(.gray.opacity(0.5))
   } else {
-    EmptyView()
+    ProgressView()
   }
 }
 #endif
