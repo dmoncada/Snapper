@@ -3,8 +3,10 @@ import SwiftUI
 
 struct NoData: PreviewModifier {
   static func makeSharedContext() throws -> ModelContainer {
-    let container = try ModelContainer(for: AlbumEntry.self)
-    try container.erase()
+    let container = try ModelContainer(
+      for: AlbumEntry.self,
+      configurations: .init(isStoredInMemoryOnly: true),
+    )
     return container
   }
 

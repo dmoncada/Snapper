@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 struct AlbumCreation: View {
   @Environment(\.dismiss) private var dismiss
@@ -48,6 +49,7 @@ struct AlbumCreation: View {
 
     do {
       try saveContext.save()
+      WidgetCenter.shared.reloadTimelines(ofKind: "SnapperWidget")
       locationCapture.resumePending(in: context)
       dismiss()
     } catch {

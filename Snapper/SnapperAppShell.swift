@@ -6,8 +6,8 @@ struct SnapperAppShell: View {
   @AppStorage(.storageKeys.colorScheme)
   private var preference: ColorSchemePreference = .system
 
+  @Environment(\.scenePhase) private var phase
   @Environment(\.modelContext) private var context
-  @Environment(\.scenePhase) private var scenePhase
 
   @State private var router = Router()
   @State private var locationCapture = AlbumLocationCaptureCoordinator()
@@ -30,8 +30,8 @@ struct SnapperAppShell: View {
     .task {
       locationCapture.resumePending(in: context)
     }
-    .onChange(of: scenePhase) { _, phase in
-      if phase == .active {
+    .onChange(of: phase) { _, next in
+      if next == .active {
         locationCapture.resumePending(in: context)
       }
     }

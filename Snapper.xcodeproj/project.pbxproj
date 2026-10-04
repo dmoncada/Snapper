@@ -6,12 +6,49 @@
 	objectVersion = 90;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A11B00000000000000000001 /* Snapper/Features/AlbumDetail/AlbumEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11B00000000000000000003 /* Snapper/Features/AlbumDetail/AlbumEntry.swift */; };
+		A11B00000000000000000002 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11B00000000000000000004 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift */; };
+		A11B00000000000000000005 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11B00000000000000000006 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift */; };
+		DC9912723071E25300DF8C76 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912713071E25300DF8C76 /* WidgetKit.framework */; };
+		DC9912743071E25300DF8C76 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912733071E25300DF8C76 /* SwiftUI.framework */; };
+		DC99127F3071E25400DF8C76 /* SnapperWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DC99126F3071E25300DF8C76 /* SnapperWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DC99127D3071E25400DF8C76 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DC99126E3071E25300DF8C76;
+			remoteInfo = SnapperWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DC9912843071E25400DF8C76 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				DC99127F3071E25400DF8C76 /* SnapperWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* Snapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A11B00000000000000000003 /* Snapper/Features/AlbumDetail/AlbumEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapper/Features/AlbumDetail/AlbumEntry.swift; sourceTree = SOURCE_ROOT; };
+		A11B00000000000000000004 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapper/Features/AlbumSearch/AlbumCandidate.swift; sourceTree = SOURCE_ROOT; };
+		A11B00000000000000000006 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapper/Features/AlbumHistory/SharedAlbumStore.swift; sourceTree = SOURCE_ROOT; };
 		DC1AAEDE3061EC9400A60E39 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		DC1AAEDF3061ECAB00A60E39 /* .editorconfig */ = {isa = PBXFileReference; lastKnownFileType = text; path = .editorconfig; sourceTree = "<group>"; };
 		DC1AAEE03061ECAB00A60E39 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
 		DC1AAEE13061ED0400A60E39 /* Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Settings.xcconfig; sourceTree = "<group>"; };
+		DC99126F3071E25300DF8C76 /* SnapperWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SnapperWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC9912713071E25300DF8C76 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		DC9912733071E25300DF8C76 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -21,6 +58,13 @@
 				Info.plist,
 			);
 			target = 000000000000000100000000 /* Snapper */;
+		};
+		DC9912803071E25400DF8C76 /* Exceptions for "SnapperWidget" folder in "SnapperWidget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DC99126E3071E25300DF8C76 /* SnapperWidget */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -33,12 +77,27 @@
 			path = Snapper;
 			sourceTree = "<group>";
 		};
+		DC9912753071E25300DF8C76 /* SnapperWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DC9912803071E25400DF8C76 /* Exceptions for "SnapperWidget" folder in "SnapperWidget" target */,
+			);
+			path = SnapperWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+			);
+		};
+		DC99126C3071E25300DF8C76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+				DC9912743071E25300DF8C76 /* SwiftUI.framework in Frameworks */,
+				DC9912723071E25300DF8C76 /* WidgetKit.framework in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -51,8 +110,11 @@
 				DC1AAEE03061ECAB00A60E39 /* .swift-format */,
 				DC1AAEDE3061EC9400A60E39 /* Makefile */,
 				DC1AAF1C3061EE3F00A60E39 /* Configuration */,
+				DC9912703071E25300DF8C76 /* Frameworks */,
 				000000000000000000000020 /* Products */,
 				000000000000000000000010 /* Snapper */,
+				DC9912753071E25300DF8C76 /* SnapperWidget */,
+				DC9912883071E53D00DF8C76 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				000000000000000000000120 /* Snapper.app */,
+				DC99126F3071E25300DF8C76 /* SnapperWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -72,6 +135,25 @@
 			path = Configuration;
 			sourceTree = "<group>";
 		};
+		DC9912703071E25300DF8C76 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DC9912713071E25300DF8C76 /* WidgetKit.framework */,
+				DC9912733071E25300DF8C76 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DC9912883071E53D00DF8C76 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				A11B00000000000000000003 /* Snapper/Features/AlbumDetail/AlbumEntry.swift */,
+				A11B00000000000000000004 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift */,
+				A11B00000000000000000006 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -82,8 +164,12 @@
 				000000000000000120000000 /* Sources */,
 				000000000000000130000000 /* Frameworks */,
 				000000000000000140000000 /* Resources */,
+				DC9912843071E25400DF8C76 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
+			);
+			dependencies = (
+				DC99127E3071E25400DF8C76 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				000000000000000000000010 /* Snapper */,
@@ -93,6 +179,24 @@
 			productReference = 000000000000000000000120 /* Snapper.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DC99126E3071E25300DF8C76 /* SnapperWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DC9912813071E25400DF8C76 /* Build configuration list for PBXNativeTarget "SnapperWidget" */;
+			buildPhases = (
+				DC99126B3071E25300DF8C76 /* Sources */,
+				DC99126C3071E25300DF8C76 /* Frameworks */,
+				DC99126D3071E25300DF8C76 /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				DC9912753071E25300DF8C76 /* SnapperWidget */,
+			);
+			name = SnapperWidget;
+			productName = SnapperWidgetExtension;
+			productReference = DC99126F3071E25300DF8C76 /* SnapperWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -100,11 +204,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2630;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					DC99126E3071E25300DF8C76 = {
+						CreatedOnToolsVersion = 27.0;
 					};
 				};
 			};
@@ -123,12 +230,18 @@
 			projectRoot = "";
 			targets = (
 				000000000000000100000000 /* Snapper */,
+				DC99126E3071E25300DF8C76 /* SnapperWidget */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		000000000000000140000000 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		DC99126D3071E25300DF8C76 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -141,7 +254,23 @@
 			files = (
 			);
 		};
+		DC99126B3071E25300DF8C76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+				A11B00000000000000000001 /* Snapper/Features/AlbumDetail/AlbumEntry.swift in Sources */,
+				A11B00000000000000000002 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift in Sources */,
+				A11B00000000000000000005 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift in Sources */,
+			);
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DC99127E3071E25400DF8C76 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DC99126E3071E25300DF8C76 /* SnapperWidget */;
+			targetProxy = DC99127D3071E25400DF8C76 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "Snapper" */ = {
@@ -283,6 +412,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Snapper/Snapper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = E76XSQA67L;
@@ -291,6 +421,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Snapper/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MusicSnap;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -327,6 +458,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Snapper/Snapper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = E76XSQA67L;
@@ -335,6 +467,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Snapper/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MusicSnap;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -366,6 +499,83 @@
 			};
 			name = Release;
 		};
+		DC9912823071E25400DF8C76 /* Debug configuration for PBXNativeTarget "SnapperWidget" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SnapperWidget/SnapperWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E76XSQA67L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SnapperWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MusicSnapWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dmoncada.Snapper.SnapperWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		DC9912833071E25400DF8C76 /* Release configuration for PBXNativeTarget "SnapperWidget" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = SnapperWidget/SnapperWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E76XSQA67L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SnapperWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MusicSnapWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dmoncada.Snapper.SnapperWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -382,6 +592,14 @@
 			buildConfigurations = (
 				000000000000000111000000 /* Debug configuration for PBXNativeTarget "Snapper" */,
 				000000000000000112000000 /* Release configuration for PBXNativeTarget "Snapper" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		DC9912813071E25400DF8C76 /* Build configuration list for PBXNativeTarget "SnapperWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC9912823071E25400DF8C76 /* Debug configuration for PBXNativeTarget "SnapperWidget" */,
+				DC9912833071E25400DF8C76 /* Release configuration for PBXNativeTarget "SnapperWidget" */,
 			);
 			defaultConfigurationName = Release;
 		};

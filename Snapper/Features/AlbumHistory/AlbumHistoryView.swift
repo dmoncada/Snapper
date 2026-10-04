@@ -135,7 +135,7 @@ struct HistoryView: View {
 }
 
 #if DEBUG
-#Preview("No data", traits: .modifier(NoData())) {
+#Preview("No data", traits: .withoutData) {
   @Previewable @State var router = Router()
 
   TabView {
@@ -147,7 +147,7 @@ struct HistoryView: View {
   .environment(router)
 }
 
-#Preview("With data", traits: .modifier(SampleData())) {
+#Preview("With data", traits: .withSampleData) {
   @Previewable @State var router = Router()
 
   TabView {
