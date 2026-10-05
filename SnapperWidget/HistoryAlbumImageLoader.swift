@@ -8,7 +8,7 @@ enum HistoryAlbumImageLoader {
     else { return nil }
 
     var request = URLRequest(url: url)
-    request.timeoutInterval = 15
+    request.timeoutInterval = 3
     request.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
     request.setValue("https://www.discogs.com/", forHTTPHeaderField: "Referer")
 

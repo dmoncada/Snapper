@@ -35,7 +35,7 @@ private struct AlbumHistoryContent: View {
             ForEach(history) { entry in
               Button {
                 if vm.isSelecting {
-                  vm.toggleSelection(for: entry)
+                  vm.toggleSelection(of: entry)
                 } else {
                   path.append(entry)
                 }

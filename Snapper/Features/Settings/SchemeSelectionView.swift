@@ -15,7 +15,7 @@ struct SchemeSelectionView: View {
 
             Image(systemName: "checkmark")
               .opacity(selection == option ? 1 : 0)
-              .foregroundStyle(.secondary)
+              .foregroundStyle(.accent)
           }
         }
         .buttonStyle(.plain)
