@@ -10,19 +10,33 @@ struct SnapperWidget: Widget {
     }
     .configurationDisplayName("MusicSnap History")
     .description("Shows recently saved albums.")
-    .supportedFamilies([
-      .systemSmall,
-      .systemMedium,
-    ])
+    .supportedFamilies([.systemSmall])
+    .contentMarginsDisabled()
   }
 }
 
-#Preview(as: .systemSmall) {
+#if DEBUG
+#Preview("Empty", as: .systemSmall) {
   SnapperWidget()
 } timeline: {
-  HistoryEntry(
-    date: .now,
-    albumCount: 2,
-    newestTitle: "A recent album",
-  )
+  await HistoryEntry.preview(albumCount: 0)
 }
+
+#Preview("One album", as: .systemSmall) {
+  SnapperWidget()
+} timeline: {
+  await HistoryEntry.preview(albumCount: 1)
+}
+
+#Preview("Four albums", as: .systemSmall) {
+  SnapperWidget()
+} timeline: {
+  await HistoryEntry.preview(albumCount: 4)
+}
+
+#Preview("Nine albums", as: .systemSmall) {
+  SnapperWidget()
+} timeline: {
+  await HistoryEntry.preview(albumCount: 9)
+}
+#endif

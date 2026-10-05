@@ -5,15 +5,15 @@ struct HistoryView: View {
   @Environment(\.modelContext) private var context
 
   var body: some View {
-    HistoryContent(context: context)
+    AlbumHistoryContent(context: context)
   }
 }
 
-private struct HistoryContent: View {
+private struct AlbumHistoryContent: View {
   @Environment(\.isSearching) private var isSearching
   @Environment(Router.self) private var router
 
-  @State private var vm: HistoryViewModel
+  @State private var vm: AlbumHistoryViewModel
   @State private var path = NavigationPath()
 
   static let spacing = Spacing.sm
@@ -24,7 +24,7 @@ private struct HistoryContent: View {
   ]
 
   init(context: ModelContext) {
-    _vm = State(initialValue: HistoryViewModel(context: context))
+    _vm = State(initialValue: AlbumHistoryViewModel(context: context))
   }
 
   var body: some View {

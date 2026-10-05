@@ -4,26 +4,31 @@ import WidgetKit
 struct SnapperWidgetEntryView: View {
   let entry: HistoryEntry
 
+  private let columns = [
+    GridItem(.flexible(), spacing: 0),
+    GridItem(.flexible(), spacing: 0),
+    GridItem(.flexible(), spacing: 0),
+  ]
+
   var body: some View {
-    VStack(alignment: .leading) {
-      Label("MusicSnap", systemImage: "opticaldisc")
-        .bold()
+    GeometryReader { geometry in
+      let side = max(geometry.size.width, geometry.size.height) * CGFloat(2).squareRoot()
 
-      Text("History: \(entry.albumCount)")
-
-      if let newestTitle = entry.newestTitle {
-        Text(newestTitle)
-          .lineLimit(1)
+      LazyVGrid(columns: columns, spacing: 0) {
+        ForEach(0 ..< 9, id: \.self) { index in
+          if index < entry.albums.count {
+            HistoryAlbumTile(album: entry.albums[index])
+          } else {
+            Color.clear
+              .aspectRatio(1, contentMode: .fit)
+          }
+        }
       }
+      .frame(width: side, height: side)
+      .rotationEffect(.degrees(45))
+      .frame(width: geometry.size.width, height: geometry.size.height)
     }
-    .frame(
-      maxWidth: .infinity,
-      maxHeight: .infinity,
-      alignment: .topLeading,
-    )
-    .containerBackground(
-      .fill.tertiary,
-      for: .widget,
-    )
+    .clipped()
+    .containerBackground(.fill.tertiary, for: .widget)
   }
 }

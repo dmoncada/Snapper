@@ -1,10 +1,11 @@
-import Observation
 import SwiftData
 import SwiftUI
+import WidgetKit
+import os
 
-@Observable
 @MainActor
-final class HistoryViewModel {
+@Observable
+class AlbumHistoryViewModel {
   var searchText = ""
   var favoritesOnly = false
   var sort = SortModel()
@@ -38,6 +39,7 @@ final class HistoryViewModel {
 
   func delete(_ entry: AlbumEntry) {
     context.delete(entry)
+    saveAndReloadWidget()
   }
 
   func batchDelete(ids: Set<AlbumEntry.ID>) {
@@ -47,7 +49,18 @@ final class HistoryViewModel {
       context.delete(entry)
     }
 
+    saveAndReloadWidget()
     cancelSelection()
+  }
+
+  private func saveAndReloadWidget() {
+    do {
+      try context.save()
+      WidgetCenter.shared.reloadTimelines(ofKind: "SnapperWidget")
+    } catch {
+      Logger(subsystem: "net.dmoncada.Snapper", category: "AlbumHistory")
+        .error("History save failed: \(error.localizedDescription, privacy: .public)")
+    }
   }
 
   var descriptor: FetchDescriptor<AlbumEntry> {

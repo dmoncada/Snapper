@@ -112,9 +112,9 @@
 				DC1AAF1C3061EE3F00A60E39 /* Configuration */,
 				DC9912703071E25300DF8C76 /* Frameworks */,
 				000000000000000000000020 /* Products */,
+				DC9912883071E53D00DF8C76 /* Recovered References */,
 				000000000000000000000010 /* Snapper */,
 				DC9912753071E25300DF8C76 /* SnapperWidget */,
-				DC9912883071E53D00DF8C76 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};

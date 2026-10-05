@@ -4,45 +4,76 @@ import os
 
 struct SnapperWidgetProvider: TimelineProvider {
   func placeholder(in context: Context) -> HistoryEntry {
-    HistoryEntry(date: .now, albumCount: 0, newestTitle: nil)
+    HistoryEntry(date: .now, albums: [])
   }
 
   func getSnapshot(
     in context: Context,
     completion: @escaping (HistoryEntry) -> Void,
   ) {
-    completion(readHistory())
+    Task {
+      completion(await readHistory())
+    }
   }
 
   func getTimeline(
     in context: Context,
     completion: @escaping (Timeline<HistoryEntry>) -> Void,
   ) {
-    completion(Timeline(entries: [readHistory()], policy: .never))
+    Task {
+      completion(Timeline(entries: [await readHistory()], policy: .never))
+    }
   }
 
-  private func readHistory() -> HistoryEntry {
+  @MainActor
+  private func readHistory() async -> HistoryEntry {
     let logger = Logger(subsystem: "net.dmoncada.Snapper", category: "WidgetHistory")
 
     do {
       let container = try SharedAlbumStore.makeContainer()
-      let modelContext = ModelContext(container)
+      let context = ModelContext(container)
 
-      let sort = SortDescriptor(\AlbumEntry.selectedAt)
-      var fetch = FetchDescriptor<AlbumEntry>(sortBy: [sort])
-      fetch.fetchLimit = 8
+      var fetch = FetchDescriptor<AlbumEntry>()
+      let sort = SortDescriptor(\AlbumEntry.selectedAt, order: .reverse)
 
-      let albums = try modelContext.fetch(fetch)
-      logger.info("Widget read \(albums.count) history albums")
+      fetch.sortBy = [sort]
+      fetch.fetchLimit = 9
 
-      return HistoryEntry(
-        date: .now,
-        albumCount: albums.count,
-        newestTitle: albums.first?.title,
-      )
+      let sources = try context.fetch(fetch).map { album in
+        (
+          id: album.id,
+          title: album.title,
+          imageUrlString: album.thumbnailUrlString ?? album.coverImageUrlString
+        )
+      }
+
+      logger.info("Widget read \(sources.count) history albums")
+      var imageData = [Data?](repeating: nil, count: sources.count)
+
+      await withTaskGroup(of: (Int, Data?).self) { group in
+        for (index, source) in sources.enumerated() {
+          let imageUrlString = source.imageUrlString
+          group.addTask {
+            (index, await HistoryAlbumImageLoader.load(from: imageUrlString))
+          }
+        }
+
+        for await (index, data) in group {
+          imageData[index] = data
+        }
+      }
+
+      let albums = sources.enumerated().map { index, source in
+        HistoryAlbum(
+          id: source.id,
+          title: source.title,
+          imageData: imageData[index]
+        )
+      }
+      return HistoryEntry(date: .now, albums: albums)
     } catch {
       logger.error("Widget history read failed: \(error.localizedDescription, privacy: .public)")
-      return HistoryEntry(date: .now, albumCount: 0, newestTitle: nil)
+      return HistoryEntry(date: .now, albums: [])
     }
   }
 }
