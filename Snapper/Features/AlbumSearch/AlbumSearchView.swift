@@ -114,7 +114,7 @@ private struct AlbumCandidateSection: View {
           }
           .padding(Padding.xl)
         }
-        .scrollDismissesKeyboard(.interactively)
+        .scrollDismissesKeyboard(.immediately)
 
       default:
         EmptyView()

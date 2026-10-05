@@ -3,19 +3,18 @@ import SwiftUI
 
 struct HistoryView: View {
   @Environment(\.modelContext) private var context
+
+  var body: some View {
+    HistoryContent(context: context)
+  }
+}
+
+private struct HistoryContent: View {
   @Environment(\.isSearching) private var isSearching
   @Environment(Router.self) private var router
 
-  @Query private var history: [AlbumEntry]
-
-  @State private var sort = SortModel()
+  @State private var vm: HistoryViewModel
   @State private var path = NavigationPath()
-
-  @State private var searchText = ""
-  @State private var favoritesOnly = false
-
-  @State private var isSelecting = false
-  @State private var selectedIds: Set<UUID> = []
 
   static let spacing = Spacing.sm
 
@@ -24,176 +23,139 @@ struct HistoryView: View {
     .init(.flexible(), spacing: spacing),
   ]
 
-  var body: some View {
-    NavigationStack(path: $path) {
-      ScrollView(.vertical) {
-        LazyVGrid(columns: columns, alignment: .leading, spacing: Self.spacing) {
-          ForEach(sortedHistory) { entry in
-            Button {
-              if isSelecting {
-                toggleSelection(for: entry)
-              } else {
-                path.append(entry)
-              }
-            } label: {
-              AlbumHistoryCard(entry: entry)
-                .overlay(alignment: .topTrailing) {
-                  if isSelecting {
-                    let isSelected = selectedIds.contains(entry.id)
-                    SelectionIndicator(isSelected: isSelected)
-                  }
-                }
-                .contextMenu {
-                  if isSelecting == false {
-                    FavoriteButton(entry: entry)
-                    DeleteButton {
-                      router.alertItem = AlertDestination(
-                        title: "Delete Album?",
-                        message: "Do you want to delete \"\(entry.title)\" from your history?",
-                        primary: .delete { context.delete(entry) },
-                        secondary: .cancel,
-                      )
-                    }
-                  }
-                }
-            }
-            .buttonStyle(.plain)
-          }
-        }
-        .padding(Padding.xl)
-      }
-      .frame(
-        maxWidth: .infinity,
-        maxHeight: .infinity,
-      )
-      .overlay {
-        if history.isEmpty {
-          ContentUnavailableView {
-            Text("No albums yet")
-              .font(.libreCaslonTextBold(.headline))
-          } description: {
-            Text("Music will show up here when you start identifying songs with MusicSnap")
-              .font(.libreCaslonTextRegular(.subheadline))
-          }
-        } else if sortedHistory.isEmpty {
-          ContentUnavailableView.search
-        }
-      }
-      .searchable(
-        text: $searchText,
-        prompt: "Search for artists or albums",
-      )
-      .toolbar {
-        ToolbarTitle("History")
-
-        if isSelecting {
-          ToolbarItemGroup {
-            Button(role: .cancel) {
-              selectedIds.removeAll()
-              isSelecting = false
-            }
-
-            Button(role: .destructive) {
-              confirmBatchDelete()
-            }
-            .disabled(selectedIds.isEmpty)
-          }
-        } else {
-          ToolbarItem {
-            Button("Select") {
-              isSelecting = true
-            }
-            .disabled(history.isEmpty)
-          }
-
-          ToolbarSpacer(.fixed)
-
-          ToolbarItem {
-            Menu {
-              Toggle(isOn: $favoritesOnly) {
-                Label("Favorites", systemImage: "star")
-              }
-
-              Picker("Criteria", selection: $sort.criterion) {
-                ForEach(SortCriterion.allCases) { criterion in
-                  Text(criterion.displayName)
-                    .tag(criterion)
-                }
-              }
-
-              Picker("Order", selection: currentOrder) {
-                ForEach(sort.criterion.orders) { order in
-                  Text(order.displayName)
-                    .tag(order)
-                }
-              }
-            } label: {
-              Image(systemName: "ellipsis")
-            }
-          }
-        }
-      }
-      .navigationDestination(for: AlbumEntry.self) { destination in
-        AlbumDetailWithActions(entry: destination) { _ in
-          context.delete(destination)
-          path.removeLast()
-        }
-      }
-      .fullBackground(.themePrimary)
-    }
+  init(context: ModelContext) {
+    _vm = State(initialValue: HistoryViewModel(context: context))
   }
 
-  private func toggleSelection(for entry: AlbumEntry) {
-    if selectedIds.insert(entry.id).inserted == false {
-      selectedIds.remove(entry.id)
+  var body: some View {
+    NavigationStack(path: $path) {
+      DynamicQueryView(vm.descriptor) { history in
+        ScrollView(.vertical) {
+          LazyVGrid(columns: columns, alignment: .leading, spacing: Self.spacing) {
+            ForEach(history) { entry in
+              Button {
+                if vm.isSelecting {
+                  vm.toggleSelection(for: entry)
+                } else {
+                  path.append(entry)
+                }
+              } label: {
+                AlbumHistoryCard(entry: entry)
+                  .overlay(alignment: .topTrailing) {
+                    if vm.isSelecting {
+                      let isSelected = vm.selectedIds.contains(entry.id)
+                      SelectionIndicator(isSelected: isSelected)
+                    }
+                  }
+                  .contextMenu {
+                    if vm.isSelecting == false {
+                      FavoriteButton(entry: entry)
+                      DeleteButton {
+                        router.alertItem = AlertDestination(
+                          title: "Delete Album?",
+                          message: "Do you want to delete \"\(entry.title)\" from your history?",
+                          primary: .delete { vm.delete(entry) },
+                          secondary: .cancel,
+                        )
+                      }
+                    }
+                  }
+              }
+              .buttonStyle(.plain)
+            }
+          }
+          .padding(Padding.xl)
+        }
+        .frame(
+          maxWidth: .infinity,
+          maxHeight: .infinity,
+        )
+        .overlay {
+          if history.isEmpty {
+            ContentUnavailableView {
+              Text("No albums yet")
+                .font(.libreCaslonTextBold(.headline))
+            } description: {
+              Text("Music will show up here when you start identifying songs with MusicSnap")
+                .font(.libreCaslonTextRegular(.subheadline))
+            }
+          } else if history.isEmpty {
+            ContentUnavailableView.search
+          }
+        }
+        .searchable(
+          text: $vm.searchText,
+          prompt: "Search for artists or albums",
+        )
+        .toolbar {
+          ToolbarTitle("History")
+
+          if vm.isSelecting {
+            ToolbarItemGroup {
+              Button(role: .cancel) {
+                vm.cancelSelection()
+              }
+
+              Button(role: .destructive) {
+                confirmBatchDelete()
+              }
+              .disabled(vm.selectedIds.isEmpty)
+            }
+          } else {
+            ToolbarItem {
+              Button("Select") {
+                vm.isSelecting = true
+              }
+              .disabled(history.isEmpty)
+            }
+
+            ToolbarSpacer(.fixed)
+
+            ToolbarItem {
+              Menu {
+                Toggle(isOn: $vm.favoritesOnly) {
+                  Label("Favorites", systemImage: "star")
+                }
+
+                Picker("Criteria", selection: $vm.sort.criterion) {
+                  ForEach(SortCriterion.allCases) { criterion in
+                    Text(criterion.displayName)
+                      .tag(criterion)
+                  }
+                }
+
+                Picker("Order", selection: vm.currentOrder) {
+                  ForEach(vm.sort.criterion.orders) { order in
+                    Text(order.displayName)
+                      .tag(order)
+                  }
+                }
+              } label: {
+                Image(systemName: "ellipsis")
+              }
+            }
+          }
+        }
+        .navigationDestination(for: AlbumEntry.self) { destination in
+          AlbumDetailWithActions(entry: destination) { _ in
+            vm.delete(destination)
+            path.removeLast()
+          }
+        }
+        .fullBackground(.themePrimary)
+      }
     }
   }
 
   private func confirmBatchDelete() {
-    let ids = selectedIds
+    let count = vm.selectedIds.count
 
     router.alertItem = AlertDestination(
       title: "Delete Albums?",
-      message: "Delete all \(ids.count) selected album(s) from your history?",
-      primary: .delete { batchDelete(ids: ids) },
+      message: "Delete all \(count) selected album(s) from your history?",
+      primary: .delete { vm.batchDelete(ids: vm.selectedIds) },
       secondary: .cancel,
     )
-  }
-
-  private func batchDelete(ids: Set<UUID>) {
-    for entry in history where ids.contains(entry.id) {
-      context.delete(entry)
-    }
-    selectedIds.removeAll()
-    isSelecting = false
-  }
-
-  private var currentOrder: Binding<SortOrder> {
-    Binding(
-      get: { sort.getOrder(for: sort.criterion) },
-      set: { sort.setOrder($0, for: sort.criterion) },
-    )
-  }
-
-  private var sortedHistory: [AlbumEntry] {
-    let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-    let order = sort.getOrder(for: sort.criterion)
-
-    return
-      history
-      .filter { entry in
-        let matchesSearch =
-          query.isEmpty
-          || entry.title.localizedCaseInsensitiveContains(query)
-          || entry.artist.localizedCaseInsensitiveContains(query)
-
-        let matchesFavorite = favoritesOnly == false || entry.isFavorited
-
-        return matchesSearch && matchesFavorite
-      }
-      .sorted {
-        sort.criterion.checkOrdered($0, $1, order: order)
-      }
   }
 }
 
