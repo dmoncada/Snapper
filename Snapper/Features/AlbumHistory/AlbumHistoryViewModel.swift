@@ -63,12 +63,6 @@ class AlbumHistoryViewModel {
     )
   }
 
-  func toggleSelection(of entry: AlbumEntry) {
-    if selectedIds.insert(entry.id).inserted == false {
-      selectedIds.remove(entry.id)
-    }
-  }
-
   func cancelSelection() {
     selectedIds.removeAll()
     isSelecting = false
@@ -80,7 +74,7 @@ class AlbumHistoryViewModel {
   }
 
   func batchDelete(ids: Set<AlbumEntry.ID>) {
-    guard let history = try? context.fetch(descriptor) else { return }
+    guard let history = try? context.fetch(FetchDescriptor<AlbumEntry>()) else { return }
 
     for entry in history where ids.contains(entry.id) {
       context.delete(entry)

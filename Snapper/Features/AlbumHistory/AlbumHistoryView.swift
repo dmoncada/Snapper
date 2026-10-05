@@ -16,13 +16,6 @@ private struct AlbumHistoryContent: View {
   @State private var vm: AlbumHistoryViewModel
   @State private var path = NavigationPath()
 
-  static let spacing = Spacing.sm
-
-  let columns: [GridItem] = [
-    .init(.flexible(), spacing: spacing),
-    .init(.flexible(), spacing: spacing),
-  ]
-
   init(context: ModelContext) {
     _vm = State(initialValue: AlbumHistoryViewModel(context: context))
   }
@@ -30,41 +23,30 @@ private struct AlbumHistoryContent: View {
   var body: some View {
     NavigationStack(path: $path) {
       DynamicQueryView(vm.descriptor) { history in
-        ScrollView(.vertical) {
-          LazyVGrid(columns: columns, alignment: .leading, spacing: Self.spacing) {
-            ForEach(history) { entry in
-              Button {
-                if vm.isSelecting {
-                  vm.toggleSelection(of: entry)
-                } else {
-                  path.append(entry)
-                }
-              } label: {
-                AlbumHistoryCard(entry: entry)
-                  .overlay(alignment: .topTrailing) {
-                    if vm.isSelecting {
-                      let isSelected = vm.selectedIds.contains(entry.id)
-                      SelectionIndicator(isSelected: isSelected)
-                    }
-                  }
-                  .contextMenu {
-                    if vm.isSelecting == false {
-                      FavoriteButton(entry: entry)
-                      DeleteButton {
-                        router.alertItem = AlertDestination(
-                          title: "Delete Album?",
-                          message: "Do you want to delete \"\(entry.title)\" from your history?",
-                          primary: .delete { vm.delete(entry) },
-                          secondary: .cancel,
-                        )
-                      }
-                    }
-                  }
+        SelectableGrid(
+          history,
+          selection: $vm.selectedIds,
+          isSelecting: vm.isSelecting,
+          onOpen: { path.append($0) },
+        ) { entry, isSelected in
+          AlbumSelectableCard(
+            entry: entry,
+            isSelecting: vm.isSelecting,
+            isSelected: isSelected,
+          )
+          .contextMenu {
+            if vm.isSelecting == false {
+              FavoriteButton(entry: entry)
+              DeleteButton {
+                router.alertItem = AlertDestination(
+                  title: "Delete Album?",
+                  message: "Do you want to delete \"\(entry.title)\" from your history?",
+                  primary: .delete { vm.delete(entry) },
+                  secondary: .cancel,
+                )
               }
-              .buttonStyle(.plain)
             }
           }
-          .padding(Padding.xl)
         }
         .frame(
           maxWidth: .infinity,
