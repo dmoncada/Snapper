@@ -50,9 +50,7 @@ final class HistoryViewModel {
     cancelSelection()
   }
 
-  // func fetchHistory() throws -> [AlbumEntry] {
   var descriptor: FetchDescriptor<AlbumEntry> {
-    // do {
     let criterion = sort.criterion
     let order = sort.getOrder(for: criterion)
 
@@ -62,55 +60,30 @@ final class HistoryViewModel {
       }
     )
 
+    let sortDescriptor: SortDescriptor<AlbumEntry>
+
     switch criterion {
     case .dateFound:
-      descriptor.sortBy = [
-        SortDescriptor(
-          \.selectedAt,
-          order: order == .newestFirst
-            ? .reverse
-            : .forward,
-        )
-      ]
+      sortDescriptor = SortDescriptor(
+        \.selectedAt,
+        order: order == .newestFirst ? .reverse : .forward,
+      )
 
     case .albumTitle:
-      descriptor.sortBy = [
-        SortDescriptor(
-          \.title,
-          order: order == .ascending
-            ? .forward
-            : .reverse,
-        )
-      ]
+      sortDescriptor = SortDescriptor(
+        \.title,
+        order: order == .ascending ? .forward : .reverse,
+      )
 
     case .artistName:
-      descriptor.sortBy = [
-        SortDescriptor(
-          \.artist,
-          order: order == .ascending
-            ? .forward
-            : .reverse,
-        )
-      ]
+      sortDescriptor = SortDescriptor(
+        \.artist,
+        order: order == .ascending ? .forward : .reverse,
+      )
     }
+
+    descriptor.sortBy = [sortDescriptor]
 
     return descriptor
   }
-
-  /*
-      var results = try context.fetch(descriptor)
-
-      let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-      if query.count > 0 {
-        results = results.filter { entry in
-          let hasTitle = entry.title.localizedCaseInsensitiveContains(query)
-          let hasArtist = entry.artist.localizedCaseInsensitiveContains(query)
-          return hasTitle || hasArtist
-        }
-      }
-
-      return results
-    }
-  }
-   */
 }
