@@ -2,10 +2,12 @@ import SwiftUI
 
 struct LaunchView: View {
   var body: some View {
-    Text("MusicSnap")
+    Image(.musicSnap)
+      .resizable()
+      .scaledToFit()
+      .padding(Padding.xxl)
       .foregroundStyle(.themePrimaryInverted)
       .fullBackground(.themePrimary)
-      .font(.basteleurBold(.title))
   }
 }
 

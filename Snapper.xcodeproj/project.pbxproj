@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A11B00000000000000000001 /* Snapper/Features/AlbumDetail/AlbumEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11B00000000000000000003 /* Snapper/Features/AlbumDetail/AlbumEntry.swift */; };
-		A11B00000000000000000002 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11B00000000000000000004 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift */; };
-		A11B00000000000000000005 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A11B00000000000000000006 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift */; };
 		DC9912723071E25300DF8C76 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912713071E25300DF8C76 /* WidgetKit.framework */; };
 		DC9912743071E25300DF8C76 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912733071E25300DF8C76 /* SwiftUI.framework */; };
 		DC99127F3071E25400DF8C76 /* SnapperWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DC99126F3071E25300DF8C76 /* SnapperWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -39,9 +36,6 @@
 
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* Snapper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snapper.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A11B00000000000000000003 /* Snapper/Features/AlbumDetail/AlbumEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapper/Features/AlbumDetail/AlbumEntry.swift; sourceTree = SOURCE_ROOT; };
-		A11B00000000000000000004 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapper/Features/AlbumSearch/AlbumCandidate.swift; sourceTree = SOURCE_ROOT; };
-		A11B00000000000000000006 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snapper/Features/AlbumHistory/SharedAlbumStore.swift; sourceTree = SOURCE_ROOT; };
 		DC1AAEDE3061EC9400A60E39 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		DC1AAEDF3061ECAB00A60E39 /* .editorconfig */ = {isa = PBXFileReference; lastKnownFileType = text; path = .editorconfig; sourceTree = "<group>"; };
 		DC1AAEE03061ECAB00A60E39 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
@@ -129,7 +123,6 @@
 				DC1AAF1C3061EE3F00A60E39 /* Configuration */,
 				DC9912703071E25300DF8C76 /* Frameworks */,
 				000000000000000000000020 /* Products */,
-				DC9912883071E53D00DF8C76 /* Recovered References */,
 				000000000000000000000010 /* Snapper */,
 				DC9912753071E25300DF8C76 /* SnapperWidget */,
 			);
@@ -159,16 +152,6 @@
 				DC9912733071E25300DF8C76 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		DC9912883071E53D00DF8C76 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				A11B00000000000000000003 /* Snapper/Features/AlbumDetail/AlbumEntry.swift */,
-				A11B00000000000000000004 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift */,
-				A11B00000000000000000006 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,9 +257,6 @@
 		DC99126B3071E25300DF8C76 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
-				A11B00000000000000000001 /* Snapper/Features/AlbumDetail/AlbumEntry.swift in Sources */,
-				A11B00000000000000000002 /* Snapper/Features/AlbumSearch/AlbumCandidate.swift in Sources */,
-				A11B00000000000000000005 /* Snapper/Features/AlbumHistory/SharedAlbumStore.swift in Sources */,
 			);
 		};
 /* End PBXSourcesBuildPhase section */
