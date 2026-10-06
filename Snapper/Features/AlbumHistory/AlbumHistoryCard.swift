@@ -11,18 +11,22 @@ struct AlbumHistoryCard: View {
       HStack(alignment: .center) {
         AlbumHeader(entry: entry)
           .frame(maxWidth: .infinity, alignment: .leading)
-          .minimumScaleFactor(0.75)
+          // .minimumScaleFactor(0.75)
           .lineLimit(1)
 
         Spacer()
 
-        if entry.isFavorited {
-          Image(systemName: "star.fill")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 20, height: 20)
-            .foregroundStyle(.accent)
-        }
+        Image(systemName: "star.fill")
+          .resizable()
+          .scaledToFit()
+          .frame(width: 20, height: 20)
+          .foregroundStyle(.accent)
+          .symbolEffect(
+            .bounce.up,
+            options: .speed(2),
+            value: entry.isFavorited,
+          )
+          .opacity(entry.isFavorited ? 1 : 0)
 
         Text((entry.selectedAt.shortRelative(to: .now)))
           .padding(Padding.md)
@@ -70,16 +74,15 @@ import SwiftData
 
     ScrollView(.vertical) {
       ForEach(tuples.enumerated(), id: \.offset) { _, tuple in
-        let (entry, (card, icon)) = tuple
+        let (entry, (card, _)) = tuple
 
-        AlbumHistoryCard(entry: entry)
-          .frame(width: card)
-          .overlay(alignment: .topTrailing) {
-            SelectionIndicator(
-              isSelected: true,
-              size: icon,
-            )
-          }
+        Button {
+          entry.isFavorited.toggle()
+        } label: {
+          AlbumHistoryCard(entry: entry)
+            .frame(width: card)
+        }
+        .buttonStyle(.plain)
       }
     }
     .onAppear {

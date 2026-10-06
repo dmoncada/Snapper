@@ -6,38 +6,38 @@ struct AlbumSelectableCard: View {
   let isSelected: Bool
 
   var body: some View {
-    AlbumHistoryCard(entry: entry)
-      .background {
-        if isSelecting && isSelected {
-          VStack(spacing: 0) {
-            let fill = Color.accentColor.opacity(0.25)
+    ZStack {
+      if isSelecting && isSelected {
+        ConcentricRectangle(
+          uniformTopCorners: .concentric,
+          uniformBottomCorners: .fixed(0),
+        )
+        .fill(.accent.opacity(0.25))
+      }
 
-            RoundedRectangle(cornerRadius: Radius.md)
-              .fill(fill)
-            Rectangle()
-              .fill(fill)
+      AlbumHistoryCard(entry: entry)
+        .padding(Padding.sm)
+    }
+    .containerShape(.rect(cornerRadius: Radius.md))
+    .overlay(alignment: .topTrailing) {
+      if isSelecting {
+        Group {
+          if isSelected {
+            Image(systemName: "checkmark.circle.fill")
+              .transition(.symbolEffect(.drawOn, options: .speed(0.75)))
+              .foregroundStyle(.selection)
+          } else {
+            Image(systemName: "circle")
+              .foregroundStyle(.secondary)
           }
         }
+        .padding(Padding.lg)
       }
-      .overlay(alignment: .topTrailing) {
-        if isSelecting {
-          Group {
-            if isSelected {
-              Image(systemName: "checkmark.circle.fill")
-                .transition(.symbolEffect(.drawOn, options: .speed(0.75)))
-                .foregroundStyle(.selection)
-            } else {
-              Image(systemName: "circle")
-                .foregroundStyle(.secondary)
-            }
-          }
-          .padding(Padding.lg)
-        }
-      }
-      .animation(
-        .easeOut(duration: 0.25),
-        value: isSelected,
-      )
+    }
+    .animation(
+      .easeOut(duration: 0.25),
+      value: isSelected,
+    )
   }
 }
 
@@ -75,8 +75,6 @@ private struct TestSelectableGrid: View {
     }
   }
 }
-
-import SwiftData
 
 #Preview(traits: .withSampleData) {
   @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
