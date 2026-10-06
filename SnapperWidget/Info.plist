@@ -7,5 +7,17 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Basteleur-Bold.ttf</string>
+		<string>Basteleur-Moonlight.ttf</string>
+		<string>LibreCaslonText-Bold.ttf</string>
+		<string>LibreCaslonText-Italic.ttf</string>
+		<string>LibreCaslonText-Regular.ttf</string>
+		<string>Sligoil-Micro.ttf</string>
+		<string>Sligoil-MicroBold.ttf</string>
+		<string>Sligoil-MicroMedium.ttf</string>
+		<string>VG5000-Regular.otf</string>
+	</array>
 </dict>
 </plist>

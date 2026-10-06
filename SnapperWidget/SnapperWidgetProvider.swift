@@ -39,13 +39,14 @@ struct SnapperWidgetProvider: TimelineProvider {
       fetch.sortBy = [sort]
       fetch.fetchLimit = 9
 
-      let sources = try context.fetch(fetch).map { album in
-        (
-          id: album.id,
-          title: album.title,
-          imageUrlString: album.thumbnailUrlString ?? album.coverImageUrlString
-        )
-      }
+      let sources = try context.fetch(fetch)
+        .map { album in
+          (
+            id: album.id,
+            title: album.title,
+            imageUrlString: album.thumbnailUrlString ?? album.coverImageUrlString,
+          )
+        }
 
       logger.info("Widget read \(sources.count) history albums")
       var imageData = [Data?](repeating: nil, count: sources.count)
@@ -63,13 +64,14 @@ struct SnapperWidgetProvider: TimelineProvider {
         }
       }
 
-      let albums = sources.enumerated().map { index, source in
-        HistoryAlbum(
-          id: source.id,
-          title: source.title,
-          imageData: imageData[index]
-        )
-      }
+      let albums = sources.enumerated()
+        .map { index, source in
+          HistoryAlbum(
+            id: source.id,
+            title: source.title,
+            imageData: imageData[index],
+          )
+        }
       return HistoryEntry(date: .now, albums: albums)
     } catch {
       logger.error("Widget history read failed: \(error.localizedDescription, privacy: .public)")

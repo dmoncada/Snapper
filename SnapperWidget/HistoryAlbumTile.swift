@@ -9,8 +9,7 @@ struct HistoryAlbumTile: View {
       .fill(.placeholder)
       .aspectRatio(1, contentMode: .fit)
       .overlay {
-        if
-          let data = album.imageData,
+        if let data = album.imageData,
           let source = CGImageSourceCreateWithData(data as CFData, nil),
           let image = CGImageSourceCreateImageAtIndex(source, 0, nil)
         {
@@ -25,6 +24,5 @@ struct HistoryAlbumTile: View {
         }
       }
       .clipped()
-      .accessibilityLabel(album.title)
   }
 }

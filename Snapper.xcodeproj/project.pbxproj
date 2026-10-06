@@ -66,6 +66,22 @@
 			);
 			target = DC99126E3071E25300DF8C76 /* SnapperWidget */;
 		};
+		DCD4E16C3074BFEC0020A7D8 /* Exceptions for "Snapper" folder in "SnapperWidget" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Resources/Fonts/basteleur/Basteleur-Bold.ttf",
+				"Resources/Fonts/basteleur/Basteleur-Moonlight.ttf",
+				"Resources/Fonts/libre-caslon-text/LibreCaslonText-Bold.ttf",
+				"Resources/Fonts/libre-caslon-text/LibreCaslonText-Italic.ttf",
+				"Resources/Fonts/libre-caslon-text/LibreCaslonText-Regular.ttf",
+				"Resources/Fonts/sligoil/Sligoil-Micro.ttf",
+				"Resources/Fonts/sligoil/Sligoil-MicroBold.ttf",
+				"Resources/Fonts/sligoil/Sligoil-MicroMedium.ttf",
+				"Resources/Fonts/vg5000/VG5000-Regular.otf",
+				UI/Theme/Fonts.swift,
+			);
+			target = DC99126E3071E25300DF8C76 /* SnapperWidget */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -73,6 +89,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				DC41AA7B3061F4B600969BBD /* Exceptions for "Snapper" folder in "Snapper" target */,
+				DCD4E16C3074BFEC0020A7D8 /* Exceptions for "Snapper" folder in "SnapperWidget" target */,
 			);
 			path = Snapper;
 			sourceTree = "<group>";

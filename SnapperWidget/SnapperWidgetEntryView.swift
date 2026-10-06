@@ -21,7 +21,10 @@ struct SnapperWidgetEntryView: View {
           }
         }
       }
-      .frame(width: side, height: side)
+      .frame(
+        width: side,
+        height: side,
+      )
       .rotationEffect(.degrees(45))
       .frame(
         width: geometry.size.width,
@@ -30,5 +33,12 @@ struct SnapperWidgetEntryView: View {
     }
     .clipped()
     .containerBackground(.fill.tertiary, for: .widget)
+    .overlay(alignment: .topTrailing) {
+      Text("MusicSnap")
+        .font(.basteleurBold(.caption))
+        .foregroundStyle(.white)
+        .padding(.trailing, 12)
+        .padding(.top, 8)
+    }
   }
 }
