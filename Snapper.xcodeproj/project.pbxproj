@@ -20,6 +20,20 @@
 			remoteGlobalIDString = DC99126E3071E25300DF8C76;
 			remoteInfo = SnapperWidgetExtension;
 		};
+		DCD4E1FA3074CC7B0020A7D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = Snapper;
+		};
+		DCD4E2073074CCB60020A7D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 000000000000000100000000;
+			remoteInfo = Snapper;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +57,8 @@
 		DC99126F3071E25300DF8C76 /* SnapperWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SnapperWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC9912713071E25300DF8C76 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		DC9912733071E25300DF8C76 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		DCD4E1F63074CC7B0020A7D8 /* SnapperTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SnapperTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCD4E2033074CCB60020A7D8 /* SnapperUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SnapperUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -63,6 +79,9 @@
 		DCD4E16C3074BFEC0020A7D8 /* Exceptions for "Snapper" folder in "SnapperWidget" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Features/AlbumDetail/AlbumEntry.swift,
+				Features/AlbumHistory/SharedAlbumStore.swift,
+				Features/AlbumSearch/AlbumCandidate.swift,
 				"Resources/Fonts/basteleur/Basteleur-Bold.ttf",
 				"Resources/Fonts/basteleur/Basteleur-Moonlight.ttf",
 				"Resources/Fonts/libre-caslon-text/LibreCaslonText-Bold.ttf",
@@ -96,6 +115,16 @@
 			path = SnapperWidget;
 			sourceTree = "<group>";
 		};
+		DCD4E1F73074CC7B0020A7D8 /* SnapperTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SnapperTests;
+			sourceTree = "<group>";
+		};
+		DCD4E2043074CCB60020A7D8 /* SnapperUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SnapperUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +140,16 @@
 				DC9912723071E25300DF8C76 /* WidgetKit.framework in Frameworks */,
 			);
 		};
+		DCD4E1F33074CC7B0020A7D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		DCD4E2003074CCB60020A7D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -124,6 +163,8 @@
 				DC9912703071E25300DF8C76 /* Frameworks */,
 				000000000000000000000020 /* Products */,
 				000000000000000000000010 /* Snapper */,
+				DCD4E1F73074CC7B0020A7D8 /* SnapperTests */,
+				DCD4E2043074CCB60020A7D8 /* SnapperUITests */,
 				DC9912753071E25300DF8C76 /* SnapperWidget */,
 			);
 			sourceTree = "<group>";
@@ -133,6 +174,8 @@
 			children = (
 				000000000000000000000120 /* Snapper.app */,
 				DC99126F3071E25300DF8C76 /* SnapperWidget.appex */,
+				DCD4E1F63074CC7B0020A7D8 /* SnapperTests.xctest */,
+				DCD4E2033074CCB60020A7D8 /* SnapperUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,6 +240,48 @@
 			productReference = DC99126F3071E25300DF8C76 /* SnapperWidget.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		DCD4E1F53074CC7B0020A7D8 /* SnapperTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCD4E1FC3074CC7B0020A7D8 /* Build configuration list for PBXNativeTarget "SnapperTests" */;
+			buildPhases = (
+				DCD4E1F23074CC7B0020A7D8 /* Sources */,
+				DCD4E1F33074CC7B0020A7D8 /* Frameworks */,
+				DCD4E1F43074CC7B0020A7D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCD4E1FB3074CC7B0020A7D8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DCD4E1F73074CC7B0020A7D8 /* SnapperTests */,
+			);
+			name = SnapperTests;
+			productName = SnapperTests;
+			productReference = DCD4E1F63074CC7B0020A7D8 /* SnapperTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DCD4E2023074CCB60020A7D8 /* SnapperUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DCD4E2093074CCB60020A7D8 /* Build configuration list for PBXNativeTarget "SnapperUITests" */;
+			buildPhases = (
+				DCD4E1FF3074CCB60020A7D8 /* Sources */,
+				DCD4E2003074CCB60020A7D8 /* Frameworks */,
+				DCD4E2013074CCB60020A7D8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DCD4E2083074CCB60020A7D8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DCD4E2043074CCB60020A7D8 /* SnapperUITests */,
+			);
+			name = SnapperUITests;
+			productName = SnapperUITests;
+			productReference = DCD4E2033074CCB60020A7D8 /* SnapperUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -212,6 +297,14 @@
 					};
 					DC99126E3071E25300DF8C76 = {
 						CreatedOnToolsVersion = 27.0;
+					};
+					DCD4E1F53074CC7B0020A7D8 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 000000000000000100000000;
+					};
+					DCD4E2023074CCB60020A7D8 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 000000000000000100000000;
 					};
 				};
 			};
@@ -230,6 +323,8 @@
 			projectRoot = "";
 			targets = (
 				000000000000000100000000 /* Snapper */,
+				DCD4E1F53074CC7B0020A7D8 /* SnapperTests */,
+				DCD4E2023074CCB60020A7D8 /* SnapperUITests */,
 				DC99126E3071E25300DF8C76 /* SnapperWidget */,
 			);
 		};
@@ -242,6 +337,16 @@
 			);
 		};
 		DC99126D3071E25300DF8C76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		DCD4E1F43074CC7B0020A7D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		DCD4E2013074CCB60020A7D8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
 			);
@@ -259,6 +364,16 @@
 			files = (
 			);
 		};
+		DCD4E1F23074CC7B0020A7D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		DCD4E1FF3074CCB60020A7D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -266,6 +381,16 @@
 			isa = PBXTargetDependency;
 			target = DC99126E3071E25300DF8C76 /* SnapperWidget */;
 			targetProxy = DC99127D3071E25400DF8C76 /* PBXContainerItemProxy */;
+		};
+		DCD4E1FB3074CC7B0020A7D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* Snapper */;
+			targetProxy = DCD4E1FA3074CC7B0020A7D8 /* PBXContainerItemProxy */;
+		};
+		DCD4E2083074CCB60020A7D8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 000000000000000100000000 /* Snapper */;
+			targetProxy = DCD4E2073074CCB60020A7D8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -573,6 +698,110 @@
 			};
 			name = Release;
 		};
+		DCD4E1FD3074CC7B0020A7D8 /* Debug configuration for PBXNativeTarget "SnapperTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E76XSQA67L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dmoncada.SnapperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Snapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Snapper";
+			};
+			name = Debug;
+		};
+		DCD4E1FE3074CC7B0020A7D8 /* Release configuration for PBXNativeTarget "SnapperTests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E76XSQA67L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dmoncada.SnapperTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Snapper.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Snapper";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DCD4E20A3074CCB60020A7D8 /* Debug configuration for PBXNativeTarget "SnapperUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E76XSQA67L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dmoncada.SnapperUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = Snapper;
+			};
+			name = Debug;
+		};
+		DCD4E20B3074CCB60020A7D8 /* Release configuration for PBXNativeTarget "SnapperUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E76XSQA67L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.dmoncada.SnapperUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = Snapper;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -597,6 +826,22 @@
 			buildConfigurations = (
 				DC9912823071E25400DF8C76 /* Debug configuration for PBXNativeTarget "SnapperWidget" */,
 				DC9912833071E25400DF8C76 /* Release configuration for PBXNativeTarget "SnapperWidget" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		DCD4E1FC3074CC7B0020A7D8 /* Build configuration list for PBXNativeTarget "SnapperTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCD4E1FD3074CC7B0020A7D8 /* Debug configuration for PBXNativeTarget "SnapperTests" */,
+				DCD4E1FE3074CC7B0020A7D8 /* Release configuration for PBXNativeTarget "SnapperTests" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		DCD4E2093074CCB60020A7D8 /* Build configuration list for PBXNativeTarget "SnapperUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DCD4E20A3074CCB60020A7D8 /* Debug configuration for PBXNativeTarget "SnapperUITests" */,
+				DCD4E20B3074CCB60020A7D8 /* Release configuration for PBXNativeTarget "SnapperUITests" */,
 			);
 			defaultConfigurationName = Release;
 		};

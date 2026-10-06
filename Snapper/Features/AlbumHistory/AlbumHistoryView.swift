@@ -78,11 +78,13 @@ private struct AlbumHistoryContent: View {
               Button(role: .cancel) {
                 vm.cancelSelection()
               }
+              .accessibilityIdentifier("history-cancel-selection")
 
               Button(role: .destructive) {
                 confirmBatchDelete()
               }
               .disabled(vm.selectedIds.isEmpty)
+              .accessibilityIdentifier("history-delete-selection")
             }
           } else {
             ToolbarItem {

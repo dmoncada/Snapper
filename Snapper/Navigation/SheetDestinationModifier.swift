@@ -15,7 +15,7 @@ struct SheetDestinationModifier: ViewModifier {
           switch destination {
           case .settings:
             SettingsSheet()
-              .presentationDetents([.medium])
+              .presentationDetents([.medium, .large])
 
           case .create(let entry):
             AlbumCreation(entry: entry)

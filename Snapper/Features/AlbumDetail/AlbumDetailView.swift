@@ -83,7 +83,7 @@ private struct AlbumDetailSection: View {
             Divider()
 
             LocationSection(entry: entry)
-              .frame(minHeight: 12)  // TODO(dmoncada): figure out how to set all rows to the same height.
+              .frame(minHeight: 12)
           }
         }
       }

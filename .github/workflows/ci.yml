@@ -17,7 +17,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Build and test
     runs-on: macos-26
 
     steps:
@@ -37,3 +37,6 @@ jobs:
 
       - name: Build
         run: make build
+
+      - name: Test
+        run: make test TEST_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5'

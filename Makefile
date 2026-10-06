@@ -1,4 +1,6 @@
-SWIFT := "/usr/bin/swift"
+SWIFT := /usr/bin/swift
+SOURCES := ./Snapper ./SnapperWidget ./SnapperUITests ./SnapperTests
+TEST_DESTINATION ?= platform=iOS Simulator,name=iPhone 12 mini,OS=27.0
 
 .PHONY: check
 check:
@@ -6,7 +8,7 @@ check:
 		--strict \
 		--parallel \
 		--recursive \
-		./Snapper
+		$(SOURCES)
 
 .PHONY: format
 format:
@@ -15,7 +17,7 @@ format:
 		--in-place \
 		--parallel \
 		--recursive \
-		./Snapper
+		$(SOURCES)
 
 .PHONY: build
 build:
@@ -25,4 +27,19 @@ build:
 		-scheme Snapper \
 		-configuration Debug \
 		-destination 'generic/platform=iOS Simulator' \
+		| xcbeautify
+
+.PHONY: test test-unit test-ui
+test: TEST_SCHEME = Snapper
+test-unit: TEST_SCHEME = SnapperTests
+test-ui: TEST_SCHEME = SnapperUITests
+test test-unit test-ui:
+	@set -o pipefail; xcodebuild test \
+		CODE_SIGN_STYLE='Automatic' \
+		CODE_SIGN_IDENTITY='-' \
+		-project Snapper.xcodeproj \
+		-scheme $(TEST_SCHEME) \
+		-configuration Debug \
+		-destination '$(TEST_DESTINATION)' \
+		-parallel-testing-enabled NO \
 		| xcbeautify

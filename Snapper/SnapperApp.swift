@@ -4,7 +4,10 @@ import SwiftUI
 @main
 struct SnapperApp: App {
   private let store: Result<ModelContainer, Error> = Result {
-    try SharedAlbumStore.makeContainer()
+    if ProcessInfo.processInfo.arguments.contains("-ui-testing-seed-albums") {
+      return try SampleAlbumStore.makeContainer(limit: 2)
+    }
+    return try SharedAlbumStore.makeContainer()
   }
 
   var body: some Scene {
