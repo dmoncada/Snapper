@@ -39,4 +39,53 @@ jobs:
         run: make build
 
       - name: Test
-        run: make test TEST_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5'
+        run: |
+          make test \
+            TEST_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro,OS=26.5' \
+            TEST_RESULT_BUNDLE_PATH="$RUNNER_TEMP/SnapperTests.xcresult"
+
+      - name: Show test results in run summary
+        if: always()
+        run: |
+          result_bundle="$RUNNER_TEMP/SnapperTests.xcresult"
+          if [ ! -d "$result_bundle" ]; then
+            printf '### iPhone tests\n\nNo test result bundle was produced.\n' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if ! xcrun xcresulttool get test-results summary \
+            --path "$result_bundle" > "$RUNNER_TEMP/test-summary.json"; then
+            printf '### iPhone tests\n\nCould not read the result bundle. Download the artifact for details.\n' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          jq -r '
+            "### iPhone tests", "",
+            "| Result | Passed | Failed | Skipped | Total |",
+            "| :--- | ---: | ---: | ---: | ---: |",
+            "| \(.result) | \(.passedTests) | \(.failedTests) | \(.skippedTests) | \(.totalTestCount) |",
+            "",
+            (if (.testFailures | length) > 0 then
+              "#### Failures", "",
+              (.testFailures[] | "- **\(.targetName) / \(.testName)**: \(.failureText | gsub("[\\r\\n]+"; " "))")
+            else empty end)
+          ' "$RUNNER_TEMP/test-summary.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Archive test results
+        if: always()
+        run: |
+          if [ -d "$RUNNER_TEMP/SnapperTests.xcresult" ]; then
+            ditto -c -k --keepParent \
+              "$RUNNER_TEMP/SnapperTests.xcresult" \
+              "$RUNNER_TEMP/SnapperTests.xcresult.zip"
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Snapper-test-results
+          path: ${{ runner.temp }}/SnapperTests.xcresult.zip
+          if-no-files-found: ignore
+          retention-days: 7
+          compression-level: 0
