@@ -9,7 +9,6 @@ struct AlbumCreation: View {
 
   let entry: AlbumEntry
   var onSave: (() -> Void)?
-  var onShowAllResults: (() -> Void)?
 
   @State private var saveContext: ModelContext?
   @State private var alertItem: AlertDestination?
@@ -24,17 +23,6 @@ struct AlbumCreation: View {
               dismiss()
             }
           }
-
-          /*
-          if let onShowAllResults {
-            ToolbarItem(placement: .bottomBar) {
-              Button("Show all results", systemImage: "list.bullet") {
-                saveContext?.rollback()
-                onShowAllResults()
-              }
-            }
-          }
-          */
 
           ToolbarItem(placement: .topBarTrailing) {
             Button(role: .confirm) {

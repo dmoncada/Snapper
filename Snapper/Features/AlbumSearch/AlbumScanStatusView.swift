@@ -14,7 +14,7 @@ struct AlbumScanStatusView: View {
         Text(message)
           .multilineTextAlignment(.center)
         Button("Retry", systemImage: "arrow.clockwise", action: model.retry)
-        Button("Scan Again", systemImage: "barcode.viewfinder", action: model.scanAgain)
+        Button("Scan Again", systemImage: "barcode.viewfinder", action: model.reset)
       }
       .padding()
       .background(.regularMaterial, in: .rect(cornerRadius: Radius.md))

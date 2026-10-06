@@ -52,6 +52,7 @@ private struct AlbumHistoryContent: View {
           maxWidth: .infinity,
           maxHeight: .infinity,
         )
+        .onAppear { vm.isSelecting = false }
         .overlay {
           if history.isEmpty {
             ContentUnavailableView {

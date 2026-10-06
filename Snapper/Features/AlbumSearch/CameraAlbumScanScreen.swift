@@ -47,20 +47,11 @@ struct CameraAlbumScanScreen: View {
     .overlay {
       AlbumScanStatusView(model: model)
     }
-    .sheet(isPresented: $model.isShowingAlbum, onDismiss: sheetDismissed) {
-      if let entry = model.selectedEntry {
-        AlbumCreation(
-          entry: entry,
-          onSave: model.markSaved,
-          onShowAllResults: model.showAllResults,
-        )
-      }
-
-      /*
-      AlbumScanSelectionSheet(model: model)
-        .presentationDetents([.large])
-        .interactiveDismissDisabled()
-       */
+    .sheet(item: $model.entry, onDismiss: sheetDismissed) { entry in
+      AlbumCreation(
+        entry: entry,
+        onSave: model.markSaved,
+      )
     }
     .task(id: isClosing) {
       guard isClosing else { return }
@@ -166,7 +157,7 @@ struct CameraAlbumScanScreen: View {
     if model.didSave {
       requestClose()
     } else {
-      model.scanAgain()
+      model.reset()
     }
   }
 }

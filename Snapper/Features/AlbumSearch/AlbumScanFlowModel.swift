@@ -7,14 +7,13 @@ final class AlbumScanFlowModel {
   private(set) var scanGeneration = 0
   private(set) var lookupGeneration = 0
 
+  var entry: AlbumEntry?
+
   private(set) var results: [AlbumCandidate] = []
   private(set) var message: LocalizedStringResource?
-  private(set) var selectedEntry: AlbumEntry?
 
   private(set) var didSave = false
   private(set) var isSearching = false
-
-  var isShowingAlbum = false
 
   private var barcode: String?
   private var isClosed = false
@@ -65,7 +64,6 @@ final class AlbumScanFlowModel {
       }
 
       select(first)
-      isShowingAlbum = true
     } catch {
       guard
         !Task.isCancelled,
@@ -78,25 +76,21 @@ final class AlbumScanFlowModel {
   }
 
   func select(_ candidate: AlbumCandidate) {
-    selectedEntry = AlbumEntry(candidate: candidate)
-  }
-
-  func showAllResults() {
-    selectedEntry = nil
+    entry = AlbumEntry(candidate: candidate)
   }
 
   func markSaved() {
     didSave = true
   }
 
-  func scanAgain() {
+  func reset() {
     if isClosed { return }
     barcode = nil
 
+    entry = nil
     results = []
     message = nil
     isSearching = false
-    selectedEntry = nil
 
     scanGeneration += 1
     lookupGeneration += 1
