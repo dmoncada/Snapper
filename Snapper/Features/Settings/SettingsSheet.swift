@@ -4,6 +4,9 @@ struct SettingsSheet: View {
   @AppStorage(.storageKeys.colorScheme)
   private var preference: ColorSchemePreference = .system
 
+  @AppStorage(.storageKeys.openFirstResult)
+  private var openFirstResult = false
+
   @Environment(\.dismiss) private var dismiss
 
   var body: some View {
@@ -23,6 +26,17 @@ struct SettingsSheet: View {
           }
         } footer: {
           Text("Controls the app's theme preference.")
+        }
+
+        Section {
+          Toggle("Open first barcode result", isOn: $openFirstResult)
+        } footer: {
+          Text(
+            """
+            Show album details directly after scanning a barcode. \
+            You can review other results before adding.
+            """
+          )
         }
 
         Section {

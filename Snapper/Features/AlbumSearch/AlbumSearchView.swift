@@ -3,6 +3,9 @@ import SwiftData
 import SwiftUI
 
 struct HomeView: View {
+  @AppStorage(.storageKeys.openFirstResult)
+  private var openFirstResult = false
+
   @Environment(\.modelContext) private var context
   @Environment(Router.self) private var router
 
@@ -37,16 +40,23 @@ struct HomeView: View {
         maxHeight: .infinity,
       )
       .fullScreenCover(isPresented: $isPresented) {
-        CameraScanScreen(
-          onBarcode: { barcode in
-            isPresented = false
-            vm.searchText = barcode
-          },
-          onPhoto: { data in
+        if openFirstResult {
+          CameraAlbumScanScreen { data in
             isPresented = false
             onData(data: data)
-          },
-        )
+          }
+        } else {
+          CameraScanScreen(
+            onBarcode: { barcode in
+              isPresented = false
+              vm.searchText = barcode
+            },
+            onPhoto: { data in
+              isPresented = false
+              onData(data: data)
+            },
+          )
+        }
       }
       .toolbar {
         ToolbarTitle("MusicSnap")

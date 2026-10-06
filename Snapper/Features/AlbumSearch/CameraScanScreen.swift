@@ -12,6 +12,7 @@ struct CameraScanScreen: View {
   @State private var isReady = false
   @State private var isCapturing = false
   @State private var isCompleted = false
+  @State private var isClosing = false
 
   var body: some View {
     NavigationStack {
@@ -29,7 +30,7 @@ struct CameraScanScreen: View {
             .padding(.bottom, Spacing.lg)
             .foregroundStyle(.white)
 
-          TriggerButton(action: requestPhoto)
+          CameraShutterButton(action: requestPhoto)
             .foregroundStyle(.white)
             .disabled(
               isReady == false
@@ -55,17 +56,31 @@ struct CameraScanScreen: View {
 
   @MainActor
   private func scan() async {
+    guard !isClosing else { return }
+    isCompleted = false
+    isReady = false
+
     do {
       try await camera.start()
       try Task.checkCancellation()
+
+      if isClosing {
+        await camera.stop()
+        return
+      }
+
       isReady = true
 
       let barcodes = await camera.barcodes()
       for await barcode in barcodes {
-        guard !isCapturing, !isCompleted else { continue }
+        try Task.checkCancellation()
+
+        guard !isCapturing, !isCompleted, !isClosing else { continue }
         isCompleted = true
 
         await camera.stop()
+
+        if isClosing { return }
         onBarcode(barcode)
         break
       }
@@ -82,7 +97,8 @@ struct CameraScanScreen: View {
 
   @MainActor
   private func requestClose() {
-    if isCompleted { return }
+    if isClosing { return }
+    isClosing = true
     isCompleted = true
 
     Task {
@@ -93,8 +109,9 @@ struct CameraScanScreen: View {
 
   @MainActor
   private func requestPhoto() {
-    if isCompleted { return }
+    guard isReady, !isCapturing, !isCompleted, !isClosing else { return }
     isCapturing = true
+
     Task {
       await takePhoto()
     }
@@ -106,10 +123,12 @@ struct CameraScanScreen: View {
 
     do {
       let data = try await camera.takePhoto()
-      if isCompleted { return }
+      guard !isCompleted, !isClosing else { return }
       isCompleted = true
 
       await camera.stop()
+
+      if isClosing { return }
       onPhoto(data)
     } catch {
       alertItem = AlertDestination(
@@ -120,44 +139,3 @@ struct CameraScanScreen: View {
     }
   }
 }
-
-private struct TriggerButton: View {
-  let action: () -> Void
-  let size: CGFloat
-
-  init(
-    action: @escaping () -> Void,
-    size: CGFloat = 100,
-  ) {
-    self.action = action
-    self.size = size
-  }
-
-  var body: some View {
-    Button {
-      action()
-    } label: {
-      Image(systemName: "camera.circle.fill")
-        .resizable()
-        .scaledToFit()
-        .frame(width: size, height: size)
-    }
-    .buttonBorderShape(.circle)
-  }
-}
-
-#if DEBUG
-#Preview {
-  @Previewable @State var router = Router()
-
-  TriggerButton {
-    router.alertItem = AlertDestination(
-      title: "Photo snapped",
-      message: "You snapped a photo!",
-      primary: .init(title: "OK"),
-    )
-  }
-  .withAlertDestination($router.alertItem)
-  .environment(router)
-}
-#endif

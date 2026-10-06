@@ -8,6 +8,8 @@ struct AlbumCreation: View {
   @Environment(AlbumLocationCaptureCoordinator.self) private var locationCapture
 
   let entry: AlbumEntry
+  var onSave: (() -> Void)?
+  var onShowAllResults: (() -> Void)?
 
   @State private var saveContext: ModelContext?
   @State private var alertItem: AlertDestination?
@@ -22,6 +24,17 @@ struct AlbumCreation: View {
               dismiss()
             }
           }
+
+          /*
+          if let onShowAllResults {
+            ToolbarItem(placement: .bottomBar) {
+              Button("Show all results", systemImage: "list.bullet") {
+                saveContext?.rollback()
+                onShowAllResults()
+              }
+            }
+          }
+          */
 
           ToolbarItem(placement: .topBarTrailing) {
             Button(role: .confirm) {
@@ -51,13 +64,14 @@ struct AlbumCreation: View {
       try saveContext.save()
       WidgetCenter.shared.reloadTimelines(ofKind: "SnapperWidget")
       locationCapture.resumePending(in: context)
+      onSave?()
       dismiss()
     } catch {
       alertItem = AlertDestination(
         title: "Could not add album",
         message: "The album could not be saved: \(error.localizedDescription)",
         primary: .init(title: "Retry", action: save),
-        secondary: .init(title: "Cancel", role: .cancel),
+        secondary: .cancel,
       )
     }
   }
