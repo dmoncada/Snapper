@@ -10,7 +10,6 @@ struct HistoryView: View {
 }
 
 private struct AlbumHistoryContent: View {
-  @Environment(\.isSearching) private var isSearching
   @Environment(Router.self) private var router
 
   @State private var vm: AlbumHistoryViewModel

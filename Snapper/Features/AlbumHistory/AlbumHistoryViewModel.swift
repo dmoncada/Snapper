@@ -23,9 +23,19 @@ class AlbumHistoryViewModel {
     let criterion = sort.criterion
     let order = sort.getOrder(for: criterion)
 
+    let isFavorited = #Predicate<AlbumEntry> { entry in
+      favoritesOnly == false || entry.isFavorited
+    }
+
+    let isMatch = #Predicate<AlbumEntry> { entry in
+      searchText.isEmpty
+        || entry.artist.localizedStandardContains(searchText)
+        || entry.title.localizedStandardContains(searchText)
+    }
+
     var descriptor = FetchDescriptor<AlbumEntry>(
       predicate: #Predicate { entry in
-        favoritesOnly == false || entry.isFavorited
+        isFavorited.evaluate(entry) && isMatch.evaluate(entry)
       }
     )
 

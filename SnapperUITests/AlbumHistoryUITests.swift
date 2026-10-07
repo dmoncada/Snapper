@@ -2,6 +2,37 @@ import XCTest
 
 final class AlbumHistoryUITests: XCTestCase {
   @MainActor
+  func testSearchHistoryByAlbumTitle() throws {
+    let app = XCUIApplication()
+    app.launchArguments.append("-ui-testing-seed-albums")
+    app.launch()
+
+    let historyTab = app.tabBars.buttons["History"]
+    XCTAssertTrue(historyTab.waitForExistence(timeout: 10))
+    historyTab.tap()
+
+    let searchField = app.searchFields.firstMatch
+    XCTAssertTrue(searchField.waitForExistence(timeout: 10))
+    searchField.tap()
+    searchField.typeText("House")
+
+    let matchingAlbum = app.staticTexts["Harry’s House"]
+    XCTAssertTrue(matchingAlbum.waitForExistence(timeout: 10))
+
+    let otherAlbum = app.staticTexts["Kiss All The Time. Disco, Occasionally."]
+    XCTAssertFalse(otherAlbum.exists)
+
+    searchField.buttons["Clear text"].tap()
+    XCTAssertTrue(otherAlbum.waitForExistence(timeout: 10))
+
+    searchField.typeText("No matching album")
+    XCTAssertTrue(
+      app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "No Results for"))
+        .firstMatch.waitForExistence(timeout: 10)
+    )
+  }
+
+  @MainActor
   func testSelectCancelAndDeleteOneAlbum() throws {
     let app = XCUIApplication()
     app.launchArguments.append("-ui-testing-seed-albums")
