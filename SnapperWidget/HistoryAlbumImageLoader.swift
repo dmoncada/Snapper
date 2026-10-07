@@ -14,10 +14,12 @@ enum HistoryAlbumImageLoader {
 
     do {
       let (data, response) = try await URLSession.shared.data(for: request)
+
       guard
         let response = response as? HTTPURLResponse,
         200 ..< 300 ~= response.statusCode
       else { return nil }
+
       return data
     } catch {
       return nil

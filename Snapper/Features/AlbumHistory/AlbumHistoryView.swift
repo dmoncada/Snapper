@@ -116,7 +116,22 @@ private struct AlbumHistoryContent: View {
                   }
                 }
               } label: {
+                // TODO(dmoncada): figure out proper way to tint button.
                 Image(systemName: "ellipsis")
+                  .frame(
+                    width: 32,
+                    height: 32,
+                  )
+                  .foregroundStyle(
+                    vm.favoritesOnly
+                      ? .themePrimary
+                      : .themePrimaryInverted
+                  )
+                  .background {
+                    if vm.favoritesOnly {
+                      Circle().fill(.tint)
+                    }
+                  }
               }
             }
           }

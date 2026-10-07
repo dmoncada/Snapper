@@ -24,7 +24,13 @@ struct PlaybackIndicator: View {
 
 #if DEBUG
 #Preview {
-  PlaybackIndicator(isPlaying: true, progress: 0.5)
-    .frame(width: 24)
+  @Previewable @State var isPlaying = false
+
+  Button {
+    isPlaying.toggle()
+  } label: {
+    PlaybackIndicator(isPlaying: isPlaying, progress: 0.5)
+      .frame(width: 24)
+  }
 }
 #endif

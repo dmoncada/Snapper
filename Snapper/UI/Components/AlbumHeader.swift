@@ -1,11 +1,7 @@
 import SwiftUI
 
 struct AlbumHeader: View {
-  enum Size {
-    case sm, lg
-  }
-
-  init(entry: AlbumEntry, size: Size = .sm) {
+  init(entry: AlbumEntry, size: ControlSize = .small) {
     self.init(
       title: entry.title,
       artist: entry.artist,
@@ -13,7 +9,7 @@ struct AlbumHeader: View {
     )
   }
 
-  init(title: String, artist: String, size: Size = .sm) {
+  init(title: String, artist: String, size: ControlSize = .small) {
     self.title = title
     self.artist = artist
     self.size = size
@@ -21,24 +17,39 @@ struct AlbumHeader: View {
 
   private let title: String
   private let artist: String
-  private let size: Size
-
-  private let styles: [Size: (Font.TextStyle, Font.TextStyle)] = [
-    .sm: (.caption, .caption2),
-    .lg: (.headline, .subheadline),
-  ]
+  private let size: ControlSize
 
   var body: some View {
-    let (titleStyle, artistStyle) = styles[size] ?? (.caption, .caption2)
-
-    VStack(alignment: .leading, spacing: Spacing.xs) {
-      Text(title)
-        .font(.sligoilMicroBold(titleStyle))
-        .foregroundStyle(.themePrimaryInverted)
-
+    LabeledContent {
       Text(artist)
-        .font(.sligoilMicro(artistStyle))
-        .foregroundStyle(.accent)
+    } label: {
+      Text(title)
     }
+    .labeledContentStyle(.albumHeader(controlSize: size))
   }
 }
+
+#if DEBUG
+private struct TestAlbumHeader: View {
+  var body: some View {
+    HStack(spacing: 32) {
+      AlbumHeader(title: "Galore", artist: "Dragonette", size: .large)
+      AlbumHeader(title: "Galore", artist: "Dragonette", size: .small)
+    }
+    .padding()
+    .frame(maxWidth: .infinity)
+  }
+}
+
+#Preview {
+  VStack(spacing: 0) {
+    TestAlbumHeader()
+      .background(.themePrimary)
+      .environment(\.colorScheme, .light)
+
+    TestAlbumHeader()
+      .background(.themePrimary)
+      .environment(\.colorScheme, .dark)
+  }
+}
+#endif

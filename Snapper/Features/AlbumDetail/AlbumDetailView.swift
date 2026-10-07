@@ -21,7 +21,7 @@ struct AlbumDetailView: View {
           .stretchable()
 
         VStack(alignment: .leading, spacing: Padding.xxl) {
-          AlbumHeader(entry: entry, size: .lg)
+          AlbumHeaderSection(entry: entry)
           AlbumDetailSection(entry: entry, showMetadata: showMetadata)
           AlbumTrackSection(tracks: vm.tracks)
         }
@@ -59,35 +59,45 @@ private struct AlbumCover: View {
   }
 }
 
+private struct AlbumHeaderSection: View {
+  let entry: AlbumEntry
+
+  var body: some View {
+    HStack(alignment: .top) {
+      AlbumHeader(entry: entry, size: .large)
+
+      Spacer()
+
+      Icon(systemName: "star.fill", size: 24)
+        .foregroundStyle(.accent)
+        .symbolEffect(.bounce.up, options: .speed(2), value: entry.isFavorited)
+        .opacity(entry.isFavorited ? 1 : 0)
+    }
+  }
+}
+
 private struct AlbumDetailSection: View {
   let entry: AlbumEntry
   let showMetadata: Bool
 
   var body: some View {
-    VStack(alignment: .leading, spacing: Padding.xl) {
-      SectionHeader("About")
-      Section {
-        VStack(spacing: Spacing.sm) {
-          if let label = entry.labels.first {
-            AlbumDetailRow("Label", label)
-            Divider()
-          }
+    ThemeSection {
+      Section("About") {
+        if let label = entry.labels.first {
+          LabeledContent("Label", value: label)
+        }
 
-          if let year = entry.year?.description {
-            AlbumDetailRow("Released", year)
-            Divider()
-          }
+        if let year = entry.year?.description {
+          LabeledContent("Released", value: year)
+        }
 
-          if showMetadata {
-            AlbumDetailRow("Recognized", entry.selectedAt.abbreviated)
-            Divider()
-
-            LocationSection(entry: entry)
-              .frame(minHeight: 12)
-          }
+        if showMetadata {
+          LabeledContent("Recognized", value: entry.selectedAt.abbreviated)
+          LocationSection(entry: entry)
         }
       }
     }
+    .labeledContentStyle(.withThemeFont)
   }
 }
 
@@ -105,13 +115,12 @@ private struct LocationSection: View {
   var body: some View {
     switch entry.locationStatus {
     case .pending:
-      HStack {
-        Text("Location").font(.sligoilMicroBold(.subheadline))
-        Spacer()
+      LabeledContent {
         ProgressView()
+          .controlSize(.small)
+      } label: {
+        Text("Location")
       }
-      .foregroundStyle(.themePrimaryInverted)
-      .opacity(0.625)
 
     case .captured:
       if let location = entry.location {
@@ -121,23 +130,16 @@ private struct LocationSection: View {
             accuracyRadius: entry.locationHorizontalAccuracy,
           )
         } label: {
-          Group {
-            if (entry.locationHorizontalAccuracy ?? 0) >= 1_000 {
-              Text("Approximate Location")
-            } else {
-              Text("Location")
-            }
-          }
-          .font(.sligoilMicroBold(.subheadline))
+          Text("Location")
+            .font(.sligoilMicroBold(.subheadline))
         }
         .disclosureGroupStyle(.plain)
-        .opacity(0.625)
       } else {
-        AlbumDetailRow("Location", "No Location")
+        LabeledContent("Location", value: "No Location")
       }
 
     case .denied, .unavailable:
-      AlbumDetailRow("Location", "No Location")
+      LabeledContent("Location", value: "No Location")
     }
   }
 }
@@ -153,8 +155,8 @@ private struct MapView: View {
       Map(position: $position) {
         if let accuracyRadius, accuracyRadius > 0 {
           MapCircle(center: location.coordinate, radius: accuracyRadius)
-            .foregroundStyle(.themeBlue.opacity(0.15))
-            .stroke(.themeBlue.opacity(0.55), lineWidth: 1)
+            .foregroundStyle(.themeBlue.opacity(0.25))
+            .stroke(.themeBlue.opacity(0.5), lineWidth: 1)
         }
         Marker("Location", coordinate: location.coordinate)
       }
@@ -193,43 +195,26 @@ private struct MapView: View {
   }
 }
 
-private struct AlbumDetailRow: View {
-  let key: String
-  let value: String
-
-  init(_ key: String, _ value: String) {
-    self.key = key
-    self.value = value
-  }
-
-  var body: some View {
-    HStack {
-      Text(key).font(.sligoilMicroBold(.subheadline))
-      Spacer()
-      Text(value).font(.sligoilMicro(.subheadline))
-    }
-    .foregroundStyle(.themePrimaryInverted)
-    .opacity(0.625)
-  }
-}
-
 private struct AlbumTrackSection: View {
   let tracks: [AlbumTrack]
 
   var body: some View {
-    VStack(alignment: .leading, spacing: Padding.xl) {
-      SectionHeader("Tracks")
-      Section {
-        if tracks.isEmpty {
+    ThemeSection {
+      if tracks.isEmpty {
+        Section("Tracks") {
           ProgressView()
-        } else {
-          VStack(spacing: Spacing.sm) {
-            ForEach(tracks.enumerated(), id: \.offset) { i, track in
-              AlbumTrackRow(track)
-              if i < tracks.count - 1 {
-                Divider()
-              }
-            }
+        }
+      } else {
+        Section {
+          ForEach(tracks) { track in
+            AlbumTrackRow(track: track)
+          }
+        } header: {
+          Text("Tracks")
+        } footer: {
+          let anyPreview = tracks.contains { $0.previewUrl != nil }
+          if anyPreview {
+            Text("Tracks provided courtesy of iTunes.")
           }
         }
       }
@@ -242,10 +227,6 @@ private struct AlbumTrackRow: View {
 
   let track: AlbumTrack
 
-  init(_ track: AlbumTrack) {
-    self.track = track
-  }
-
   var body: some View {
     let isPlaying = track.title == player.preview?.title
 
@@ -257,41 +238,28 @@ private struct AlbumTrackRow: View {
           : await player.play(url, title: track.title)
       }
     } label: {
-      HStack {
-        Group {
-          if track.previewUrl == nil {
-            Image(systemName: "play.slash")
-          } else {
-            PlaybackIndicator(isPlaying: isPlaying, progress: player.progress)
-          }
-        }
-        .frame(width: 24)
-
-        Text(track.title)
-          .font(.sligoilMicroBold(.subheadline))
-          .minimumScaleFactor(0.75)
-          .lineLimit(1)
-
-        Spacer()
-
+      LabeledContent {
         Text(track.duration ?? "N/A")
-          .font(.sligoilMicro(.subheadline))
+      } label: {
+        HStack(spacing: Spacing.sm) {
+          Group {
+            if track.previewUrl == nil {
+              Icon(systemName: "play.slash")
+            } else {
+              PlaybackIndicator(isPlaying: isPlaying, progress: player.progress)
+            }
+          }
+          .frame(width: 24)
+
+          Text(track.title)
+            .lineLimit(1)
+        }
       }
-      .contentShape(.rect)
     }
     .buttonStyle(.plain)
-    .allowsHitTesting(track.previewUrl != nil)
-    // .disabled(track.previewUrl == nil)
-    .foregroundStyle(
-      isPlaying
-        ? .accent
-        : .themePrimaryInverted
-    )
-    .animation(
-      .easeInOut(duration: 0.25),
-      value: isPlaying,
-    )
-    .opacity(0.625)
+    .labeledContentStyle(.withThemeFont(isActive: isPlaying))
+    .animation(.easeInOut, value: isPlaying)
+    .disabled(track.previewUrl == nil)
   }
 }
 

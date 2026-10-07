@@ -2,19 +2,19 @@ import SwiftUI
 
 struct PlainDisclosureGroupStyle: DisclosureGroupStyle {
   func makeBody(configuration: Configuration) -> some View {
-    VStack(spacing: Spacing.md) {
+    VStack {
       Button {
         withAnimation {
           configuration.isExpanded.toggle()
         }
       } label: {
-        HStack {
-          configuration.label
-          Spacer()
+        LabeledContent {
           Image(systemName: "chevron.right")
             .rotationEffect(
               .degrees(configuration.isExpanded ? 90 : 0)
             )
+        } label: {
+          configuration.label
         }
         .contentShape(.rect)
       }
