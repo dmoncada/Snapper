@@ -8,7 +8,7 @@ struct AlbumCandidateRow: View {
       AlbumThumbnail(url: candidate.thumbnailUrl)
 
       AlbumHeader(title: candidate.title, artist: candidate.artist)
-        .minimumScaleFactor(0.5)
+        // .minimumScaleFactor(0.75)
         .lineLimit(1)
 
       Spacer()
@@ -16,29 +16,34 @@ struct AlbumCandidateRow: View {
       HStack(spacing: Spacing.xs) {
         if let year = candidate.year {
           Text(String(year))
-            .padding(Padding.md)
-            .roundedOutline(radius: Radius.md, lineWidth: 1)
+            .badgeStyle()
         }
 
         if let format = candidate.formats.first {
           Text(format)
-            .padding(Padding.md)
-            .roundedOutline(radius: Radius.md, lineWidth: 1, color: .themePrimaryInverted)
+            .badgeStyle()
         }
       }
-      .font(.sligoilMicroMedium(.caption2))
-      .foregroundStyle(.themePrimaryInverted)
     }
     .frame(maxWidth: .infinity)
   }
 }
 
-struct AlbumThumbnail: View {
-  let url: URL?
+private struct AlbumThumbnail: View {
+  init(
+    url: URL?,
+    size: CGFloat = 64,
+  ) {
+    self.url = url
+    self.size = size
+  }
+
+  private let url: URL?
+  private let size: CGFloat
 
   var body: some View {
     CachedImage(url: url)
-      .frame(width: 64, height: 64)
+      .frame(width: size, height: size)
       .clipShape(.rect(cornerRadius: Radius.sm))
   }
 }
@@ -47,23 +52,27 @@ struct AlbumThumbnail: View {
 import SwiftData
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query var entries: [AlbumEntry]
+  @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
 
-  if let entry = entries.first {
-    let album = entry.toCandidate()
+  if entries.count > 1 {
+    let entry1 = entries[0]
+    let entry2 = entries[1]
+
+    let album1 = entry1.toCandidate()
+    let album2 = entry2.toCandidate()
 
     VStack(spacing: 0) {
-      AlbumCandidateRow(candidate: album)
+      AlbumCandidateRow(candidate: album1)
         .padding()
         .frame(height: 150)
         .background(.themePrimary)
-        .colorScheme(.light)
+        .environment(\.colorScheme, .light)
 
-      AlbumCandidateRow(candidate: album)
+      AlbumCandidateRow(candidate: album2)
         .padding()
         .frame(height: 150)
         .background(.themePrimary)
-        .colorScheme(.dark)
+        .environment(\.colorScheme, .dark)
     }
   } else {
     ProgressView()

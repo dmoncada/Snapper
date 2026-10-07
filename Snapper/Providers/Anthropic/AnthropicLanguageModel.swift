@@ -11,11 +11,6 @@ nonisolated struct AnthropicLanguageModel: LanguageModel {
   struct Configuration: Hashable, Sendable {
     let apiKey: String?
     let modelID: String
-
-    init(apiKey: String?, modelID: String) {
-      self.apiKey = apiKey
-      self.modelID = modelID
-    }
   }
 
   private let configuration: Configuration

@@ -16,10 +16,7 @@ struct AlbumHistoryCard: View {
 
         Spacer()
 
-        Image(systemName: "star.fill")
-          .resizable()
-          .scaledToFit()
-          .frame(width: 20, height: 20)
+        Icon(systemName: "star.fill")
           .foregroundStyle(.accent)
           .symbolEffect(
             .bounce.up,
@@ -29,10 +26,7 @@ struct AlbumHistoryCard: View {
           .opacity(entry.isFavorited ? 1 : 0)
 
         Text((entry.selectedAt.shortRelative(to: .now)))
-          .padding(Padding.md)
-          .font(.sligoilMicroMedium(.caption2))
-          .foregroundStyle(.themePrimaryInverted)
-          .roundedOutline(lineWidth: 1, color: .themePrimaryInverted)
+          .badgeStyle()
       }
       .frame(height: 40)
     }
