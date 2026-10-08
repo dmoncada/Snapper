@@ -53,7 +53,7 @@ private struct AlbumHistoryContent: View {
         )
         .onAppear { vm.isSelecting = false }
         .overlay {
-          if history.isEmpty {
+          if history.isEmpty && vm.searchText.isEmpty {
             ContentUnavailableView {
               Text("No albums yet")
                 .font(.libreCaslonTextBold(.headline))
@@ -62,7 +62,7 @@ private struct AlbumHistoryContent: View {
                 .font(.libreCaslonTextRegular(.subheadline))
             }
           } else if history.isEmpty {
-            ContentUnavailableView.search
+            ContentUnavailableView.search(text: vm.searchText)
           }
         }
         .searchable(

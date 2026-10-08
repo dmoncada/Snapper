@@ -7,7 +7,7 @@ final class AlbumHistoryUITests: XCTestCase {
     app.launchArguments.append("-ui-testing-seed-albums")
     app.launch()
 
-    let historyTab = app.tabBars.buttons["History"]
+    let historyTab = app.tabBars.buttons["clock"]
     XCTAssertTrue(historyTab.waitForExistence(timeout: 10))
     historyTab.tap()
 
@@ -16,7 +16,7 @@ final class AlbumHistoryUITests: XCTestCase {
     searchField.tap()
     searchField.typeText("House")
 
-    let matchingAlbum = app.staticTexts["Harry’s House"]
+    let matchingAlbum = app.staticTexts["Harry's House"]
     XCTAssertTrue(matchingAlbum.waitForExistence(timeout: 10))
 
     let otherAlbum = app.staticTexts["Kiss All The Time. Disco, Occasionally."]
@@ -38,12 +38,12 @@ final class AlbumHistoryUITests: XCTestCase {
     app.launchArguments.append("-ui-testing-seed-albums")
     app.launch()
 
-    let historyTab = app.tabBars.buttons["History"]
+    let historyTab = app.tabBars.buttons["clock"]
     XCTAssertTrue(historyTab.waitForExistence(timeout: 10))
     historyTab.tap()
 
     let deletedAlbum = app.staticTexts["Kiss All The Time. Disco, Occasionally."]
-    let retainedAlbum = app.staticTexts["Harry’s House"]
+    let retainedAlbum = app.staticTexts["Harry's House"]
     XCTAssertTrue(deletedAlbum.waitForExistence(timeout: 10))
     XCTAssertTrue(retainedAlbum.exists)
 
