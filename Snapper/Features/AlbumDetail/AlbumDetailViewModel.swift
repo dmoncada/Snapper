@@ -1,6 +1,6 @@
 import SwiftUI
 
-nonisolated struct AlbumTracklistRequest: Sendable {
+nonisolated struct AlbumTracklistRequest: Encodable, Sendable {
   let discogsReleaseId: Int
   let artist: String
   let title: String
@@ -31,49 +31,14 @@ nonisolated enum AlbumTracklistSource: Sendable, Hashable {
 }
 
 nonisolated struct AlbumTracklistResolver: Sendable {
-  private let discogsClient: DiscogsClient
-  private let itunesClient: ItunesClient
+  private let apiClient: SnapperApiClient
 
-  init(
-    discogsClient: DiscogsClient,
-    itunesClient: ItunesClient,
-  ) {
-    self.discogsClient = discogsClient
-    self.itunesClient = itunesClient
+  init(apiClient: SnapperApiClient) {
+    self.apiClient = apiClient
   }
 
   func resolve(_ request: AlbumTracklistRequest) async throws -> AlbumTracklist {
-    let candidate = AlbumCandidate(
-      id: 0,
-      artist: request.artist,
-      title: request.title,
-      year: nil,
-      formats: [],
-      labels: [],
-      country: nil,
-      thumbnailUrl: nil,
-      coverImageUrl: nil,
-      discogsUrl: nil,
-    )
-
-    if let tracklist = try await itunesClient.tracklist(for: candidate, barcode: nil) {
-      return AlbumTracklist(
-        tracks: tracklist.tracks.map { track in
-          AlbumTrack(
-            id: "itunes-\(track.id)",
-            position: "\(track.discNumber)-\(track.trackNumber)",
-            title: track.title,
-            duration: track.duration,
-            previewUrl: track.previewUrl,
-          )
-        },
-        source: .itunes(tracklist.collectionUrl),
-      )
-    }
-
-    let tracks = try await discogsClient.tracklist(for: request.discogsReleaseId)
-
-    return AlbumTracklist(tracks: tracks, source: .discogs)
+    try await apiClient.resolveTracklist(request)
   }
 }
 
@@ -86,12 +51,7 @@ final class AlbumDetailViewModel {
   private(set) var tracklistSource: AlbumTracklistSource?
 
   init() {
-    let token = Bundle.main.object(forInfoDictionaryKey: "DISCOGS_TOKEN") as? String ?? ""
-
-    resolver = .init(
-      discogsClient: .init(token: token),
-      itunesClient: .init(),
-    )
+    resolver = .init(apiClient: .init())
   }
 
   func materialize(_ entry: AlbumEntry) async {

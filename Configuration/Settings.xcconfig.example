@@ -1,2 +1,4 @@
 ANTHROPIC_API_KEY =
 DISCOGS_TOKEN =
+SLASH = /
+SNAPPER_API_BASE_URL = https:$(SLASH)$(SLASH)api.musicsnap.dmoncada.net

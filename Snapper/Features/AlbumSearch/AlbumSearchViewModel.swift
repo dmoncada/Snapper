@@ -9,12 +9,17 @@ class AlbumSearchViewModel {
   private(set) var state: State = .idle
   private(set) var results: [AlbumCandidate] = []
 
-  private let discogsClient: DiscogsClient
+  private let apiClient: SnapperApiClient
   private var recognizer = ImageRecognitionService()
+  private var scannedBarcode: String?
 
   init() {
-    let token = Bundle.main.object(forInfoDictionaryKey: "DISCOGS_TOKEN") as? String ?? ""
-    self.discogsClient = .init(token: token)
+    apiClient = SnapperApiClient()
+  }
+
+  func showScannedBarcode(_ barcode: String) {
+    scannedBarcode = barcode
+    searchText = barcode
   }
 
   func recognize(in data: Data) async throws {
@@ -28,14 +33,18 @@ class AlbumSearchViewModel {
       return
     }
 
-    return await search(barcode, debounceDuration: .zero)
+    return await search(barcode, debounceDuration: .zero, isBarcode: true)
   }
 
   func search(debounceDuration: Duration = .seconds(1)) async {
-    await search(searchText, debounceDuration: debounceDuration)
+    await search(
+      searchText,
+      debounceDuration: debounceDuration,
+      isBarcode: searchText == scannedBarcode,
+    )
   }
 
-  private func search(_ query: String, debounceDuration: Duration) async {
+  private func search(_ query: String, debounceDuration: Duration, isBarcode: Bool) async {
     let query = query.trimmingCharacters(in: .whitespacesAndNewlines)
 
     if query.isEmpty {
@@ -50,7 +59,11 @@ class AlbumSearchViewModel {
       try await Task.sleep(for: debounceDuration)
       try Task.checkCancellation()
 
-      results = try await discogsClient.searchAlbums(matching: query, limit: 10)
+      if isBarcode {
+        results = try await apiClient.searchAlbums(withBarcode: query)
+      } else {
+        results = try await apiClient.searchAlbums(matching: query)
+      }
       try Task.checkCancellation()
 
       state = results.isEmpty ? .empty : .results

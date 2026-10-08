@@ -49,7 +49,7 @@ struct HomeView: View {
           CameraScanScreen(
             onBarcode: { barcode in
               isPresented = false
-              vm.searchText = barcode
+              vm.showScannedBarcode(barcode)
             },
             onPhoto: { data in
               isPresented = false

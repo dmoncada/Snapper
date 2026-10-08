@@ -17,11 +17,10 @@ final class AlbumScanFlowModel {
 
   private var barcode: String?
   private var isClosed = false
-  private let client: DiscogsClient
+  private let client: SnapperApiClient
 
   init() {
-    let token = Bundle.main.object(forInfoDictionaryKey: "DISCOGS_TOKEN") as? String ?? ""
-    client = DiscogsClient(token: token)
+    client = SnapperApiClient()
   }
 
   func accept(_ barcode: String) {
@@ -47,7 +46,7 @@ final class AlbumScanFlowModel {
     let generation = lookupGeneration
 
     do {
-      let candidates = try await client.searchAlbums(matching: barcode, limit: 10)
+      let candidates = try await client.searchAlbums(withBarcode: barcode)
       try Task.checkCancellation()
 
       guard

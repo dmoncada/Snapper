@@ -1,6 +1,6 @@
 import Foundation
 
-nonisolated struct AlbumCandidate: Identifiable, Sendable, Hashable {
+nonisolated struct AlbumCandidate: Identifiable, Decodable, Sendable, Hashable {
   let id: Int
   let artist: String
   let title: String
