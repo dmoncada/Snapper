@@ -43,8 +43,8 @@ class TracklistRequest(BaseModel):
 
 
 class TracklistTrack(BaseModel):
-    track_id: int | None = None
-    track_title: str
-    track_position: str
-    track_duration: str
-    track_preview_url: str | None = None
+    id: int | None = None
+    title: str
+    position: str
+    duration: str
+    preview_url: str | None = None

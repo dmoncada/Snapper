@@ -155,16 +155,16 @@ async def _get_matching_album_tracks(
 def _itunes_tracklist(tracks: list[MusicItem]) -> TracklistResponse:
     return [
         TracklistTrack(
-            track_id=track.trackId,
-            track_title=track.trackName or "",
-            track_position=f"{track.discNumber or 1}-{track.trackNumber}",
-            track_duration=(
+            id=track.trackId,
+            title=track.trackName or "",
+            position=f"{track.discNumber or 1}-{track.trackNumber}",
+            duration=(
                 f"{track.trackTimeMillis // 60_000}:"
                 f"{track.trackTimeMillis // 1_000 % 60:02}"
                 if track.trackTimeMillis is not None
                 else ""
             ),
-            track_preview_url=track.previewUrl,
+            preview_url=track.previewUrl,
         )
         for track in tracks
     ]
@@ -173,9 +173,9 @@ def _itunes_tracklist(tracks: list[MusicItem]) -> TracklistResponse:
 def _discogs_tracklist(tracks: list[Track]) -> TracklistResponse:
     return [
         TracklistTrack(
-            track_title=track.title,
-            track_position=track.position or str(index),
-            track_duration=track.duration or "",
+            title=track.title,
+            position=track.position or str(index),
+            duration=track.duration or "",
         )
         for index, track in enumerate(tracks, start=1)
     ]

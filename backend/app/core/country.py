@@ -7,11 +7,19 @@ from pydantic import BaseModel, ConfigDict
 class Country(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    alpha_2: str
-    alpha_3: str
+    alpha2: str
+    alpha3: str
     numeric: str
     name: str
     official_name: str | None = None
+
+
+_COMMON_ALIASES = {
+    "UK": "GB",
+    "U.K.": "GB",
+    "USA": "US",
+    "U.S.A.": "US",
+}
 
 
 def normalize_country(value: Any) -> Country | None:
@@ -20,6 +28,7 @@ def normalize_country(value: Any) -> Country | None:
         return None
 
     value = value.strip()
+    value = _COMMON_ALIASES.get(value.upper(), value)
 
     # Prefer exact ISO alpha-2 code matching, then general lookup.
     country = pycountry.countries.get(alpha_2=value.upper())
@@ -30,8 +39,8 @@ def normalize_country(value: Any) -> Country | None:
             return None
 
     return Country(
-        alpha_2=country.alpha_2,
-        alpha_3=country.alpha_3,
+        alpha2=country.alpha_2,
+        alpha3=country.alpha_3,
         numeric=country.numeric,
         name=country.name,
         official_name=getattr(country, "official_name", None),
