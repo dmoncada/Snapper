@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MusicSnap</title>
+    <style>
+      @font-face {
+        font-family: "Basteleur";
+        src: url("./fonts/basteleur-bold.ttf") format("truetype");
+        font-weight: bold;
+        font-style: normal;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: #fff;
+        color: #000;
+        font-family: "Basteleur", sans-serif;
+        font-weight: bold;
+        transition:
+          background-color 0.2s,
+          color 0.2s;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #000;
+          color: #fff;
+        }
+      }
+
+      h1 {
+        font-size: clamp(2rem, 8vw, 6rem);
+        line-height: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MusicSnap</h1>
+  </body>
+</html>
