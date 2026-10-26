@@ -18,6 +18,7 @@ _COMMON_ALIASES = {
     "UK": "GB",
     "U.K.": "GB",
     "USA": "US",
+    "U.S.": "US",
     "U.S.A.": "US",
 }
 

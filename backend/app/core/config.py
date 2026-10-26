@@ -17,5 +17,11 @@ class Settings(BaseSettings):
     DISCOGS_TOKEN: str = ""
     SENTRY_DSN: HttpUrl | None = None
 
+    REDIS_HOST: str = ""
+    REDIS_PORT: int = 6380
+    REDIS_DB: int = 0
+    REDIS_USERNAME: str = ""
+    REDIS_PASSWORD: str = ""
+
 
 settings = Settings()

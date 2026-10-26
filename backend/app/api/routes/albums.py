@@ -1,10 +1,12 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Query
+from redis_fastapi import CacheBackendDep
 
 from app.api.deps import DiscogsClientDep
 from app.api.models import AlbumCandidate, AlbumSearchRequest
-from app.providers.discogs.models import SearchRequest
+from app.core.cache import MIN, cached_provider_call
+from app.providers.discogs.models import SearchRequest, SearchResponse
 
 router = APIRouter(prefix="/albums", tags=["albums"])
 
@@ -13,16 +15,25 @@ router = APIRouter(prefix="/albums", tags=["albums"])
 async def search_candidates(
     params: Annotated[AlbumSearchRequest, Query()],
     discogs: DiscogsClientDep,
+    cache: CacheBackendDep,
 ) -> list[AlbumCandidate]:
-    response = await discogs.search(
-        SearchRequest.model_validate(
-            {
-                "q": params.term,
-                "barcode": params.barcode,
-                "per_page": params.limit,
-                "type": "release",
-            }
-        )
+    request = SearchRequest.model_validate(
+        {
+            "q": params.term,
+            "barcode": params.barcode,
+            "per_page": params.limit,
+            "type": "release",
+        }
+    )
+
+    response = await cached_provider_call(
+        cache,
+        namespace="discogs:search",
+        request=request,
+        response_model=SearchResponse,
+        fetch=lambda: discogs.search(request),
+        ttl=15 * MIN,
+        empty_ttl=MIN,
     )
 
     albums = []
@@ -31,7 +42,7 @@ async def search_candidates(
 
         albums.append(
             AlbumCandidate(
-                discogs_id=result.id,
+                id=result.id,
                 title=title if separator else result.title,
                 artist=artist if separator else result.title,
                 discogs_url=result.uri,

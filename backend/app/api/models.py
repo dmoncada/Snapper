@@ -20,7 +20,7 @@ class AlbumSearchRequest(BaseModel):
 
 
 class AlbumCandidate(BaseModel):
-    discogs_id: int
+    id: int
     title: str
     artist: str
     discogs_url: str | None = None
