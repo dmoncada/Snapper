@@ -53,6 +53,10 @@ nonisolated struct RetryPolicy: Sendable {
     return .seconds(seconds)
   }
 
+  func shouldRetry(_ code: Int) -> Bool {
+    retryableHttpStatusCodes.contains(code)
+  }
+
   func shouldRetry(_ error: any Error) -> Bool {
     guard let urlError = error as? URLError else {
       return false

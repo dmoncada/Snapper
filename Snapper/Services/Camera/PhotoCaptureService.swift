@@ -274,10 +274,12 @@ struct CameraPreview: UIViewRepresentable {
 }
 
 protocol PreviewSource: Sendable {
-  @MainActor func connect(to target: PreviewTarget)
+  @MainActor
+  func connect(to target: PreviewTarget)
 }
 
-@MainActor protocol PreviewTarget {
+@MainActor
+protocol PreviewTarget {
   func setSession(_ session: AVCaptureSession)
 }
 
@@ -288,7 +290,8 @@ nonisolated struct DefaultPreviewSource: PreviewSource {
     self.session = session
   }
 
-  @MainActor func connect(to target: PreviewTarget) {
+  @MainActor
+  func connect(to target: PreviewTarget) {
     target.setSession(session)
   }
 }

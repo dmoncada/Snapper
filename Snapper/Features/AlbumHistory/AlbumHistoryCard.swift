@@ -1,15 +1,15 @@
 import SwiftUI
 
 struct AlbumHistoryCard: View {
-  let entry: AlbumEntry
+  let album: Album
 
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
-      AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
+      AlbumCover(url: album.coverImageUrl)
         .roundedOutline(lineWidth: 1)
 
       HStack(alignment: .center) {
-        AlbumHeader(entry: entry)
+        AlbumHeader(title: album.title, artist: album.artist)
           .frame(maxWidth: .infinity, alignment: .leading)
           // .minimumScaleFactor(0.75)
           .lineLimit(1)
@@ -17,19 +17,34 @@ struct AlbumHistoryCard: View {
         Spacer()
 
         Icon(systemName: "star.fill")
-          .foregroundStyle(.accent)
-          .symbolEffect(
-            .bounce.up,
-            options: .speed(2),
-            value: entry.isFavorited,
-          )
-          .opacity(entry.isFavorited ? 1 : 0)
+          .favoriteIconStyle(isFavorited: album.isFavorite)
 
-        Text((entry.selectedAt.shortRelative(to: .now)))
+        Text((album.selectedAt.shortRelative(to: .now)))
           .badgeStyle()
       }
       .frame(height: 40)
     }
+  }
+}
+
+struct FavoriteIconStyle: ViewModifier {
+  let isFavorited: Bool
+
+  func body(content: Content) -> some View {
+    content
+      .foregroundStyle(.accent)
+      .symbolEffect(
+        .bounce.up,
+        options: .speed(2),
+        value: isFavorited,
+      )
+      .opacity(isFavorited ? 1 : 0)
+  }
+}
+
+extension View {
+  func favoriteIconStyle(isFavorited: Bool) -> some View {
+    modifier(FavoriteIconStyle(isFavorited: isFavorited))
   }
 }
 
@@ -54,38 +69,40 @@ private struct AlbumCover: View {
 #if DEBUG
 import SwiftData
 
+private struct TestHistoryCard: View {
+  let album1: Album
+  let album2: Album
+
+  var body: some View {
+    HStack {
+      Button {
+        album1.isFavorite.toggle()
+      } label: {
+        AlbumHistoryCard(album: album1)
+          .contentShape(.rect)
+      }
+
+      Spacer()
+
+      Button {
+        album2.isFavorite.toggle()
+      } label: {
+        AlbumHistoryCard(album: album2)
+          .contentShape(.rect)
+      }
+    }
+    .buttonStyle(.plain)
+  }
+}
+
 #Preview(traits: .withSampleData) {
-  @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
+  @Previewable @Query(sort: \Album.selectedAt) var albums: [Album]
 
-  if entries.count > 3 {
-    let sizes: [(CGFloat, CGFloat)] = [
-      (300, 32),
-      (200, 24),
-      (100, 16),
-    ]
-
-    let tuples = Array(zip(entries, sizes))
-
-    ScrollView(.vertical) {
-      ForEach(tuples.enumerated(), id: \.offset) { _, tuple in
-        let (entry, (card, _)) = tuple
-
-        Button {
-          entry.isFavorited.toggle()
-        } label: {
-          AlbumHistoryCard(entry: entry)
-            .frame(width: card)
-        }
-        .buttonStyle(.plain)
-      }
+  if albums.count > 1 {
+    WithColorSchemes {
+      TestHistoryCard(album1: albums[0], album2: albums[1])
+        .padding()
     }
-    .onAppear {
-      for i in 0 ..< 3 {
-        let entry = entries[i]
-        entry.isFavorited = true
-      }
-    }
-    .fullBackground(.gray.opacity(0.5))
   } else {
     ProgressView()
   }

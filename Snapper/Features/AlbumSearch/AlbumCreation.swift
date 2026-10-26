@@ -7,19 +7,17 @@ struct AlbumCreation: View {
   @Environment(\.modelContext) private var context
   @Environment(AlbumLocationCaptureCoordinator.self) private var locationCapture
 
-  let entry: AlbumEntry
+  let album: Album
   var onSave: (() -> Void)?
 
-  @State private var saveContext: ModelContext?
   @State private var alertItem: AlertDestination?
 
   var body: some View {
     NavigationStack {
-      AlbumDetailView(entry: entry, showMetadata: false)
+      AlbumDetailView(album: album, showMetadata: false)
         .toolbar {
           ToolbarItem(placement: .topBarLeading) {
             Button(role: .cancel) {
-              saveContext?.rollback()
               dismiss()
             }
           }
@@ -36,22 +34,18 @@ struct AlbumCreation: View {
   }
 
   private func save() {
-    if saveContext == nil {
-      let newContext = ModelContext(context.container)
-      newContext.autosaveEnabled = false
-      newContext.insert(entry)
-      saveContext = newContext
-    }
+    album.selectedAt = .now
+    album.locationStatusRaw = AlbumLocationStatus.pending.rawValue
 
-    entry.selectedAt = .now
-    entry.locationCaptureStatusRaw = AlbumLocationStatus.pending.rawValue
-
-    guard let saveContext else { return }
+    context.insert(album)
 
     do {
-      try saveContext.save()
+      try context.save()
+
       WidgetCenter.shared.reloadTimelines(ofKind: "SnapperWidget")
+
       locationCapture.resumePending(in: context)
+
       onSave?()
       dismiss()
     } catch {

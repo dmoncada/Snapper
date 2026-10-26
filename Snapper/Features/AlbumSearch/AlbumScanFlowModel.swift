@@ -4,12 +4,11 @@ import Observation
 @MainActor
 @Observable
 final class AlbumScanFlowModel {
+  var entry: Album?
+
   private(set) var scanGeneration = 0
   private(set) var lookupGeneration = 0
 
-  var entry: AlbumEntry?
-
-  private(set) var results: [AlbumCandidate] = []
   private(set) var message: LocalizedStringResource?
 
   private(set) var didSave = false
@@ -17,10 +16,11 @@ final class AlbumScanFlowModel {
 
   private var barcode: String?
   private var isClosed = false
-  private let client: SnapperApiClient
 
-  init() {
-    client = SnapperApiClient()
+  private let apiClient: any ApiClient
+
+  init(apiClient: any ApiClient = .live) {
+    self.apiClient = apiClient
   }
 
   func accept(_ barcode: String) {
@@ -46,8 +46,11 @@ final class AlbumScanFlowModel {
     let generation = lookupGeneration
 
     do {
-      let candidates = try await client.searchAlbums(withBarcode: barcode)
+      let response = try await apiClient.searchAlbums(term: nil, barcode: barcode, limit: 10)
       try Task.checkCancellation()
+
+      // let candidates = response.map(AlbumCandidate.init(dto:))
+      let candidates = response.map { Album(dto: $0) }
 
       guard
         !isClosed,
@@ -55,14 +58,13 @@ final class AlbumScanFlowModel {
       else { return }
 
       isSearching = false
-      results = candidates
 
       guard let first = candidates.first else {
         message = "No albums found for this barcode."
         return
       }
 
-      select(first)
+      entry = first
     } catch {
       guard
         !Task.isCancelled,
@@ -74,10 +76,6 @@ final class AlbumScanFlowModel {
     }
   }
 
-  func select(_ candidate: AlbumCandidate) {
-    entry = AlbumEntry(candidate: candidate)
-  }
-
   func markSaved() {
     didSave = true
   }
@@ -87,7 +85,6 @@ final class AlbumScanFlowModel {
     barcode = nil
 
     entry = nil
-    results = []
     message = nil
     isSearching = false
 

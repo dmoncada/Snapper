@@ -5,41 +5,41 @@ import os
 
 @MainActor
 @Observable
-class AlbumHistoryViewModel {
+final class AlbumHistoryViewModel {
   var searchText = ""
   var favoritesOnly = false
   var sort = SortModel()
 
   var isSelecting = false
-  var selectedIds: Set<UUID> = []
-
-  private let context: ModelContext
+  var selectedIds: Set<Album.ID> = []
 
   init(context: ModelContext) {
     self.context = context
   }
 
-  var descriptor: FetchDescriptor<AlbumEntry> {
+  @ObservationIgnored private let context: ModelContext
+
+  var descriptor: FetchDescriptor<Album> {
     let criterion = sort.criterion
     let order = sort.getOrder(for: criterion)
 
-    let isFavorited = #Predicate<AlbumEntry> { entry in
-      favoritesOnly == false || entry.isFavorited
+    let isFavorite = #Predicate<Album> { album in
+      favoritesOnly == false || album.isFavorite
     }
 
-    let isMatch = #Predicate<AlbumEntry> { entry in
+    let isMatch = #Predicate<Album> { album in
       searchText.isEmpty
-        || entry.artist.localizedStandardContains(searchText)
-        || entry.title.localizedStandardContains(searchText)
+        || album.artist.localizedStandardContains(searchText)
+        || album.title.localizedStandardContains(searchText)
     }
 
-    var descriptor = FetchDescriptor<AlbumEntry>(
-      predicate: #Predicate { entry in
-        isFavorited.evaluate(entry) && isMatch.evaluate(entry)
+    var descriptor = FetchDescriptor<Album>(
+      predicate: #Predicate { album in
+        isFavorite.evaluate(album) && isMatch.evaluate(album)
       }
     )
 
-    let sortDescriptor: SortDescriptor<AlbumEntry>
+    let sortDescriptor: SortDescriptor<Album>
 
     switch criterion {
     case .dateFound:
@@ -66,6 +66,14 @@ class AlbumHistoryViewModel {
     return descriptor
   }
 
+  var albumCount: Int {
+    context.getCount(for: Album.self)
+  }
+
+  var filteredCount: Int {
+    context.getCount(using: descriptor)
+  }
+
   var currentOrder: Binding<SortOrder> {
     Binding(
       get: { self.sort.getOrder(for: self.sort.criterion) },
@@ -73,25 +81,25 @@ class AlbumHistoryViewModel {
     )
   }
 
-  func cancelSelection() {
+  func clearSelection() {
     selectedIds.removeAll()
     isSelecting = false
   }
 
-  func delete(_ entry: AlbumEntry) {
-    context.delete(entry)
+  func delete(_ album: Album) {
+    context.delete(album)
     saveAndReloadWidget()
   }
 
-  func batchDelete(ids: Set<AlbumEntry.ID>) {
-    guard let history = try? context.fetch(FetchDescriptor<AlbumEntry>()) else { return }
+  func batchDelete(ids: Set<Album.ID>) {
+    guard let history = try? context.fetch(FetchDescriptor<Album>()) else { return }
 
-    for entry in history where ids.contains(entry.id) {
-      context.delete(entry)
+    for album in history where ids.contains(album.id) {
+      context.delete(album)
     }
 
     saveAndReloadWidget()
-    cancelSelection()
+    clearSelection()
   }
 
   private func saveAndReloadWidget() {

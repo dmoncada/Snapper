@@ -6,7 +6,7 @@ struct BadgeStyleModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .padding(Padding.md)
-      .font(.sligoilMicroBold(.caption2))
+      .font(.sligoilMicroBold(.caption))
       .foregroundStyle(
         isActive
           ? .themePrimary
@@ -26,11 +26,14 @@ struct BadgeStyleModifier: ViewModifier {
 
 struct BadgeToggleStyle: ToggleStyle {
   func makeBody(configuration: Configuration) -> some View {
-    configuration.label
-      .badgeStyle(isActive: configuration.isOn)
-      .onTapGesture {
-        configuration.isOn.toggle()
-      }
+    Button {
+      configuration.isOn.toggle()
+    } label: {
+      configuration.label
+        .badgeStyle(isActive: configuration.isOn)
+        .animation(nil, value: configuration.isOn)
+    }
+    .buttonStyle(.plain)
   }
 }
 
@@ -41,8 +44,35 @@ extension View {
 }
 
 extension ToggleStyle where Self == BadgeToggleStyle {
-  static var badge: Self {
-    Self()
+  static var badge: Self { Self() }
+}
+
+struct FilterBar: View {
+  enum Filter: String, CaseIterable, Identifiable {
+    case all, favorites, rock, pop
+
+    var id: Self { self }
+
+    var title: String { rawValue.capitalized }
+  }
+
+  @Binding var selectedFilter: Filter
+
+  var body: some View {
+    ScrollView(.horizontal, showsIndicators: false) {
+      HStack(spacing: Spacing.sm) {
+        ForEach(Filter.allCases) { filter in
+          Toggle(
+            filter.title,
+            isOn: Binding(
+              get: { selectedFilter == filter },
+              set: { if $0 { selectedFilter = filter } },
+            ),
+          )
+          .toggleStyle(.badge)
+        }
+      }
+    }
   }
 }
 
@@ -66,19 +96,69 @@ private struct TestBadge: View {
   }
 }
 
-#Preview {
-  VStack(spacing: 0) {
-    TestBadge()
-      .frame(height: 200)
-      .frame(maxWidth: .infinity)
-      .background(.themePrimary)
-      .environment(\.colorScheme, .light)
+private struct CompleteView: View {
+  private struct Item: Identifiable {
+    let id: Int
+    let category: FilterBar.Filter
 
+    var title: String {
+      "Item \(id)"
+    }
+  }
+
+  @State private var selectedFilter: FilterBar.Filter = .all
+
+  private let items: [Item] = (1 ... 100)
+    .map { index in
+      let categories: [FilterBar.Filter] = [.favorites, .rock, .pop]
+
+      return Item(
+        id: index,
+        category: categories[(index - 1) % categories.count],
+      )
+    }
+
+  private var filteredItems: [Item] {
+    guard selectedFilter != .all else {
+      return items
+    }
+
+    return items.filter { $0.category == selectedFilter }
+  }
+
+  var body: some View {
+    ScrollView(.vertical) {
+      FilterBar(selectedFilter: $selectedFilter)
+
+      LazyVStack(spacing: 0) {
+        ForEach(filteredItems) { item in
+          LabeledContent {
+            Text(item.category.title)
+              .font(.caption)
+              .foregroundStyle(.secondary)
+          } label: {
+            Text(item.title)
+          }
+          .padding(.vertical)
+          .tag(item.id)
+
+          Divider()
+        }
+      }
+      //      .border(.red)
+    }
+    .padding(.horizontal)
+  }
+}
+#Preview("Filter Bar") {
+  CompleteView()
+}
+
+#Preview("Component") {
+  WithColorSchemes {
     TestBadge()
-      .frame(height: 200)
       .frame(maxWidth: .infinity)
-      .background(.themePrimary)
-      .environment(\.colorScheme, .dark)
+      .padding()
   }
 }
 #endif

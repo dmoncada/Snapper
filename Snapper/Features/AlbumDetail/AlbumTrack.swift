@@ -1,9 +1,0 @@
-import Foundation
-
-nonisolated struct AlbumTrack: Identifiable, Decodable, Sendable, Hashable {
-  let id: String
-  let position: String?
-  let title: String
-  let duration: String?
-  let previewUrl: URL?
-}

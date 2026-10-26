@@ -30,11 +30,11 @@ struct SnapperWidgetProvider: TimelineProvider {
     let logger = Logger(subsystem: "net.dmoncada.Snapper", category: "WidgetHistory")
 
     do {
-      let container = try SharedAlbumStore.makeContainer()
+      let container = try SnapperStore.makeContainer()
       let context = ModelContext(container)
 
-      var fetch = FetchDescriptor<AlbumEntry>()
-      let sort = SortDescriptor(\AlbumEntry.selectedAt, order: .reverse)
+      var fetch = FetchDescriptor<Album>()
+      let sort = SortDescriptor(\Album.selectedAt, order: .reverse)
 
       fetch.sortBy = [sort]
       fetch.fetchLimit = 9
@@ -42,9 +42,10 @@ struct SnapperWidgetProvider: TimelineProvider {
       let sources = try context.fetch(fetch)
         .map { album in
           (
+            // id: String(album.discogsId),
             id: album.id,
             title: album.title,
-            imageUrlString: album.thumbnailUrlString ?? album.coverImageUrlString,
+            imageUrl: album.thumbnailUrl ?? album.coverImageUrl,
           )
         }
 
@@ -53,9 +54,9 @@ struct SnapperWidgetProvider: TimelineProvider {
 
       await withTaskGroup(of: (Int, Data?).self) { group in
         for (index, source) in sources.enumerated() {
-          let imageUrlString = source.imageUrlString
+          let imageUrl = source.imageUrl
           group.addTask {
-            (index, await HistoryAlbumImageLoader.load(from: imageUrlString))
+            (index, await HistoryAlbumImageLoader.load(from: imageUrl))
           }
         }
 

@@ -1,55 +1,54 @@
-import Foundation
-import Observation
+import Logging
+import SwiftUI
 
 @MainActor
 @Observable
-class AlbumSearchViewModel {
-  var searchText = ""
-
-  private(set) var state: State = .idle
-  private(set) var results: [AlbumCandidate] = []
-
-  private let apiClient: SnapperApiClient
-  private var recognizer = ImageRecognitionService()
-  private var scannedBarcode: String?
-
-  init() {
-    apiClient = SnapperApiClient()
+final class AlbumSearchViewModel {
+  enum SearchKind {
+    case term(String)
+    case barcode(String)
   }
 
-  func showScannedBarcode(_ barcode: String) {
-    scannedBarcode = barcode
-    searchText = barcode
+  enum State: Equatable {
+    case ready
+    case searching
+    case detecting
+    case cancelled
+    case success([Album])
+    case failure(SearchError)
   }
 
-  func recognize(in data: Data) async throws {
-    state = .recognizing
+  private(set) var state: State = .ready
 
-    let result = try await recognizer.recognize(in: data)
-    try Task.checkCancellation()
+  private let logger: Logger?
+  private let apiClient: any ApiClient
+  private let recognizer: any ImageRecognizing
 
-    guard let barcode = result.barcode else {
-      state = .unreadable
-      return
+  init(
+    logger: Logger? = nil,
+    apiClient: any ApiClient = .null,
+    recognizer: any ImageRecognizing = .null,
+  ) {
+    self.logger = logger
+    self.apiClient = apiClient
+    self.recognizer = recognizer
+  }
+
+  func search(
+    by kind: SearchKind,
+    debounceDuration: Duration = .seconds(1),
+    limit: Int = 10,
+  ) async {
+    var term: String?
+    var barcode: String?
+
+    switch kind {
+    case .term(let value): term = value
+    case .barcode(let value): barcode = value
     }
 
-    return await search(barcode, debounceDuration: .zero, isBarcode: true)
-  }
-
-  func search(debounceDuration: Duration = .seconds(1)) async {
-    await search(
-      searchText,
-      debounceDuration: debounceDuration,
-      isBarcode: searchText == scannedBarcode,
-    )
-  }
-
-  private func search(_ query: String, debounceDuration: Duration, isBarcode: Bool) async {
-    let query = query.trimmingCharacters(in: .whitespacesAndNewlines)
-
-    if query.isEmpty {
-      state = .idle
-      results = []
+    if term.isNilOrEmpty && barcode.isNilOrEmpty {
+      state = .ready
       return
     }
 
@@ -59,43 +58,54 @@ class AlbumSearchViewModel {
       try await Task.sleep(for: debounceDuration)
       try Task.checkCancellation()
 
-      if isBarcode {
-        results = try await apiClient.searchAlbums(withBarcode: query)
-      } else {
-        results = try await apiClient.searchAlbums(matching: query)
-      }
+      let candidates = try await apiClient.searchAlbums(term: term, barcode: barcode, limit: limit)
+      let results = candidates.map { Album(dto: $0) }
+
+      logger?.info("Found: \(results.count) albums for: '\(term ?? barcode ?? "nil")'")
+
+      state = .success(results)
+    } catch is CancellationError {
+      // state = .cancelled
+    } catch {
+      state = .failure(.generic)
+    }
+  }
+
+  func detect(in data: Data, limit: Int = 10) async {
+    state = .detecting
+
+    do {
+      let result = try await recognizer.recognize(in: data)
       try Task.checkCancellation()
 
-      state = results.isEmpty ? .empty : .results
+      guard let barcode = result.barcode else {
+        state = .failure(.detection)
+        return
+      }
+
+      return await search(by: .barcode(barcode), debounceDuration: .zero, limit: limit)
     } catch is CancellationError {
-      // A newer input replaces this request.
+      // state = .cancelled
     } catch {
-      state = .error(error.localizedDescription)
-      results = []
+      state = .failure(.generic)
     }
   }
 }
 
-extension AlbumSearchViewModel {
-  enum State: Equatable, CustomStringConvertible {
-    case idle
-    case recognizing
-    case searching
-    case results
-    case empty
-    case unreadable
-    case error(String)
+enum SearchError: Error {
+  case generic
+  case detection
 
-    var description: String {
-      switch self {
-      case .idle: return "Idle"
-      case .recognizing: return "Recognizing"
-      case .searching: return "Searching"
-      case .results: return "Results"
-      case .empty: return "No results"
-      case .unreadable: return "Unreadable"
-      case .error(let message): return "Error: \(message)"
-      }
+  var message: LocalizedStringResource {
+    switch self {
+    case .generic: "search.error.generic"
+    case .detection: "search.error.detection"
     }
+  }
+}
+
+extension Optional where Wrapped == String {
+  fileprivate var isNilOrEmpty: Bool {
+    self?.isEmpty != false
   }
 }

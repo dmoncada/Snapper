@@ -17,8 +17,8 @@ struct SheetDestinationModifier: ViewModifier {
             SettingsSheet()
               .presentationDetents([.medium, .large])
 
-          case .create(let entry):
-            AlbumCreation(entry: entry)
+          case .create(let album):
+            AlbumCreation(album: album)
               .presentationDetents([.large])
           }
         }

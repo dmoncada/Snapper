@@ -9,8 +9,9 @@ struct SnapperAppShell: View {
   @Environment(\.scenePhase) private var phase
   @Environment(\.modelContext) private var context
 
+  @Environment(AlbumLocationCaptureCoordinator.self) private var locationCoordinator
+
   @State private var router = Router()
-  @State private var locationCapture = AlbumLocationCaptureCoordinator()
 
   var body: some View {
     TabView {
@@ -20,19 +21,22 @@ struct SnapperAppShell: View {
       Tab("History", systemImage: "clock") {
         HistoryView()
       }
+      #if DEBUG
+      Tab("Export", systemImage: "square.and.arrow.up") {
+        SampleDataExportView()
+      }
+      #endif
     }
     .withSheetDestination($router.sheetItem)
     .withAlertDestination($router.alertItem)
     .preferredColorScheme(preference.colorScheme)
-    .environment(locationCapture)
-    .environment(PreviewPlayer())
     .environment(router)
     .task {
-      locationCapture.resumePending(in: context)
+      locationCoordinator.resumePending(in: context)
     }
     .onChange(of: phase) { _, next in
       if next == .active {
-        locationCapture.resumePending(in: context)
+        locationCoordinator.resumePending(in: context)
       }
     }
   }
@@ -41,5 +45,7 @@ struct SnapperAppShell: View {
 #if DEBUG
 #Preview(traits: .withSampleData) {
   SnapperAppShell()
+    .environment(AlbumSearchViewModel())
+    .environment(AlbumLocationCaptureCoordinator())
 }
 #endif

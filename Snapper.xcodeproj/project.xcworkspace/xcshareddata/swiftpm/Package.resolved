@@ -1,0 +1,33 @@
+{
+  "originHash" : "6ed2941d0ee644848ba3b400a3ed7224478b3deca2625b4bb10aedf836496057",
+  "pins" : [
+    {
+      "identity" : "sentry-apple-swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getsentry/sentry-apple-swift-log.git",
+      "state" : {
+        "revision" : "1b7160216e57d15a4237cf0100efc962d43c572a",
+        "version" : "9.31.0"
+      }
+    },
+    {
+      "identity" : "sentry-cocoa",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getsentry/sentry-cocoa",
+      "state" : {
+        "revision" : "2f64c77f77514acd01780d1aac86ae75b7fccd04",
+        "version" : "9.31.0"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "c9c6bb9d275ec0d95c3ad16391f3f045dc623104",
+        "version" : "1.16.2"
+      }
+    }
+  ],
+  "version" : 3
+}

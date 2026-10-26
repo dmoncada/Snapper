@@ -3,26 +3,21 @@ import SwiftUI
 
 @main
 struct SnapperApp: App {
-  private let store: Result<ModelContainer, Error> = Result {
-    if ProcessInfo.processInfo.arguments.contains("-ui-testing-seed-albums") {
-      return try SampleAlbumStore.makeContainer(limit: 2)
-    }
-    return try SharedAlbumStore.makeContainer()
-  }
+  @State private var dependencies = Dependencies()
 
   var body: some Scene {
     WindowGroup {
-      switch store {
-      case .success(let container):
-        ContentView()
-          .modelContainer(container)
+      ContentView()
+        .modelContainer(dependencies.modelContainer)
 
-      case .failure:
-        ContentUnavailableView(
-          "History unavailable",
-          systemImage: "exclamationmark.triangle",
-        )
-      }
+        .environment(\.apiClient, dependencies.apiClient)
+        .environment(\.previewPlayer, dependencies.previewPlayer)
+        .environment(\.imageRecognizer, dependencies.imageRecognizer)
+        .environment(\.locationProvider, dependencies.locationProvider)
+
+        .environment(dependencies.searchViewModel)
+        .environment(dependencies.historyViewModel)
+        .environment(dependencies.locationCoordinator)
     }
   }
 }
@@ -30,6 +25,8 @@ struct SnapperApp: App {
 private struct ContentView: View {
   @AppStorage(.storageKeys.firstLaunch)
   private var firstLaunch = true
+
+  @Environment(\.apiClient) private var client
 
   @State private var isLaunching = true
 
@@ -47,6 +44,9 @@ private struct ContentView: View {
       let delay = firstLaunch ? 2.0 : 0.5
       try? await Task.sleep(for: .seconds(delay))
       withAnimation { isLaunching = false }
+    }
+    .task {
+      try? await client.health()  // Warm up the backend.
     }
   }
 }

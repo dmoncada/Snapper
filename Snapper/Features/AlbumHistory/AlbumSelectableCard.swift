@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AlbumSelectableCard: View {
-  let entry: AlbumEntry
+  let album: Album
   let isSelecting: Bool
   let isSelected: Bool
 
@@ -15,7 +15,7 @@ struct AlbumSelectableCard: View {
         .fill(.accent.opacity(0.25))
       }
 
-      AlbumHistoryCard(entry: entry)
+      AlbumHistoryCard(album: album)
         .padding(Padding.sm)
     }
     .containerShape(.rect(cornerRadius: Radius.md))
@@ -45,20 +45,20 @@ struct AlbumSelectableCard: View {
 import SwiftData
 
 private struct TestSelectableGrid: View {
-  let entries: [AlbumEntry]
+  let albums: [Album]
 
-  @State private var selection = Set<AlbumEntry.ID>()
+  @State private var selection = Set<Album.ID>()
 
   var body: some View {
     NavigationStack {
       SelectableGrid(
-        entries,
+        albums,
         selection: $selection,
         isSelecting: true,
         onOpen: { _ in },
-      ) { entry, isSelected in
+      ) { album, isSelected in
         AlbumSelectableCard(
-          entry: entry,
+          album: album,
           isSelecting: true,
           isSelected: isSelected,
         )
@@ -77,12 +77,12 @@ private struct TestSelectableGrid: View {
 }
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
+  @Previewable @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
 
-  if entries.isEmpty {
+  if albums.isEmpty {
     ProgressView()
   } else {
-    TestSelectableGrid(entries: entries)
+    TestSelectableGrid(albums: albums)
   }
 }
 #endif

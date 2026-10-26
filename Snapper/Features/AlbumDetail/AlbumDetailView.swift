@@ -1,36 +1,38 @@
 import MapKit
+import SwiftData
 import SwiftUI
 
 struct AlbumDetailView: View {
-  @Environment(PreviewPlayer.self) private var player
+  @Environment(\.modelContext) private var context
+  @Environment(\.previewPlayer) private var player
 
-  let entry: AlbumEntry
+  let album: Album
   let showMetadata: Bool
 
-  init(entry: AlbumEntry, showMetadata: Bool = true) {
-    self.entry = entry
+  init(album: Album, showMetadata: Bool = true) {
+    self.album = album
     self.showMetadata = showMetadata
   }
 
   @State private var vm = AlbumDetailViewModel()
 
   var body: some View {
-    ScrollView(.vertical) {
+    ScrollView {
       VStack(spacing: 0) {
-        AlbumCover(url: URL(string: entry.coverImageUrlString ?? ""))
+        AlbumCover(url: album.coverImageUrl)
           .stretchable()
 
         VStack(alignment: .leading, spacing: Padding.xxl) {
-          AlbumHeaderSection(entry: entry)
-          AlbumDetailSection(entry: entry, showMetadata: showMetadata)
-          AlbumTrackSection(tracks: vm.tracks)
+          AlbumHeaderSection(album: album, showMetadata: showMetadata)
+          AlbumDetailSection(album: album, showMetadata: showMetadata)
+          AlbumTrackSection(vm: vm)
         }
         .padding(Padding.xl)
       }
       .containerRelativeFrame(.horizontal)
     }
     .task {
-      await vm.materialize(entry)
+      await vm.resolveTracks(for: album)
     }
     .onDisappear {
       Task {
@@ -46,7 +48,10 @@ private struct AlbumCover: View {
   let url: URL?
   let height: CGFloat
 
-  init(url: URL?, height: CGFloat = 300) {
+  init(
+    url: URL?,
+    height: CGFloat = 300,
+  ) {
     self.url = url
     self.height = height
   }
@@ -60,40 +65,46 @@ private struct AlbumCover: View {
 }
 
 private struct AlbumHeaderSection: View {
-  let entry: AlbumEntry
+  let album: Album
+  let showMetadata: Bool
 
   var body: some View {
+    @Bindable var album = album
+
     HStack(alignment: .top) {
-      AlbumHeader(entry: entry, size: .large)
+      AlbumHeader(title: album.title, artist: album.artist, size: .large)
 
       Spacer()
 
-      Icon(systemName: "star.fill", size: 24)
-        .foregroundStyle(.accent)
-        .symbolEffect(.bounce.up, options: .speed(2), value: entry.isFavorited)
-        .opacity(entry.isFavorited ? 1 : 0)
+      FavoriteIconButton(isFavorite: $album.isFavorite)
+        .disabled(showMetadata == false)
+        .opacity(showMetadata ? 1 : 0)
     }
   }
 }
 
 private struct AlbumDetailSection: View {
-  let entry: AlbumEntry
+  let album: Album
   let showMetadata: Bool
 
   var body: some View {
     ThemeSection {
       Section("About") {
-        if let label = entry.labels.first {
+        if let label = album.label.first {
           LabeledContent("Label", value: label)
         }
 
-        if let year = entry.year?.description {
+        if let year = album.year?.description {
           LabeledContent("Released", value: year)
         }
 
+        if let country = album.countryName {
+          LabeledContent("Country", value: country)
+        }
+
         if showMetadata {
-          LabeledContent("Recognized", value: entry.selectedAt.abbreviated)
-          LocationSection(entry: entry)
+          LabeledContent("Recognized", value: album.selectedAt.abbreviated)
+          LocationSection(location: album.location, locationStatus: album.locationStatus)
         }
       }
     }
@@ -108,12 +119,13 @@ extension Date {
 }
 
 private struct LocationSection: View {
-  let entry: AlbumEntry
+  let location: CLLocation?
+  let locationStatus: AlbumLocationStatus
 
   @State private var isExpanded = false
 
   var body: some View {
-    switch entry.locationStatus {
+    switch locationStatus {
     case .pending:
       LabeledContent {
         ProgressView()
@@ -123,12 +135,9 @@ private struct LocationSection: View {
       }
 
     case .captured:
-      if let location = entry.location {
+      if let location = location {
         DisclosureGroup(isExpanded: $isExpanded) {
-          MapView(
-            location: location,
-            accuracyRadius: entry.locationHorizontalAccuracy,
-          )
+          MapView(location: location)
         } label: {
           Text("Location")
             .font(.sligoilMicroBold(.subheadline))
@@ -147,6 +156,11 @@ private struct LocationSection: View {
 private struct MapView: View {
   let location: CLLocation
   let accuracyRadius: Double?
+
+  init(location: CLLocation, accuracyRadius: Double? = nil) {
+    self.location = location
+    self.accuracyRadius = accuracyRadius
+  }
 
   @State private var position: MapCameraPosition = .automatic
 
@@ -196,15 +210,27 @@ private struct MapView: View {
 }
 
 private struct AlbumTrackSection: View {
-  let tracks: [AlbumTrack]
+  let vm: AlbumDetailViewModel
 
   var body: some View {
     ThemeSection {
-      if tracks.isEmpty {
-        Section("Tracks") {
-          ProgressView()
-        }
-      } else {
+      switch vm.state {
+      case .ready:
+        Text("Ready to load.")
+
+      case .loading:
+        ProgressView()
+
+      case .cancelled:
+        Text("Loading cancelled.")
+
+      case .failure(let error):
+        Text("Unable to load tracks: \(error)")
+
+      case .success(let tracks) where tracks.isEmpty:
+        Text("Unable to load tracks.")
+
+      case .success(let tracks):
         Section {
           ForEach(tracks) { track in
             AlbumTrackRow(track: track)
@@ -223,9 +249,9 @@ private struct AlbumTrackSection: View {
 }
 
 private struct AlbumTrackRow: View {
-  @Environment(PreviewPlayer.self) private var player
+  @Environment(\.previewPlayer) private var player
 
-  let track: AlbumTrack
+  let track: Track
 
   var body: some View {
     let isPlaying = track.title == player.preview?.title
@@ -238,23 +264,29 @@ private struct AlbumTrackRow: View {
           : await player.play(url, title: track.title)
       }
     } label: {
-      LabeledContent {
-        Text(track.duration ?? "N/A")
-      } label: {
+      HStack(spacing: Spacing.sm) {
         HStack(spacing: Spacing.sm) {
-          Group {
-            if track.previewUrl == nil {
-              Icon(systemName: "play.slash")
-            } else {
-              PlaybackIndicator(isPlaying: isPlaying, progress: player.progress)
-            }
-          }
-          .frame(width: 24)
+          PlaybackIndicator(isPlaying: isPlaying, progress: player.progress)
+
+          // Text(track.position)
 
           Text(track.title)
             .lineLimit(1)
         }
+        .font(.sligoilMicroBold(.subheadline))
+
+        Spacer()
+
+        Text(track.duration)
+          .font(.sligoilMicro(.subheadline))
       }
+      .contentShape(.rect)
+      .foregroundStyle(
+        isPlaying
+          ? .accent
+          : .themePrimaryInverted
+      )
+      .opacity(isPlaying ? 1 : 0.625)
     }
     .buttonStyle(.plain)
     .labeledContentStyle(.withThemeFont(isActive: isPlaying))
@@ -267,14 +299,12 @@ private struct AlbumTrackRow: View {
 import SwiftData
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
-  @Previewable @State var player = PreviewPlayer()
+  @Previewable @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
 
-  if entries.count > 0 {
-    let entry = entries[0]
+  if let album = albums.first {
     NavigationStack {
-      AlbumDetailView(entry: entry)
-        .environment(player)
+      AlbumDetailView(album: album)
+        .environment(\.previewPlayer, .live)
     }
   } else {
     ProgressView()

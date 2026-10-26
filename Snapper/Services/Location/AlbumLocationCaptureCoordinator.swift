@@ -6,7 +6,11 @@ import SwiftData
 @MainActor
 @Observable
 final class AlbumLocationCaptureCoordinator {
-  private let locator = LocationService()
+  init(locator: any LocationProviding = .null) {
+    self.locator = locator
+  }
+
+  private let locator: LocationProviding
   private var isProcessing = false
   private var needsRetry = false
 
@@ -40,25 +44,25 @@ final class AlbumLocationCaptureCoordinator {
   }
 
   private func processPending(in context: ModelContext) async {
-    var processedIDs = Set<UUID>()
+    var processedIds = Set<UUID>()
     do {
-      let entries = try context.fetch(FetchDescriptor<AlbumEntry>())
+      let entries = try context.fetch(FetchDescriptor<Album>())
       let pendingCount =
         entries.filter {
-          $0.locationCaptureStatusRaw == AlbumLocationStatus.pending.rawValue
+          $0.locationStatusRaw == AlbumLocationStatus.pending.rawValue
         }
         .count
       logger.info("Scan found \(entries.count) albums; \(pendingCount) pending")
 
-      while let entry = try context.fetch(FetchDescriptor<AlbumEntry>())
+      while let entry = try context.fetch(FetchDescriptor<Album>())
         .filter({
-          $0.locationCaptureStatusRaw == AlbumLocationStatus.pending.rawValue
-            && processedIDs.contains($0.id) == false
+          $0.locationStatusRaw == AlbumLocationStatus.pending.rawValue
+            && processedIds.contains($0.id) == false
         })
         .min(by: { $0.selectedAt < $1.selectedAt })
       {
         logger.info("Processing album \(entry.id.uuidString, privacy: .public)")
-        processedIDs.insert(entry.id)
+        processedIds.insert(entry.id)
         await captureLocation(for: entry.id, in: context)
       }
     } catch {
@@ -72,7 +76,7 @@ final class AlbumLocationCaptureCoordinator {
   private func captureLocation(for id: UUID, in context: ModelContext) async {
     guard
       let entry = findEntry(by: id, in: context),
-      entry.locationCaptureStatusRaw == AlbumLocationStatus.pending.rawValue
+      entry.locationStatusRaw == AlbumLocationStatus.pending.rawValue
     else {
       logger.info("Skipping album \(id.uuidString, privacy: .public): missing or no longer pending")
       return
@@ -85,7 +89,7 @@ final class AlbumLocationCaptureCoordinator {
 
     let outcome: AlbumLocationStatus
     var coordinate: CLLocationCoordinate2D?
-    var horizontalAccuracy: Double?
+    // var horizontalAccuracy: Double?
 
     if age < 120 {
       do {
@@ -102,7 +106,7 @@ final class AlbumLocationCaptureCoordinator {
           abs(fixOffset) <= 120
         {
           coordinate = location.coordinate
-          horizontalAccuracy = location.horizontalAccuracy
+          // horizontalAccuracy = location.horizontalAccuracy
           outcome = .captured
           logger.info("Accepted fix for album \(id.uuidString, privacy: .public)")
         } else {
@@ -132,7 +136,7 @@ final class AlbumLocationCaptureCoordinator {
     // The album may have been deleted while Core Location was resolving.
     guard
       let current = findEntry(by: id, in: context),
-      current.locationCaptureStatusRaw == AlbumLocationStatus.pending.rawValue
+      current.locationStatusRaw == AlbumLocationStatus.pending.rawValue
     else {
       logger.info(
         "Dropping result for album \(id.uuidString, privacy: .public): deleted or status changed"
@@ -143,10 +147,10 @@ final class AlbumLocationCaptureCoordinator {
     if let coordinate {
       current.latitude = coordinate.latitude
       current.longitude = coordinate.longitude
-      current.locationHorizontalAccuracy = horizontalAccuracy
+      // current.locationHorizontalAccuracy = horizontalAccuracy
     }
 
-    current.locationCaptureStatusRaw = outcome.rawValue
+    current.locationStatusRaw = outcome.rawValue
 
     do {
       try context.save()
@@ -160,14 +164,14 @@ final class AlbumLocationCaptureCoordinator {
       // Keep this album eligible for another attempt without rolling back unrelated edits.
       current.latitude = nil
       current.longitude = nil
-      current.locationHorizontalAccuracy = nil
-      current.locationCaptureStatusRaw = AlbumLocationStatus.pending.rawValue
+      // current.locationHorizontalAccuracy = nil
+      current.locationStatusRaw = AlbumLocationStatus.pending.rawValue
     }
   }
 
-  private func findEntry(by id: UUID, in context: ModelContext) -> AlbumEntry? {
+  private func findEntry(by id: UUID, in context: ModelContext) -> Album? {
     do {
-      return try context.fetch(FetchDescriptor<AlbumEntry>())
+      return try context.fetch(FetchDescriptor<Album>())
         .first { $0.id == id }
     } catch {
       logger.error(

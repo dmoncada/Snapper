@@ -1,77 +1,68 @@
 import SwiftUI
 
-nonisolated struct AlbumTracklistRequest: Encodable, Sendable {
-  let discogsReleaseId: Int
-  let artist: String
-  let title: String
-}
-
-nonisolated struct AlbumTracklist: Sendable, Hashable {
-  let tracks: [AlbumTrack]
-  let source: AlbumTracklistSource
-}
-
-nonisolated enum AlbumTracklistSource: Sendable, Hashable {
-  case itunes(URL?)
-  case discogs
-
-  var title: String {
-    switch self {
-    case .itunes:
-      "Tracks and previews from iTunes"
-    case .discogs:
-      "Tracklist from Discogs"
-    }
-  }
-
-  var itunesUrl: URL? {
-    guard case .itunes(let url) = self else { return nil }
-    return url
-  }
-}
-
-nonisolated struct AlbumTracklistResolver: Sendable {
-  private let apiClient: SnapperApiClient
-
-  init(apiClient: SnapperApiClient) {
-    self.apiClient = apiClient
-  }
-
-  func resolve(_ request: AlbumTracklistRequest) async throws -> AlbumTracklist {
-    try await apiClient.resolveTracklist(request)
-  }
-}
-
 @MainActor
 @Observable
 final class AlbumDetailViewModel {
-  private let resolver: AlbumTracklistResolver
-
-  private(set) var tracks: [AlbumTrack] = []
-  private(set) var tracklistSource: AlbumTracklistSource?
-
-  init() {
-    resolver = .init(apiClient: .init())
+  enum State {
+    case ready
+    case loading
+    case cancelled
+    case success([Track])
+    case failure(String)
+    // case failure(LocalizedError)
   }
 
-  func materialize(_ entry: AlbumEntry) async {
-    let request = AlbumTracklistRequest(
-      discogsReleaseId: entry.discogsReleaseId,
-      artist: entry.artist,
-      title: entry.title,
-    )
+  // init(apiClient: any ApiClient = .null) {
+  init(apiClient: any ApiClient = .live) {
+    self.apiClient = apiClient
+  }
 
-    if let tracklist = await resolveTracks(for: request) {
-      tracklistSource = tracklist.source
-      tracks = tracklist.tracks
+  private(set) var state: State = .ready
+
+  private let apiClient: ApiClient
+
+  func resolveTracks(for album: Album) async {
+    guard album.tracks.isEmpty else {
+      state = .success(album.tracks.positionSorted)
+      return
     }
-  }
 
-  private func resolveTracks(for entry: AlbumTracklistRequest) async -> AlbumTracklist? {
+    state = .loading
+
     do {
-      return try await resolver.resolve(entry)
+      let results = try await apiClient.resolveTracks(for: album)
+      try Task.checkCancellation()
+
+      guard album.tracks.isEmpty else {
+        state = .success(album.tracks)
+        return
+      }
+
+      album.tracks = results.map { Track(dto: $0, album: album) }
+
+      state = .success(album.tracks.positionSorted)
+    } catch is CancellationError {
+      state = .cancelled
     } catch {
-      return nil
+      state = .failure(error.localizedDescription)
     }
+  }
+}
+
+extension Array where Element == Track {
+  fileprivate var positionSorted: [Track] {
+    sorted(using: KeyPathComparator(\.position, comparator: .localizedStandard))
+  }
+}
+
+extension ApiClient {
+  fileprivate func resolveTracks(for album: Album) async throws -> [TrackDto] {
+    try await resolveTracks(
+      // discogsId: album.id,
+      discogsId: album.discogsId,
+      albumTitle: album.title,
+      albumArtist: album.artist,
+      barcode: album.barcode.first,
+    )
   }
 }

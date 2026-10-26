@@ -4,7 +4,7 @@ import Observation
 
 @MainActor
 @Observable
-final class PreviewPlayer {
+final class PreviewPlayer: PreviewPlaying {
   struct Preview: Equatable {
     let url: URL
     let title: String
@@ -241,51 +241,62 @@ final class PreviewPlayer {
   }
 }
 
+extension PreviewPlaying where Self == PreviewPlayer {
+  static var live: Self { Self() }
+}
+
 #if DEBUG
 import SwiftUI
 
-#Preview {
-  @Previewable @State var player = PreviewPlayer()
+private struct TestPreviewPlayer: View {
+  @Environment(\.previewPlayer) private var player
 
-  let titles = [
+  private let titles = [
     "Take a Bow",
     "Starlight",
     "Supermassive Black Hole",
   ]
 
-  let urls = [
+  private let urls = [
     "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b1/37/d2/b137d288-04c0-bdaf-9c93-e895a3931394/mzaf_8273800498014466621.plus.aac.p.m4a",
     "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/00/2c/2a/002c2a41-d59f-92a6-740a-35641b4e1e48/mzaf_9814325723002930170.plus.aac.p.m4a",
     "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/76/4a/63/764a63c0-9533-97ce-51a5-31a23b57f2eb/mzaf_3187296926844362175.plus.aac.p.m4a",
   ]
   .compactMap(URL.init(string:))
 
-  if titles.count == urls.count {
-    VStack {
-      ForEach(Array(zip(titles, urls)).enumerated(), id: \.offset) { _, pair in
-        let (title, url) = pair
-        let isPlaying = title == player.preview?.title
+  var body: some View {
+    if titles.count == urls.count {
+      VStack {
+        ForEach(Array(zip(titles, urls)).enumerated(), id: \.offset) { _, pair in
+          let (title, url) = pair
+          let isPlaying = title == player.preview?.title
 
-        LabeledContent(title) {
-          PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
-            Task {
-              isPlaying
-                ? await player.stopImmediately()
-                : await player.play(url, title: title)
+          LabeledContent(title) {
+            PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
+              Task {
+                isPlaying
+                  ? await player.stopImmediately()
+                  : await player.play(url, title: title)
+              }
             }
+            .frame(width: 24)
           }
-          .frame(width: 24)
+          .foregroundStyle(
+            isPlaying
+              ? .themeRed
+              : .themeSeafoam
+          )
         }
-        .foregroundStyle(
-          isPlaying
-            ? .themeRed
-            : .themeSeafoam
-        )
       }
+      .padding()
+    } else {
+      ProgressView()
     }
-    .padding()
-  } else {
-    ProgressView()
   }
+}
+
+#Preview {
+  TestPreviewPlayer()
+    .environment(\.previewPlayer, .live)
 }
 #endif

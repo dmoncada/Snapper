@@ -1,20 +1,20 @@
-import CoreLocation
 import SwiftData
 import SwiftUI
 
 struct HomeView: View {
   @AppStorage(.storageKeys.openFirstResult)
-  private var openFirstResult = false
+  private var openFirstResult = true
 
-  @Environment(\.modelContext) private var context
+  @Environment(AlbumSearchViewModel.self) private var vm
   @Environment(Router.self) private var router
 
-  @State private var vm = AlbumSearchViewModel()
-  @State private var path: [AlbumEntry] = []
+  @State private var searchText = ""
   @State private var isPresented = false
 
+  @FocusState private var isFocused: Bool
+
   var body: some View {
-    NavigationStack(path: $path) {
+    NavigationStack {
       VStack(alignment: .leading, spacing: 0) {
         VStack(spacing: Spacing.sm) {
           HStack(spacing: Spacing.sm) {
@@ -25,14 +25,28 @@ struct HomeView: View {
               .buttonStyle(.large)
           }
 
-          SearchField(text: $vm.searchText, placeholder: "Or search by artist, album")
+          /*
+          SearchField(text: $searchText, placeholder: "Or search by artist, album")
             .keyboardType(.webSearch)
+           */
+
+          TextField(text: $searchText) {
+            Text("Or search by artist, album")
+          }
+          .autocorrectionDisabled(true)
+          .keyboardType(.webSearch)
+          .focused($isFocused)
+          .textFieldStyle(
+            .searchField(
+              text: $searchText,
+              isFocused: isFocused,
+            )
+          )
         }
         .padding(Padding.xl)
 
         AlbumCandidateSection(vm: vm) { candidate in
-          let entry = AlbumEntry(candidate: candidate)
-          router.sheetItem = .create(entry)
+          router.sheetItem = .create(candidate)
         }
       }
       .frame(
@@ -43,17 +57,17 @@ struct HomeView: View {
         if openFirstResult {
           CameraAlbumScanScreen { data in
             isPresented = false
-            onData(data: data)
+            onData(data)
           }
         } else {
           CameraScanScreen(
             onBarcode: { barcode in
               isPresented = false
-              vm.showScannedBarcode(barcode)
+              onBarcode(barcode)
             },
             onPhoto: { data in
               isPresented = false
-              onData(data: data)
+              onData(data)
             },
           )
         }
@@ -70,82 +84,93 @@ struct HomeView: View {
       .fullBackground(.themePrimary)
       .dismissKeyboardOnTap()
     }
-    .task(id: vm.searchText) {
-      await vm.search()
+    .task(id: searchText) {
+      await vm.search(by: .term(searchText))
     }
   }
 
-  private func onData(data: Data) {
+  private func onBarcode(_ barcode: String) {
     Task {
-      do {
-        try await vm.recognize(in: data)
-      } catch {
-        print(error.localizedDescription)
-      }
+      await vm.search(by: .barcode(barcode))
+    }
+  }
+
+  private func onData(_ data: Data) {
+    Task {
+      await vm.detect(in: data)
     }
   }
 }
 
 private struct AlbumCandidateSection: View {
   let vm: AlbumSearchViewModel
-  let action: (AlbumCandidate) -> Void
+  let action: (Album) -> Void
 
   var body: some View {
-    Section {
+    VStack {
       switch vm.state {
-      case .idle:
+      case .ready:
+        Text("Ready to search")
+
+      case .searching:
+        ProgressView("Searching term...")
+
+      case .detecting:
+        ProgressView("Detecting barcode...")
+
+      case .cancelled:
+        Text("Search cancelled")
+
+      case .failure(let error):
+        ContentUnavailableView(error.localizedDescription, systemImage: "xmark.circle")
+
+      case .success(let albums) where albums.isEmpty:
         ContentUnavailableView.search
 
-      case .searching, .recognizing:
-        ProgressView(vm.state.description).frame(maxWidth: .infinity, maxHeight: .infinity)
-
-      case .unreadable:
-        ContentUnavailableView("Unreadable", systemImage: "xmark.circle")
-
-      case .error(let error):
-        ContentUnavailableView(error, systemImage: "xmark.circle")
-
-      case .results:
-        ScrollView(.vertical) {
-          VStack {
-            ForEach(vm.results.enumerated(), id: \.offset) { i, candidate in
-              Button {
-                action(candidate)
-              } label: {
-                VStack {
-                  AlbumCandidateRow(candidate: candidate)
-                  if i < vm.results.count - 1 {
-                    Divider()
-                  }
+      case .success(let albums):
+        ScrollView {
+          ThemeSection {
+            Section {
+              ForEach(albums) { candidate in
+                Button {
+                  action(candidate)
+                } label: {
+                  AlbumCandidateRow(album: candidate)
                 }
+                .buttonStyle(.plain)
               }
-              .buttonStyle(.plain)
             }
           }
-          .padding(Padding.xl)
+          .padding(.horizontal, Padding.xl)
         }
         .scrollDismissesKeyboard(.immediately)
-
-      default:
-        EmptyView()
       }
     }
+    .frame(
+      maxWidth: .infinity,
+      maxHeight: .infinity,
+    )
   }
 }
 
 #if DEBUG
-#Preview("Default") {
+#Preview("Default", traits: .withoutData) {
   @Previewable @State var router = Router()
 
   HomeView()
     .withSheetDestination($router.sheetItem)
-    .modelContainer(for: AlbumEntry.self)
-    .environment(AlbumLocationCaptureCoordinator())
-    .environment(PreviewPlayer())
+    .environment(
+      AlbumSearchViewModel(
+        apiClient: .live,
+        recognizer: .stub(result: .barcode("843563174807")),
+      )
+    )
+    .environment(AlbumLocationCaptureCoordinator(locator: .stub(.newYork)))
+    .environment(\.previewPlayer, .live)
     .environment(router)
 }
 
-#Preview("In tab") {
+#Preview("In tab", traits: .withoutData) {
   @Previewable @State var router = Router()
 
   TabView {
@@ -154,9 +179,14 @@ private struct AlbumCandidateSection: View {
     }
   }
   .withSheetDestination($router.sheetItem)
-  .modelContainer(for: AlbumEntry.self)
-  .environment(AlbumLocationCaptureCoordinator())
-  .environment(PreviewPlayer())
+  .environment(
+    AlbumSearchViewModel(
+      apiClient: .live,
+      recognizer: .stub(result: .barcode("843563174807")),
+    )
+  )
+  .environment(AlbumLocationCaptureCoordinator(locator: .stub(.newYork)))
+  .environment(\.previewPlayer, .live)
   .environment(router)
 }
 #endif

@@ -19,3 +19,17 @@ struct AlertDestination: Identifiable {
     self.secondary = secondary
   }
 }
+
+extension AlertDestination {
+  static func ok(
+    _ message: LocalizedStringResource,
+    title: LocalizedStringResource = "Notice",
+    action: @escaping @MainActor () -> Void = {},
+  ) -> Self {
+    .init(
+      title: title,
+      message: message,
+      primary: .init(title: "OK", action: action),
+    )
+  }
+}

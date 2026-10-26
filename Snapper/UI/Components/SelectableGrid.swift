@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SelectableGrid<
   Item: Identifiable,
+  Header: View,
   Cell: View,
 >: View where Item.ID: Hashable {
   let items: [Item]
@@ -12,6 +13,7 @@ struct SelectableGrid<
 
   let columns: [GridItem]
 
+  @ViewBuilder let header: () -> Header
   @ViewBuilder let cell: (Item, Bool) -> Cell
 
   init(
@@ -24,6 +26,7 @@ struct SelectableGrid<
     ],
     onOpen: @escaping (Item) -> Void,
     @ViewBuilder cell: @escaping (Item, Bool) -> Cell,
+    @ViewBuilder header: @escaping () -> Header = { EmptyView() },
   ) {
     self.items = items
     self._selection = selection
@@ -31,27 +34,32 @@ struct SelectableGrid<
     self.columns = columns
     self.onOpen = onOpen
     self.cell = cell
+    self.header = header
   }
 
   var body: some View {
     ScrollView(.vertical) {
-      LazyVGrid(
-        columns: columns,
-        alignment: .leading,
-        spacing: Spacing.sm,
-      ) {
-        ForEach(items) { item in
-          SelectableView(
-            id: item.id,
-            isSelecting: isSelecting,
-            onOpen: { onOpen(item) },
-            selection: $selection,
-          ) { isSelected in
-            cell(item, isSelected)
+      VStack(spacing: Spacing.sm) {
+        header()
+
+        LazyVGrid(
+          columns: columns,
+          alignment: .leading,
+          spacing: Spacing.sm,
+        ) {
+          ForEach(items) { item in
+            SelectableView(
+              id: item.id,
+              isSelecting: isSelecting,
+              onOpen: { onOpen(item) },
+              selection: $selection,
+            ) { isSelected in
+              cell(item, isSelected)
+            }
           }
         }
       }
-      .padding(Padding.xl)
+      .padding(.horizontal, Padding.xl)
     }
   }
 }

@@ -37,9 +37,10 @@ extension HistoryEntry {
 
       await withTaskGroup(of: (Int, Data?).self) { group in
         for (index, record) in records.enumerated() {
-          let imageUrlString = record.thumbnailUrlString ?? record.coverImageUrlString
+          let imageUrl = record.thumbnailUrl ?? record.coverImageUrl
+
           group.addTask {
-            let data = await HistoryAlbumImageLoader.load(from: imageUrlString)
+            let data = await HistoryAlbumImageLoader.load(from: imageUrl)
             return (index, data)
           }
         }

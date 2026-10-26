@@ -50,23 +50,6 @@ extension SortCriterion {
     }
   }
 
-  func checkOrdered(
-    _ lhs: AlbumEntry,
-    _ rhs: AlbumEntry,
-    order: SortOrder,
-  ) -> Bool {
-    switch self {
-    case .albumTitle:
-      compare(lhs.title, rhs.title, order: order)
-
-    case .artistName:
-      compare(lhs.artist, rhs.artist, order: order)
-
-    case .dateFound:
-      compare(lhs.selectedAt, rhs.selectedAt, order: order)
-    }
-  }
-
   fileprivate func compare<T: Comparable>(
     _ lhs: T,
     _ rhs: T,

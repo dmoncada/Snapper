@@ -5,7 +5,7 @@ struct SnapperWidgetEntryView: View {
   let entry: HistoryEntry
 
   var body: some View {
-    let gridSize = entry.albums.count < 9 ? 2 : 3
+    let gridSize = entry.albums.count <= 4 ? 2 : 3
     let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: gridSize)
 
     GeometryReader { geometry in

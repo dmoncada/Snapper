@@ -3,20 +3,20 @@ import SwiftUI
 struct AlbumDetailWithActions: View {
   @Environment(Router.self) private var router
 
-  let entry: AlbumEntry
-  let onDelete: (AlbumEntry) -> Void
+  let album: Album
+  let onDelete: (Album) -> Void
 
   var body: some View {
-    AlbumDetailView(entry: entry)
+    AlbumDetailView(album: album)
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
           Menu {
-            FavoriteButton(entry: entry)
+            FavoriteButton(album: album)
             DeleteButton {
               router.alertItem = AlertDestination(
                 title: "Delete Album?",
-                message: "Do you want to delete \"\(entry.title)\" from your history?",
-                primary: .delete { onDelete(entry) },
+                message: "Do you want to delete \"\(album.title)\" from your history?",
+                primary: .delete { onDelete(album) },
                 secondary: .cancel,
               )
             }
@@ -32,17 +32,16 @@ struct AlbumDetailWithActions: View {
 import SwiftData
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query var entries: [AlbumEntry]
-  @Previewable @State var player = PreviewPlayer()
+  @Previewable @Query var albums: [Album]
   @Previewable @State var router = Router()
 
-  if let entry = entries.first {
+  if let album = albums.first {
     NavigationStack {
-      AlbumDetailWithActions(entry: entry) { _ in
+      AlbumDetailWithActions(album: album) { _ in
         print("Album deleted")
       }
       .withAlertDestination($router.alertItem)
-      .environment(player)
+      .environment(\.previewPlayer, .live)
       .environment(router)
     }
   } else {

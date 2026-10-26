@@ -6,7 +6,6 @@ struct SearchField: View {
   @Binding var text: String
 
   private let placeholder: String
-  private let leadingPadding = Padding.xl
 
   init(text: Binding<String>, placeholder: String = "") {
     self._text = text

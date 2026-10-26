@@ -47,11 +47,10 @@ struct CameraAlbumScanScreen: View {
     .overlay {
       AlbumScanStatusView(model: model)
     }
-    .sheet(item: $model.entry, onDismiss: sheetDismissed) { entry in
-      AlbumCreation(
-        entry: entry,
-        onSave: model.markSaved,
-      )
+    .sheet(item: $model.entry, onDismiss: sheetDismissed) { album in
+      AlbumCreation(album: album) {
+        model.markSaved()
+      }
     }
     .task(id: isClosing) {
       guard isClosing else { return }
@@ -94,9 +93,9 @@ struct CameraAlbumScanScreen: View {
         try Task.checkCancellation()
 
         guard !isCapturing, !isCompleted, !isClosing else { continue }
-        isCompleted = true
 
         model.accept(barcode)
+        isCompleted = true
         break
       }
     } catch is CancellationError {

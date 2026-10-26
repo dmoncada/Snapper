@@ -1,6 +1,6 @@
 enum SheetDestination: Hashable, Identifiable {
   case settings
-  case create(AlbumEntry)
+  case create(Album)
 
   var id: String {
     switch self {

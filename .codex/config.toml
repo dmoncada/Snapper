@@ -1,0 +1,3 @@
+[mcp_servers.xcode]
+default_tools_approval_mode = "approve"
+enabled = true

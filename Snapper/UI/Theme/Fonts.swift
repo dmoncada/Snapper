@@ -142,25 +142,22 @@ private func installedFontNames(matching queries: [String]) -> [String] {
 }
 
 private struct InstalledFontsList: View {
-  let fontNames = installedFontNames(matching: CustomFont.allCases.map(\.id))
+  private let fontNames = installedFontNames(matching: CustomFont.allCases.map(\.id))
 
   var body: some View {
     List(fontNames, id: \.self) { name in
       Text(name)
         .font(.custom(name, size: 32, relativeTo: .title))
         .minimumScaleFactor(0.5)
-        .scaledToFit()
     }
   }
 }
 
 private struct FontSpecimenView: View {
-  private let specimens = CustomFont.allCases
-
   var body: some View {
-    List(specimens) { font in
+    List(CustomFont.allCases) { font in
       VStack(alignment: .leading) {
-        Text("Hello, world!")
+        Text("MusicSnap")
           .font(.custom(font, .title))
         Text(font.id)
           .font(.caption)

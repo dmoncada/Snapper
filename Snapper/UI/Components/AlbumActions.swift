@@ -2,22 +2,22 @@ import SwiftData
 import SwiftUI
 
 struct FavoriteButton: View {
-  let entry: AlbumEntry
+  let album: Album
 
   var body: some View {
     Button {
-      entry.isFavorited.toggle()
+      album.isFavorite.toggle()
     } label: {
       HStack {
         Image(
           systemName:
-            entry.isFavorited
+            album.isFavorite
             ? "star.slash"
             : "star"
         )
 
         Text(
-          entry.isFavorited
+          album.isFavorite
             ? "Undo Favorite"
             : "Favorite"
         )
@@ -42,15 +42,15 @@ struct DeleteButton: View {
 import SwiftData
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query var entries: [AlbumEntry]
+  @Previewable @Query var albums: [Album]
 
-  if let entry = entries.first {
+  if let album = albums.first {
     NavigationStack {
       Text("Hello, world!")
         .toolbar {
           ToolbarItem(placement: .topBarTrailing) {
             Menu {
-              FavoriteButton(entry: entry)
+              FavoriteButton(album: album)
               DeleteButton {}
             } label: {
               Image(systemName: "ellipsis")

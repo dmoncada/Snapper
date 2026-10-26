@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct AlbumHeader: View {
+  /*
   init(entry: AlbumEntry, size: ControlSize = .small) {
     self.init(
       title: entry.title,
@@ -8,6 +9,7 @@ struct AlbumHeader: View {
       size: size,
     )
   }
+   */
 
   init(title: String, artist: String, size: ControlSize = .small) {
     self.title = title

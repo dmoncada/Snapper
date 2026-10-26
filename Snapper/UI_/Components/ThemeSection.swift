@@ -68,19 +68,20 @@ private struct ButtonRow: View {
     Button {
       isActive.toggle()
     } label: {
-      LabeledContent {
-        Text(trailing)
-      } label: {
-        HStack {
-          PlaybackIndicator(isPlaying: isActive, progress: 0.25)
-            .frame(width: 24)
+      HStack(spacing: Spacing.sm) {
+        PlaybackIndicator(isPlaying: isActive, progress: 0.25)
+          .border(.red)
 
-          Text(leading)
-        }
+        Text(leading)
+        Spacer()
+        Text(trailing)
       }
-      .labeledContentStyle(.withThemeFont(isActive: isActive))
+      .foregroundStyle(isActive ? AnyShapeStyle(.tint) : AnyShapeStyle(.themePrimaryInverted))
+      // .labeledContentStyle(.withThemeFont(isActive: isActive))
+      .contentShape(.rect)
     }
     .buttonStyle(.plain)
+    .border(.red)
   }
 }
 

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC111269308BE054001726C2 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = DC111268308BE054001726C2 /* Logging */; };
+		DC11126B308BE1D8001726C2 /* SentrySwiftLog in Frameworks */ = {isa = PBXBuildFile; productRef = DC11126A308BE1D8001726C2 /* SentrySwiftLog */; };
 		DC9912723071E25300DF8C76 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912713071E25300DF8C76 /* WidgetKit.framework */; };
 		DC9912743071E25300DF8C76 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912733071E25300DF8C76 /* SwiftUI.framework */; };
 		DC99127F3071E25400DF8C76 /* SnapperWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DC99126F3071E25300DF8C76 /* SnapperWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -79,9 +81,9 @@
 		DCD4E16C3074BFEC0020A7D8 /* Exceptions for "Snapper" folder in "SnapperWidget" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Features/AlbumDetail/AlbumEntry.swift,
-				Features/AlbumHistory/SharedAlbumStore.swift,
-				Features/AlbumSearch/AlbumCandidate.swift,
+				App/Constants.swift,
+				Models/Album.swift,
+				Models/Track.swift,
 				"Resources/Fonts/basteleur/Basteleur-Bold.ttf",
 				"Resources/Fonts/basteleur/Basteleur-Moonlight.ttf",
 				"Resources/Fonts/libre-caslon-text/LibreCaslonText-Bold.ttf",
@@ -91,6 +93,11 @@
 				"Resources/Fonts/sligoil/Sligoil-MicroBold.ttf",
 				"Resources/Fonts/sligoil/Sligoil-MicroMedium.ttf",
 				"Resources/Fonts/vg5000/VG5000-Regular.otf",
+				Services/Api/Dto/AlbumDto.swift,
+				Services/Api/Dto/TrackDto.swift,
+				Storage/JsonFile.swift,
+				Storage/SnapperSchema.swift,
+				Storage/SnapperStore.swift,
 				UI/Theme/Fonts.swift,
 			);
 			target = DC99126E3071E25300DF8C76 /* SnapperWidget */;
@@ -131,6 +138,8 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				DC11126B308BE1D8001726C2 /* SentrySwiftLog in Frameworks */,
+				DC111269308BE054001726C2 /* Logging in Frameworks */,
 			);
 		};
 		DC99126C3071E25300DF8C76 /* Frameworks */ = {
@@ -218,6 +227,10 @@
 				000000000000000000000010 /* Snapper */,
 			);
 			name = Snapper;
+			packageProductDependencies = (
+				DC111268308BE054001726C2 /* Logging */,
+				DC11126A308BE1D8001726C2 /* SentrySwiftLog */,
+			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* Snapper.app */;
 			productType = "com.apple.product-type.application";
@@ -290,7 +303,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2700;
-				LastUpgradeCheck = 2700;
+				LastUpgradeCheck = 2710;
 				TargetAttributes = {
 					000000000000000100000000 = {
 						CreatedOnToolsVersion = 26.3;
@@ -317,6 +330,10 @@
 			);
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DC111266308BD9E3001726C2 /* XCRemoteSwiftPackageReference "swift-log" */,
+				DC111267308BDC6E001726C2 /* XCRemoteSwiftPackageReference "sentry-apple-swift-log" */,
+			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
 			projectDirPath = "";
@@ -432,6 +449,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = E76XSQA67L;
 				DRIVERKIT_DEPLOYMENT_TARGET = 27.0;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -503,6 +521,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = E76XSQA67L;
 				DRIVERKIT_DEPLOYMENT_TARGET = 27.0;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -537,7 +556,6 @@
 				CODE_SIGN_ENTITLEMENTS = Snapper/Snapper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -583,7 +601,6 @@
 				CODE_SIGN_ENTITLEMENTS = Snapper/Snapper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -629,7 +646,6 @@
 				CODE_SIGN_ENTITLEMENTS = SnapperWidget/SnapperWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SnapperWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSnapWidget;
@@ -667,7 +683,6 @@
 				CODE_SIGN_ENTITLEMENTS = SnapperWidget/SnapperWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SnapperWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MusicSnapWidget;
@@ -704,7 +719,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
@@ -730,7 +744,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
@@ -756,7 +769,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
@@ -781,7 +793,6 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = E76XSQA67L;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
 				MARKETING_VERSION = 1.0;
@@ -846,6 +857,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DC111266308BD9E3001726C2 /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.16.2;
+			};
+		};
+		DC111267308BDC6E001726C2 /* XCRemoteSwiftPackageReference "sentry-apple-swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-apple-swift-log.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.31.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DC111268308BE054001726C2 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC111266308BD9E3001726C2 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+		DC11126A308BE1D8001726C2 /* SentrySwiftLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC111267308BDC6E001726C2 /* XCRemoteSwiftPackageReference "sentry-apple-swift-log" */;
+			productName = SentrySwiftLog;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 000000000000000000000000 /* Project object */;
 }

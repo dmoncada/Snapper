@@ -1,35 +1,44 @@
 import SwiftUI
 
 struct AlbumCandidateRow: View {
-  let candidate: AlbumCandidate
+  let album: Album
+
+  private let size: CGFloat = 64
 
   var body: some View {
     HStack {
-      AlbumThumbnail(url: candidate.thumbnailUrl)
+      AlbumThumbnail(url: album.thumbnailUrl)
 
-      AlbumHeader(title: candidate.title, artist: candidate.artist)
+      AlbumHeader(title: album.title, artist: album.artist)
         // .minimumScaleFactor(0.75)
         .lineLimit(1)
 
       Spacer()
 
       HStack(spacing: Spacing.xs) {
-        if let year = candidate.year {
+        if let country = album.countryCode {
+          Text(country)
+            .badgeStyle()
+        }
+
+        if let year = album.year {
           Text(String(year))
             .badgeStyle()
         }
 
-        if let format = candidate.formats.first {
-          Text(format)
+        if let format = album.mediaFormats.first {
+          Text(format.description)
             .badgeStyle()
         }
       }
     }
-    .frame(maxWidth: .infinity)
   }
 }
 
 private struct AlbumThumbnail: View {
+  let url: URL?
+  let size: CGFloat
+
   init(
     url: URL?,
     size: CGFloat = 64,
@@ -38,9 +47,6 @@ private struct AlbumThumbnail: View {
     self.size = size
   }
 
-  private let url: URL?
-  private let size: CGFloat
-
   var body: some View {
     CachedImage(url: url)
       .frame(width: size, height: size)
@@ -48,31 +54,43 @@ private struct AlbumThumbnail: View {
   }
 }
 
+enum MediaFormat: String, CaseIterable {
+  case vinyl
+  case cd
+  case cassette
+}
+
+extension MediaFormat: CustomStringConvertible {
+  var description: String {
+    switch self {
+    case .vinyl: "Vinyl"
+    case .cd: "CD"
+    case .cassette: "Cassette"
+    }
+  }
+}
+
+extension Album {
+  var mediaFormats: [MediaFormat] {
+    format.compactMap { MediaFormat(rawValue: $0.lowercased()) }
+  }
+}
+
 #if DEBUG
 import SwiftData
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query(sort: \AlbumEntry.selectedAt) var entries: [AlbumEntry]
+  @Previewable @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
 
-  if entries.count > 1 {
-    let entry1 = entries[0]
-    let entry2 = entries[1]
-
-    let album1 = entry1.toCandidate()
-    let album2 = entry2.toCandidate()
-
-    VStack(spacing: 0) {
-      AlbumCandidateRow(candidate: album1)
-        .padding()
-        .frame(height: 150)
-        .background(.themePrimary)
-        .environment(\.colorScheme, .light)
-
-      AlbumCandidateRow(candidate: album2)
-        .padding()
-        .frame(height: 150)
-        .background(.themePrimary)
-        .environment(\.colorScheme, .dark)
+  if let album = albums.first {
+    WithColorSchemes {
+      Button {
+        // No-op.
+      } label: {
+        AlbumCandidateRow(album: album)
+          .border(.red)
+      }
+      .padding()
     }
   } else {
     ProgressView()

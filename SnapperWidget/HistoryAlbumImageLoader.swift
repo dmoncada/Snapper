@@ -1,11 +1,8 @@
 import Foundation
 
 enum HistoryAlbumImageLoader {
-  nonisolated static func load(from urlString: String?) async -> Data? {
-    guard
-      let urlString,
-      let url = URL(string: urlString)
-    else { return nil }
+  nonisolated static func load(from url: URL?) async -> Data? {
+    guard let url else { return nil }
 
     var request = URLRequest(url: url)
     request.timeoutInterval = 3

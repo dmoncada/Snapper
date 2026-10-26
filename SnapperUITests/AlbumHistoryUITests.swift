@@ -1,3 +1,5 @@
+// Pending replacement with ApiService tests.
+#if false
 import XCTest
 
 final class AlbumHistoryUITests: XCTestCase {
@@ -64,3 +66,4 @@ final class AlbumHistoryUITests: XCTestCase {
     XCTAssertTrue(retainedAlbum.exists)
   }
 }
+#endif

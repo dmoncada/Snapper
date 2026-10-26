@@ -24,10 +24,10 @@ struct DynamicQueryView<Element: PersistentModel, Content: View>: View {
 }
 
 #if DEBUG
-private struct DynamicQueryPreview: View {
-  var descriptor: FetchDescriptor<AlbumEntry> {
-    let fetch = #Predicate<AlbumEntry> { _ in true }
-    let sort = SortDescriptor<AlbumEntry>(\.artist, order: .forward)
+private struct TestDynamicQueryView: View {
+  var descriptor: FetchDescriptor<Album> {
+    let fetch = #Predicate<Album> { _ in true }
+    let sort = SortDescriptor<Album>(\.artist, order: .forward)
     return FetchDescriptor(predicate: fetch, sortBy: [sort])
   }
 
@@ -48,7 +48,8 @@ private struct DynamicQueryPreview: View {
     }
   }
 }
+
 #Preview(traits: .withSampleData) {
-  DynamicQueryPreview()
+  TestDynamicQueryView()
 }
 #endif
