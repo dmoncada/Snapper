@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DC111269308BE054001726C2 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = DC111268308BE054001726C2 /* Logging */; };
 		DC11126B308BE1D8001726C2 /* SentrySwiftLog in Frameworks */ = {isa = PBXBuildFile; productRef = DC11126A308BE1D8001726C2 /* SentrySwiftLog */; };
+		DC70EAED30911561000411D2 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = DC70EAEC30911561000411D2 /* Alamofire */; };
 		DC9912723071E25300DF8C76 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912713071E25300DF8C76 /* WidgetKit.framework */; };
 		DC9912743071E25300DF8C76 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9912733071E25300DF8C76 /* SwiftUI.framework */; };
 		DC99127F3071E25400DF8C76 /* SnapperWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DC99126F3071E25300DF8C76 /* SnapperWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -138,6 +139,7 @@
 		000000000000000130000000 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				DC70EAED30911561000411D2 /* Alamofire in Frameworks */,
 				DC11126B308BE1D8001726C2 /* SentrySwiftLog in Frameworks */,
 				DC111269308BE054001726C2 /* Logging in Frameworks */,
 			);
@@ -230,6 +232,7 @@
 			packageProductDependencies = (
 				DC111268308BE054001726C2 /* Logging */,
 				DC11126A308BE1D8001726C2 /* SentrySwiftLog */,
+				DC70EAEC30911561000411D2 /* Alamofire */,
 			);
 			productName = MyApp;
 			productReference = 000000000000000000000120 /* Snapper.app */;
@@ -333,6 +336,7 @@
 			packageReferences = (
 				DC111266308BD9E3001726C2 /* XCRemoteSwiftPackageReference "swift-log" */,
 				DC111267308BDC6E001726C2 /* XCRemoteSwiftPackageReference "sentry-apple-swift-log" */,
+				DC70EAEB30911552000411D2 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 000000000000000000000020 /* Products */;
@@ -477,6 +481,7 @@
 				PROJECT_UNIQUE_VALUE = TUHW5FCR;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TVOS_DEPLOYMENT_TARGET = 27.0;
 				WATCHOS_DEPLOYMENT_TARGET = 27.0;
@@ -542,6 +547,7 @@
 				PROJECT_UNIQUE_VALUE = TUHW5FCR;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				TVOS_DEPLOYMENT_TARGET = 27.0;
 				WATCHOS_DEPLOYMENT_TARGET = 27.0;
 				XROS_DEPLOYMENT_TARGET = 27.0;
@@ -875,6 +881,14 @@
 				minimumVersion = 9.31.0;
 			};
 		};
+		DC70EAEB30911552000411D2 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.12.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -887,6 +901,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DC111267308BDC6E001726C2 /* XCRemoteSwiftPackageReference "sentry-apple-swift-log" */;
 			productName = SentrySwiftLog;
+		};
+		DC70EAEC30911561000411D2 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DC70EAEB30911552000411D2 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

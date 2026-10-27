@@ -1,3 +1,4 @@
+/*
 import Foundation
 
 nonisolated struct LiveApiClient: ApiClient {
@@ -113,3 +114,4 @@ import Playgrounds
   )
 }
 #endif
+*/
