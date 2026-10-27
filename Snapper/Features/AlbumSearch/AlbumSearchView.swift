@@ -5,6 +5,8 @@ struct HomeView: View {
   @AppStorage(.storageKeys.openFirstResult)
   private var openFirstResult = true
 
+  @Environment(\.locale) private var locale
+
   @Environment(AlbumSearchViewModel.self) private var vm
   @Environment(Router.self) private var router
 
@@ -85,19 +87,19 @@ struct HomeView: View {
       .dismissKeyboardOnTap()
     }
     .task(id: searchText) {
-      await vm.search(by: .term(searchText))
+      await vm.search(by: .term(searchText), locale: locale)
     }
   }
 
   private func onBarcode(_ barcode: String) {
     Task {
-      await vm.search(by: .barcode(barcode))
+      await vm.search(by: .barcode(barcode), locale: locale)
     }
   }
 
   private func onData(_ data: Data) {
     Task {
-      await vm.detect(in: data)
+      await vm.detect(in: data, locale: locale)
     }
   }
 }

@@ -36,8 +36,9 @@ final class AlbumSearchViewModel {
 
   func search(
     by kind: SearchKind,
-    debounceDuration: Duration = .seconds(1),
+    debounce duration: Duration = .seconds(1),
     limit: Int = 10,
+    locale: Locale = .current,
   ) async {
     var term: String?
     var barcode: String?
@@ -55,10 +56,15 @@ final class AlbumSearchViewModel {
     state = .searching
 
     do {
-      try await Task.sleep(for: debounceDuration)
+      try await Task.sleep(for: duration)
       try Task.checkCancellation()
 
-      let candidates = try await apiClient.searchAlbums(term: term, barcode: barcode, limit: limit)
+      var candidates = try await apiClient.searchAlbums(term: term, barcode: barcode, limit: limit)
+
+      if case .barcode = kind, let countryCode = locale.region?.identifier {
+        candidates = candidates.preferredCountryFirst(countryCode)
+      }
+
       let results = candidates.map { Album(dto: $0) }
 
       logger?.info("Found: \(results.count) albums for: '\(term ?? barcode ?? "nil")'")
@@ -71,7 +77,11 @@ final class AlbumSearchViewModel {
     }
   }
 
-  func detect(in data: Data, limit: Int = 10) async {
+  func detect(
+    in data: Data,
+    limit: Int = 10,
+    locale: Locale = .current,
+  ) async {
     state = .detecting
 
     do {
@@ -83,12 +93,21 @@ final class AlbumSearchViewModel {
         return
       }
 
-      return await search(by: .barcode(barcode), debounceDuration: .zero, limit: limit)
+      return await search(by: .barcode(barcode), debounce: .zero, limit: limit, locale: locale)
     } catch is CancellationError {
       // state = .cancelled
     } catch {
       state = .failure(.generic)
     }
+  }
+}
+
+extension Array where Element == AlbumDto {
+  fileprivate func preferredCountryFirst(_ countryCode: String) -> [AlbumDto] {
+    let code = countryCode.uppercased()
+    let local = self.filter { $0.countryInfo?.alpha2.uppercased() == code }
+    let other = self.filter { $0.countryInfo?.alpha2.uppercased() != code }
+    return local + other
   }
 }
 

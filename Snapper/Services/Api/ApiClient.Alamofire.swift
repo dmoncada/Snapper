@@ -92,14 +92,7 @@ nonisolated struct AlamofireApiClient: ApiClient {
       .serializingDecodable([AlbumDto].self, decoder: Self.makeDecoder())
       .value
 
-    if barcode != nil, let countryCode = Locale.current.region?.identifier {
-      let code = countryCode.uppercased()
-      let local = albums.filter { $0.countryInfo?.alpha2.uppercased() == code }
-      let other = albums.filter { $0.countryInfo?.alpha2.uppercased() != code }
-      return local + other
-    }
-
-    return albums
+        return albums
   }
 
   func resolveTracks(
