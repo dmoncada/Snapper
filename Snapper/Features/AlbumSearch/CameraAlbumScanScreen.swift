@@ -3,6 +3,7 @@ import SwiftUI
 struct CameraAlbumScanScreen: View {
   let onPhoto: @MainActor (Data) -> Void
 
+  @Environment(\.locale) private var locale
   @Environment(\.dismiss) private var dismiss
 
   @State private var model = AlbumScanFlowModel()
@@ -58,7 +59,7 @@ struct CameraAlbumScanScreen: View {
       dismiss()
     }
     .task(id: model.lookupGeneration) {
-      await model.lookup()
+      await model.lookup(locale: locale)
     }
     .task(id: model.scanGeneration) {
       await scan()

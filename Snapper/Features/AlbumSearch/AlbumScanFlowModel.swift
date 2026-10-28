@@ -36,7 +36,7 @@ final class AlbumScanFlowModel {
     lookupGeneration += 1
   }
 
-  func lookup() async {
+  func lookup(locale: Locale = .current) async {
     guard
       !isClosed,
       isSearching,
@@ -46,10 +46,13 @@ final class AlbumScanFlowModel {
     let generation = lookupGeneration
 
     do {
-      let response = try await apiClient.searchAlbums(term: nil, barcode: barcode, limit: 10)
+      var response = try await apiClient.searchAlbums(term: nil, barcode: barcode, limit: 10)
       try Task.checkCancellation()
 
-      // let candidates = response.map(AlbumCandidate.init(dto:))
+      if let countryCode = locale.region?.identifier {
+        response = response.preferredCountryFirst(countryCode)
+      }
+
       let candidates = response.map { Album(dto: $0) }
 
       guard

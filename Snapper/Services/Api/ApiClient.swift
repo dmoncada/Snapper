@@ -14,7 +14,7 @@ nonisolated protocol ApiClient: Sendable {
     albumTitle: String,
     albumArtist: String,
     barcode: String?,
-  ) async throws -> [TrackDto]
+  ) async throws -> TracklistResponseDto
 }
 
 struct NullApiClient: ApiClient {
@@ -33,8 +33,11 @@ struct NullApiClient: ApiClient {
     albumTitle: String,
     albumArtist: String,
     barcode: String?,
-  ) async throws -> [TrackDto] {
-    []
+  ) async throws -> TracklistResponseDto {
+    .init(
+      albumUrl: nil,
+      tracks: [],
+    )
   }
 }
 

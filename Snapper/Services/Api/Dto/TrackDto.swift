@@ -5,3 +5,8 @@ nonisolated struct TrackDto: Sendable, Codable {
   let duration: String
   let previewUrl: String?
 }
+
+nonisolated struct TracklistResponseDto: Sendable, Codable {
+  let albumUrl: String?
+  let tracks: [TrackDto]
+}

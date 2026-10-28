@@ -227,6 +227,7 @@ def matching_itunes_tracks(
         item
         for item in results
         if item.wrapperType == "track"
+        and item.kind != "music-video"
         and item.collectionId == collection_id
         and item.trackName
         and item.trackNumber is not None
@@ -279,7 +280,7 @@ def matching_upc_tracks(
 
         artist_score = _similarity(artist, album.artistName)
         title_score = _similarity(title, album.collectionName)
-        if artist_score < 0.90 or title_score < 0.70:
+        if artist_score < 0.90:
             continue
 
         tracks = matching_itunes_tracks(results, album.collectionId, discogs_tracks)

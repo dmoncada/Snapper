@@ -4,9 +4,12 @@ import Foundation
 nonisolated struct AlamofireApiClient: ApiClient {
   private let baseUrl: URL
   private let session: Session
+  private let decoder: JSONDecoder
 
   init(baseUrl: URL = .baseUrl) {
     self.baseUrl = baseUrl
+
+    self.decoder = Self.makeDecoder()
 
     let retryPolicy = Alamofire.RetryPolicy(
       retryLimit: 3,
@@ -89,10 +92,10 @@ nonisolated struct AlamofireApiClient: ApiClient {
         ],
       )
       .validate(statusCode: 200 ..< 300)
-      .serializingDecodable([AlbumDto].self, decoder: Self.makeDecoder())
+      .serializingDecodable([AlbumDto].self, decoder: decoder)
       .value
 
-        return albums
+    return albums
   }
 
   func resolveTracks(
@@ -100,7 +103,7 @@ nonisolated struct AlamofireApiClient: ApiClient {
     albumTitle: String,
     albumArtist: String,
     barcode: String? = nil,
-  ) async throws -> [TrackDto] {
+  ) async throws -> TracklistResponseDto {
     var parameters = [
       "discogs_id": String(discogsId),
       "album_title": albumTitle,
@@ -120,7 +123,7 @@ nonisolated struct AlamofireApiClient: ApiClient {
         ],
       )
       .validate(statusCode: 200 ..< 300)
-      .serializingDecodable([TrackDto].self, decoder: Self.makeDecoder())
+      .serializingDecodable(TracklistResponseDto.self, decoder: decoder)
       .value
   }
 
@@ -172,10 +175,10 @@ import Playgrounds
   let client: ApiClient = .live
 
   _ = try await client.resolveTracks(
-    discogsId: 25_875_376,
-    albumTitle: "Time's Arrow",
-    albumArtist: "Ladytron",
-    barcode: "711297532685",
+    discogsId: 28_581_574,
+    albumTitle: "Hackney Diamonds",
+    albumArtist: "Rolling Stones*",
+    barcode: "6 02458 12256 5",
   )
 }
 #endif

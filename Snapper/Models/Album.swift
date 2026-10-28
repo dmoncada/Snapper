@@ -10,9 +10,11 @@ final class Album: Identifiable {
   var title: String
   var artist: String
 
+  var musicUrl: URL?
   var discogsUrl: URL?
   var thumbnailUrl: URL?
   var coverImageUrl: URL?
+
   var countryName: String?
   var countryCode: String?
   var year: Int?

@@ -60,6 +60,7 @@ final class AlbumSearchViewModel {
       try Task.checkCancellation()
 
       var candidates = try await apiClient.searchAlbums(term: term, barcode: barcode, limit: limit)
+      try Task.checkCancellation()
 
       if case .barcode = kind, let countryCode = locale.region?.identifier {
         candidates = candidates.preferredCountryFirst(countryCode)
@@ -103,7 +104,7 @@ final class AlbumSearchViewModel {
 }
 
 extension Array where Element == AlbumDto {
-  fileprivate func preferredCountryFirst(_ countryCode: String) -> [AlbumDto] {
+  func preferredCountryFirst(_ countryCode: String) -> [AlbumDto] {
     let code = countryCode.uppercased()
     let local = self.filter { $0.countryInfo?.alpha2.uppercased() == code }
     let other = self.filter { $0.countryInfo?.alpha2.uppercased() != code }

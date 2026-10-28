@@ -15,11 +15,13 @@ from app.providers.itunes.client import ItunesClient, create_itunes_http_client
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     token = settings.DISCOGS_TOKEN
-    async with create_discogs_http_client(token) as discogs_http:
-        async with create_itunes_http_client() as itunes_http:
-            app.state.discogs = DiscogsClient(discogs_http)
-            app.state.itunes = ItunesClient(itunes_http)
-            yield
+    async with (
+        create_discogs_http_client(token) as discogs_http,
+        create_itunes_http_client() as itunes_http,
+    ):
+        app.state.discogs = DiscogsClient(discogs_http)
+        app.state.itunes = ItunesClient(itunes_http)
+        yield
 
 
 if settings.SENTRY_DSN and settings.FASTAPI_ENV != "development":

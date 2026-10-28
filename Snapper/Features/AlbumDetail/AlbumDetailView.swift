@@ -25,7 +25,7 @@ struct AlbumDetailView: View {
         VStack(alignment: .leading, spacing: Padding.xxl) {
           AlbumHeaderSection(album: album, showMetadata: showMetadata)
           AlbumDetailSection(album: album, showMetadata: showMetadata)
-          AlbumTrackSection(vm: vm)
+          AlbumTrackSection(vm: vm, musicUrl: album.musicUrl)
         }
         .padding(Padding.xl)
       }
@@ -211,6 +211,7 @@ private struct MapView: View {
 
 private struct AlbumTrackSection: View {
   let vm: AlbumDetailViewModel
+  let musicUrl: URL?
 
   var body: some View {
     ThemeSection {
@@ -240,8 +241,29 @@ private struct AlbumTrackSection: View {
         } footer: {
           let anyPreview = tracks.contains { $0.previewUrl != nil }
           if anyPreview {
-            Text("Tracks provided courtesy of iTunes.")
+            AlbumTrackSectionFooter(musicUrl: musicUrl)
           }
+        }
+      }
+    }
+  }
+}
+
+private struct AlbumTrackSectionFooter: View {
+  let musicUrl: URL?
+
+  var body: some View {
+    HStack(alignment: .center) {
+      Text("Tracks courtesy of iTunes.")
+
+      if let musicUrl {
+        Spacer()
+
+        Link(destination: musicUrl) {
+          Image(.appleMusicBadge)
+            .resizable()
+            .scaledToFit()
+            .frame(height: 32)
         }
       }
     }

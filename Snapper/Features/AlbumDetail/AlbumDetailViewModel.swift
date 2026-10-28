@@ -30,7 +30,7 @@ final class AlbumDetailViewModel {
     state = .loading
 
     do {
-      let results = try await apiClient.resolveTracks(for: album)
+      let response = try await apiClient.resolveTracks(for: album)
       try Task.checkCancellation()
 
       guard album.tracks.isEmpty else {
@@ -38,7 +38,8 @@ final class AlbumDetailViewModel {
         return
       }
 
-      album.tracks = results.map { Track(dto: $0, album: album) }
+      album.musicUrl = response.albumUrl.flatMap(URL.init(string:))
+      album.tracks = response.tracks.map { Track(dto: $0, album: album) }
 
       state = .success(album.tracks.positionSorted)
     } catch is CancellationError {
@@ -56,7 +57,7 @@ extension Array where Element == Track {
 }
 
 extension ApiClient {
-  fileprivate func resolveTracks(for album: Album) async throws -> [TrackDto] {
+  fileprivate func resolveTracks(for album: Album) async throws -> TracklistResponseDto {
     try await resolveTracks(
       // discogsId: album.id,
       discogsId: album.discogsId,

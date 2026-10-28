@@ -48,3 +48,8 @@ class TracklistTrack(BaseModel):
     position: str
     duration: str
     preview_url: str | None = None
+
+
+class TracklistResponse(BaseModel):
+    album_url: str | None = None
+    tracks: list[TracklistTrack] = Field(default_factory=list)
