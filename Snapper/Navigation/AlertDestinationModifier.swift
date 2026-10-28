@@ -40,7 +40,7 @@ extension View {
   @Previewable @State var alertItem: AlertDestination?
 
   VStack(spacing: 24) {
-    Button("Acknowledge") {
+    Button("Notice") {
       alertItem = AlertDestination(
         title: "Album created",
         message: "The album was added to your history.",

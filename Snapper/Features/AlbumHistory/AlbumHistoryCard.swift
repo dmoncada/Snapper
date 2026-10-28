@@ -6,7 +6,7 @@ struct AlbumHistoryCard: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       AlbumCover(url: album.coverImageUrl)
-        .roundedOutline(lineWidth: 1)
+        .roundedOutline(lineWidth: LineWidth.sm)
 
       HStack(alignment: .center) {
         AlbumHeader(title: album.title, artist: album.artist)
@@ -17,10 +17,11 @@ struct AlbumHistoryCard: View {
         Spacer()
 
         Icon(systemName: "star.fill")
-          .favoriteIconStyle(isFavorited: album.isFavorite)
+          .favoriteIconStyle(isFavorite: album.isFavorite)
 
         Text((album.selectedAt.shortRelative(to: .now)))
           .badgeStyle()
+          .controlSize(.mini)
       }
       .frame(height: 40)
     }
@@ -28,7 +29,7 @@ struct AlbumHistoryCard: View {
 }
 
 struct FavoriteIconStyle: ViewModifier {
-  let isFavorited: Bool
+  let isFavorite: Bool
 
   func body(content: Content) -> some View {
     content
@@ -36,15 +37,15 @@ struct FavoriteIconStyle: ViewModifier {
       .symbolEffect(
         .bounce.up,
         options: .speed(2),
-        value: isFavorited,
+        value: isFavorite,
       )
-      .opacity(isFavorited ? 1 : 0)
+      .opacity(isFavorite ? 1 : 0)
   }
 }
 
 extension View {
-  func favoriteIconStyle(isFavorited: Bool) -> some View {
-    modifier(FavoriteIconStyle(isFavorited: isFavorited))
+  func favoriteIconStyle(isFavorite: Bool) -> some View {
+    modifier(FavoriteIconStyle(isFavorite: isFavorite))
   }
 }
 

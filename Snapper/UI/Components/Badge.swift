@@ -3,10 +3,23 @@ import SwiftUI
 struct BadgeStyleModifier: ViewModifier {
   let isActive: Bool
 
+  @Environment(\.controlSize) private var controlSize
+
+  private var textStyle: Font.TextStyle {
+    switch controlSize {
+    case .mini: .caption2
+    case .small: .caption
+    case .regular: .body
+    case .large: .title3
+    case .extraLarge: .title2
+    @unknown default: .body
+    }
+  }
+
   func body(content: Content) -> some View {
     content
       .padding(Padding.md)
-      .font(.sligoilMicroBold(.caption))
+      .font(.sligoilMicroBold(textStyle))
       .foregroundStyle(
         isActive
           ? .themePrimary
@@ -18,7 +31,7 @@ struct BadgeStyleModifier: ViewModifier {
             .fill(.tint)
         } else {
           RoundedRectangle(cornerRadius: Radius.md)
-            .stroke(.themePrimaryInverted)
+            .stroke(.themePrimaryInverted, lineWidth: LineWidth.sm)
         }
       }
   }
@@ -72,6 +85,7 @@ struct FilterBar: View {
           .toggleStyle(.badge)
         }
       }
+      .padding(1)
     }
   }
 }
@@ -85,12 +99,15 @@ private struct TestBadge: View {
     VStack {
       Text("Badge")
         .badgeStyle()
+        .controlSize(.small)
 
       Toggle("Toggle", isOn: $isOn1)
         .toggleStyle(.badge)
+        .controlSize(.regular)
 
       Toggle("Tinted toggle", isOn: $isOn2)
         .toggleStyle(.badge)
+        .controlSize(.large)
         .tint(.blue)
     }
   }
@@ -119,7 +136,7 @@ private struct CompleteView: View {
     }
 
   private var filteredItems: [Item] {
-    guard selectedFilter != .all else {
+    if selectedFilter == .all {
       return items
     }
 
@@ -145,11 +162,11 @@ private struct CompleteView: View {
           Divider()
         }
       }
-      //      .border(.red)
     }
     .padding(.horizontal)
   }
 }
+
 #Preview("Filter Bar") {
   CompleteView()
 }

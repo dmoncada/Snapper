@@ -31,6 +31,7 @@ struct AlbumCandidateRow: View {
             .badgeStyle()
         }
       }
+      .controlSize(.mini)
     }
   }
 }

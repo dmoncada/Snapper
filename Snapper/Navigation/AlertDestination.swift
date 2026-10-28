@@ -26,10 +26,27 @@ extension AlertDestination {
     title: LocalizedStringResource = "Notice",
     action: @escaping @MainActor () -> Void = {},
   ) -> Self {
-    .init(
+    Self(
       title: title,
       message: message,
       primary: .init(title: "OK", action: action),
     )
   }
 }
+
+#if DEBUG
+#Preview {
+  @Previewable @State var alertItem: AlertDestination?
+
+  VStack {
+    Button("Show OK Alert") {
+      alertItem = .ok(
+        "The album was added to your history.",
+        title: "Album created",
+      )
+    }
+    .buttonStyle(.borderedProminent)
+  }
+  .withAlertDestination($alertItem)
+}
+#endif
