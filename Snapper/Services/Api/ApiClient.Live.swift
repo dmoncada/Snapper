@@ -1,24 +1,107 @@
-/*
+import Alamofire
 import Foundation
 
-nonisolated struct LiveApiClient: ApiClient {
-  private let httpClient: HttpClient
+nonisolated struct AlamofireApiClient: ApiClient {
+  private let baseUrl: URL
+  private let session: Session
+  private let decoder: JSONDecoder
 
-  init(
-    baseUrl: URL = .baseUrl,
-    transport: any HttpTransport = UrlSessionTransport().withRetry(),
-  ) {
-    httpClient = HttpClient(baseUrl: baseUrl, transport: transport)
+  // private let recognitionSession: Session
+
+  init(baseUrl: URL = .baseUrl) {
+    self.baseUrl = baseUrl
+
+    self.decoder = Self.makeDecoder()
+
+    let retryPolicy = Alamofire.RetryPolicy(
+      retryLimit: 3,
+      exponentialBackoffBase: 2,
+      exponentialBackoffScale: 0.5,
+      retryableHTTPMethods: [.get],
+      retryableHTTPStatusCodes: [408, 429, 500, 502, 503, 504],
+      retryableURLErrorCodes: [
+        .timedOut,
+        .cannotFindHost,
+        .cannotConnectToHost,
+        .networkConnectionLost,
+        .dnsLookupFailed,
+        .notConnectedToInternet,
+      ],
+    )
+
+    let retryAfter = Alamofire.Retrier { request, _, _, completion in
+      guard
+        request.request?.httpMethod == "GET",
+        request.retryCount < 3,
+        let response = request.response,
+        [408, 429, 500, 502, 503, 504].contains(response.statusCode),
+        let header = response.value(forHTTPHeaderField: "Retry-After"),
+        let seconds = Int(header.trimmingCharacters(in: .whitespacesAndNewlines)),
+        seconds >= 0
+      else {
+        completion(.doNotRetry)
+        return
+      }
+
+      completion(.retryWithDelay(TimeInterval(seconds)))
+    }
+
+    session = Self.makeSession(
+      timeout: 15,
+      interceptor: Alamofire.Interceptor(
+        retriers: [
+          retryAfter,
+          retryPolicy,
+        ]
+      ),
+    )
+
+    // recognitionSession = Self.makeSession(timeout: 90)
   }
 
   func health() async throws {
-    _ = try await httpClient.send(
-      Endpoint<EmptyResponse>(
-        route: .health,
-        responseKind: .empty(EmptyResponse()),
+    _ =
+      try await session.request(
+        baseUrl.appending(path: "health"),
+        headers: [
+          .accept("application/json"),
+          .contentType("application/json"),
+        ],
       )
-    )
+      .validate(statusCode: 200 ..< 300)
+      .serializingData(emptyResponseCodes: Set(200 ..< 300))
+      .value
   }
+
+  /*
+  func recognizeAlbum(
+    image: Data,
+    ocrText: String,
+  ) async throws -> [AlbumDto] {
+    // let decoder = Self.makeDecoder()
+
+    return
+      try await recognitionSession.upload(
+        multipartFormData: { form in
+          form.append(
+            Data(ocrText.utf8),
+            withName: "ocr_text",
+          )
+          form.append(
+            image,
+            withName: "image",
+            fileName: "cover.jpg",
+            mimeType: "image/jpeg",
+          )
+        },
+        to: baseUrl.appending(path: "albums/recognize"),
+        headers: [.accept("application/json")],
+      )
+      .validate(statusCode: 200 ..< 300)
+      .serializingDecodable([AlbumDto].self, decoder: decoder)
+      .value
+  }
+   */
 
   func searchAlbums(
     term: String? = nil,
@@ -27,30 +110,26 @@ nonisolated struct LiveApiClient: ApiClient {
   ) async throws -> [AlbumDto] {
     assert(term != nil || barcode != nil, "Term and barcode cannot both be nil.")
 
-    let albums = try await searchAlbumsInternal(term, barcode, limit)
+    var parameters = ["limit": String(limit)]
 
-    if barcode != nil, let countryCode = Locale.current.region?.identifier {
-      return AlbumRanking.preferredCountryFirst(albums, countryCode)
-    }
+    if let term { parameters["term"] = term }
+    if let barcode { parameters["barcode"] = barcode }
 
-    return albums
-  }
-
-  private func searchAlbumsInternal(
-    _ term: String? = nil,
-    _ barcode: String? = nil,
-    _ limit: Int = 10,
-  ) async throws -> [AlbumDto] {
-    try await httpClient.send(
-      Endpoint(
-        route: .albums,
-        queryItems: [
-          URLQueryItem(name: "term", value: term),
-          URLQueryItem(name: "barcode", value: barcode),
-          URLQueryItem(name: "limit", value: String(limit)),
+    let albums =
+      try await session.request(
+        baseUrl.appending(path: "albums"),
+        parameters: parameters,
+        encoder: URLEncodedFormParameterEncoder.default,
+        headers: [
+          .accept("application/json"),
+          .contentType("application/json"),
         ],
       )
-    )
+      .validate(statusCode: 200 ..< 300)
+      .serializingDecodable([AlbumDto].self, decoder: decoder)
+      .value
+
+    return albums
   }
 
   func resolveTracks(
@@ -58,34 +137,57 @@ nonisolated struct LiveApiClient: ApiClient {
     albumTitle: String,
     albumArtist: String,
     barcode: String? = nil,
-  ) async throws -> [TrackDto] {
-    try await httpClient.send(
-      Endpoint(
-        route: .tracks,
-        queryItems: [
-          URLQueryItem(name: "discogs_id", value: String(discogsId)),
-          URLQueryItem(name: "album_title", value: albumTitle),
-          URLQueryItem(name: "album_artist", value: albumArtist),
-          URLQueryItem(name: "barcode", value: barcode),
+  ) async throws -> TracklistResponseDto {
+    var parameters = [
+      "discogs_id": String(discogsId),
+      "album_title": albumTitle,
+      "album_artist": albumArtist,
+    ]
+
+    if let barcode { parameters["barcode"] = barcode }
+
+    return
+      try await session.request(
+        baseUrl.appending(path: "tracks"),
+        parameters: parameters,
+        encoder: URLEncodedFormParameterEncoder.default,
+        headers: [
+          .accept("application/json"),
+          .contentType("application/json"),
         ],
       )
+      .validate(statusCode: 200 ..< 300)
+      .serializingDecodable(TracklistResponseDto.self, decoder: decoder)
+      .value
+  }
+
+  private static func makeDecoder() -> JSONDecoder {
+    let decoder = JSONDecoder()
+    decoder.keyDecodingStrategy = .convertFromSnakeCase
+    return decoder
+  }
+
+  private static func makeSession(
+    timeout: TimeInterval,
+    interceptor: (any RequestInterceptor)? = nil,
+  ) -> Session {
+    let configuration = URLSessionConfiguration.default
+
+    configuration.urlCache = URLCache(
+      memoryCapacity: 20 * 1_024 * 1_024,
+      diskCapacity: 100 * 1_024 * 1_024,
     )
+
+    configuration.requestCachePolicy = .useProtocolCachePolicy
+    configuration.timeoutIntervalForRequest = timeout
+    configuration.timeoutIntervalForResource = timeout * 2
+    configuration.waitsForConnectivity = true
+
+    return Session(configuration: configuration, interceptor: interceptor)
   }
 }
 
-nonisolated private enum AlbumRanking {
-  static func preferredCountryFirst(
-    _ albums: [AlbumDto],
-    _ countryCode: String,
-  ) -> [AlbumDto] {
-    let code = countryCode.uppercased()
-    let local = albums.filter { $0.countryInfo?.alpha2.uppercased() == code }
-    let other = albums.filter { $0.countryInfo?.alpha2.uppercased() != code }
-    return local + other
-  }
-}
-
-extension ApiClient where Self == LiveApiClient {
+extension ApiClient where Self == AlamofireApiClient {
   static var live: Self { Self() }
   static func live(_ baseUrl: URL) -> Self { Self(baseUrl: baseUrl) }
 }
@@ -107,11 +209,10 @@ import Playgrounds
   let client: ApiClient = .live
 
   _ = try await client.resolveTracks(
-    discogsId: 25_875_376,
-    albumTitle: "Time's Arrow",
-    albumArtist: "Ladytron",
-    barcode: "711297532685",
+    discogsId: 28_581_574,
+    albumTitle: "Hackney Diamonds",
+    albumArtist: "Rolling Stones*",
+    barcode: "6 02458 12256 5",
   )
 }
 #endif
-*/

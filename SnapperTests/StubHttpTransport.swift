@@ -1,3 +1,4 @@
+#if false
 import Foundation
 
 @testable import Snapper
@@ -23,3 +24,4 @@ nonisolated struct StubHttpTransport: HttpTransport {
     return HttpResponse(data: Data(body.utf8), response: response)
   }
 }
+#endif
