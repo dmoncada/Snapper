@@ -13,6 +13,7 @@ struct Dependencies {
   let locationProvider: any LocationProviding
 
   let searchViewModel: AlbumSearchViewModel
+  let detailViewModel: AlbumDetailViewModel
   let historyViewModel: AlbumHistoryViewModel
   let locationCoordinator: AlbumLocationCaptureCoordinator
 
@@ -38,6 +39,7 @@ struct Dependencies {
       recognizer: imageRecognizer,
     )
 
+    detailViewModel = AlbumDetailViewModel(apiClient: apiClient)
     historyViewModel = AlbumHistoryViewModel(context: modelContainer.mainContext)
     locationCoordinator = AlbumLocationCaptureCoordinator(locator: locationProvider)
   }

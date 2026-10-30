@@ -6,6 +6,8 @@ struct AlbumDetailView: View {
   @Environment(\.modelContext) private var context
   @Environment(\.previewPlayer) private var player
 
+  @Environment(AlbumDetailViewModel.self) private var vm
+
   let album: Album
   let showMetadata: Bool
 
@@ -13,8 +15,6 @@ struct AlbumDetailView: View {
     self.album = album
     self.showMetadata = showMetadata
   }
-
-  @State private var vm = AlbumDetailViewModel()
 
   var body: some View {
     ScrollView {
@@ -253,8 +253,8 @@ private struct AlbumTrackSectionFooter: View {
   let musicUrl: URL?
 
   var body: some View {
-    HStack(alignment: .center) {
-      Text("Tracks courtesy of iTunes.")
+    VStack(alignment: .trailing) {
+      Text("Tracks provided courtesy of iTunes.")
 
       if let musicUrl {
         Spacer()
@@ -267,6 +267,10 @@ private struct AlbumTrackSectionFooter: View {
         }
       }
     }
+    .frame(
+      maxWidth: .infinity,
+      alignment: .trailing,
+    )
   }
 }
 
@@ -328,6 +332,7 @@ import SwiftData
     NavigationStack {
       AlbumDetailView(album: album)
         .environment(\.previewPlayer, .live)
+        .environment(AlbumDetailViewModel(apiClient: .live))
     }
   } else {
     ProgressView()

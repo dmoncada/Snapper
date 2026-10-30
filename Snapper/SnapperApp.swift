@@ -16,6 +16,7 @@ struct SnapperApp: App {
         .environment(\.locationProvider, dependencies.locationProvider)
 
         .environment(dependencies.searchViewModel)
+        .environment(dependencies.detailViewModel)
         .environment(dependencies.historyViewModel)
         .environment(dependencies.locationCoordinator)
     }
