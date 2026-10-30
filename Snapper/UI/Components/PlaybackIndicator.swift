@@ -1,15 +1,14 @@
 import SwiftUI
 
-struct PlaybackIndicator: View {
-  @Environment(\.isEnabled) var isEnabled
+struct PlaybackProgressViewStyle: ProgressViewStyle {
+  @Environment(\.isEnabled) private var isEnabled
 
-  @ScaledMetric(relativeTo: .body) var scaledSize: CGFloat = 24
-  @ScaledMetric(relativeTo: .body) var scaledWidth: CGFloat = 2
+  @ScaledMetric(relativeTo: .body) private var scaledSize: CGFloat = 24
+  @ScaledMetric(relativeTo: .body) private var scaledWidth: CGFloat = 2
 
   let isPlaying: Bool
-  let progress: Double
 
-  var body: some View {
+  func makeBody(configuration: Configuration) -> some View {
     ZStack {
       if isEnabled {
         Circle()
@@ -17,15 +16,21 @@ struct PlaybackIndicator: View {
           .stroke(.secondary.opacity(0.5), lineWidth: scaledWidth)
 
         Circle()
-          .trim(from: 0, to: isPlaying ? progress : 1)
-          .stroke(style: StrokeStyle(lineWidth: scaledWidth, lineCap: .round))
+          .trim(
+            from: 0,
+            to: isPlaying ? (configuration.fractionCompleted ?? 0) : 1,
+          )
+          .stroke(
+            style: StrokeStyle(
+              lineWidth: scaledWidth,
+              lineCap: .round,
+            )
+          )
           .rotationEffect(.degrees(-90))
       }
-    }
-    .overlay {
+
       Image(
-        systemName:
-          isEnabled
+        systemName: isEnabled
           ? isPlaying
             ? "pause.fill"
             : "play.fill"
@@ -38,6 +43,12 @@ struct PlaybackIndicator: View {
       width: scaledSize,
       height: scaledSize,
     )
+  }
+}
+
+extension ProgressViewStyle where Self == PlaybackProgressViewStyle {
+  static func playback(isPlaying: Bool) -> Self {
+    Self(isPlaying: isPlaying)
   }
 }
 
@@ -69,8 +80,8 @@ struct TestPlaybackIndicator: View {
         isPlaying ? stop() : play()
       } label: {
         HStack(spacing: Spacing.sm) {
-          PlaybackIndicator(isPlaying: isPlaying, progress: progress)
-            // .frame(minWidth: 32)
+          ProgressView(value: progress)
+            .progressViewStyle(.playback(isPlaying: isPlaying))
             .border(.green)
 
           Text("Song")

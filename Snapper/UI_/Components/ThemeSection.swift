@@ -69,7 +69,8 @@ private struct ButtonRow: View {
       isActive.toggle()
     } label: {
       HStack(spacing: Spacing.sm) {
-        PlaybackIndicator(isPlaying: isActive, progress: 0.25)
+        ProgressView(value: 0.25)
+          .progressViewStyle(.playback(isPlaying: isActive))
           .border(.red)
 
         Text(leading)

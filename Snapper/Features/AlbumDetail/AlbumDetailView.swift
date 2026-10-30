@@ -288,7 +288,8 @@ private struct AlbumTrackRow: View {
     } label: {
       HStack(spacing: Spacing.sm) {
         HStack(spacing: Spacing.sm) {
-          PlaybackIndicator(isPlaying: isPlaying, progress: player.progress)
+          ProgressView(value: player.progress)
+            .progressViewStyle(.playback(isPlaying: isPlaying))
 
           // Text(track.position)
 

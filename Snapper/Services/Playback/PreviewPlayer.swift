@@ -272,14 +272,17 @@ private struct TestPreviewPlayer: View {
           let isPlaying = title == player.preview?.title
 
           LabeledContent(title) {
-            PlaybackButton(isPlaying: isPlaying, progress: player.progress) {
+            Button {
               Task {
                 isPlaying
                   ? await player.stopImmediately()
                   : await player.play(url, title: title)
               }
+            } label: {
+              ProgressView(value: player.progress)
+                .progressViewStyle(.playback(isPlaying: isPlaying))
             }
-            .frame(width: 24)
+            .buttonStyle(.plain)
           }
           .foregroundStyle(
             isPlaying
