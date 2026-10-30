@@ -7,9 +7,11 @@ struct AlbumFixture: Codable {
   var title: String
   var artist: String
 
+  var musicUrl: URL?
   var discogsUrl: URL?
   var thumbnailUrl: URL?
   var coverImageUrl: URL?
+
   var countryName: String?
   var countryCode: String?
   var year: Int?
@@ -32,9 +34,11 @@ struct AlbumFixture: Codable {
     title = album.title
     artist = album.artist
 
+    musicUrl = album.musicUrl
     discogsUrl = album.discogsUrl
     thumbnailUrl = album.thumbnailUrl
     coverImageUrl = album.coverImageUrl
+
     countryName = album.countryName
     countryCode = album.countryCode
     year = album.year
@@ -71,6 +75,7 @@ struct AlbumFixture: Codable {
       selectedAt: selectedAt,
     )
 
+    album.musicUrl = musicUrl
     album.latitude = latitude
     album.longitude = longitude
     album.isFavorite = isFavorite
