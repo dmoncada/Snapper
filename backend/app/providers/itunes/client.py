@@ -13,6 +13,7 @@ from tenacity import (
 
 from app.core.rate_limit import RateLimitedAsyncTransport, SlidingWindowRateLimiter
 from app.core.retry import is_retryable
+from app.providers.itunes.catalog import ItunesCatalog
 from app.providers.itunes.models import (
     LookupRequest,
     LookupResponse,
@@ -55,7 +56,7 @@ def create_itunes_http_client(
     )
 
 
-class ItunesClient:
+class ItunesClient(ItunesCatalog):
     """Typed async client for music artist, album, and song catalog data."""
 
     def __init__(self, http_client: httpx2.AsyncClient) -> None:

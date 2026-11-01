@@ -13,6 +13,7 @@ from tenacity import (
 
 from app.core.rate_limit import RateLimitedAsyncTransport, SlidingWindowRateLimiter
 from app.core.retry import is_retryable
+from app.providers.discogs.catalog import DiscogsCatalog
 from app.providers.discogs.models import (
     ReleaseRequest,
     ReleaseResponse,
@@ -70,7 +71,7 @@ def create_discogs_http_client(
     )
 
 
-class DiscogsClient:
+class DiscogsClient(DiscogsCatalog):
     """Typed Discogs API wrapper around a caller-owned HTTP client."""
 
     def __init__(self, http_client: httpx2.AsyncClient) -> None:

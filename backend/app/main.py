@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from redis_fastapi import FastAPIRedis
 from sentry_sdk.integrations.logging import LoggingIntegration
 
-from app.api.main import router
+from app.api.routes import router
 from app.core.config import settings
 from app.providers.discogs.client import DiscogsClient, create_discogs_http_client
 from app.providers.itunes.client import ItunesClient, create_itunes_http_client

@@ -1,14 +1,13 @@
 import logging
-from typing import Annotated
+from dataclasses import dataclass, field
 
 import httpx2
-from fastapi import APIRouter, Query
 from pydantic import ValidationError
-from redis_fastapi import CacheBackend, CacheBackendDep
+from redis_fastapi import CacheBackend
 
-from app.api.deps import DiscogsClientDep, ItunesClientDep
-from app.api.models import TracklistRequest, TracklistResponse, TracklistTrack
-from app.core.cache import DAY, HOUR, MIN, cached_provider_call, catalog_cache_key
+from app.api.handlers.albums import get_release  # , release_artist
+from app.api.models import TracklistResponse, TracklistTrack
+from app.core.cache import DAY, catalog_cache_key
 from app.core.matching import (
     best_matching_album,
     best_matching_artist,
@@ -17,86 +16,76 @@ from app.core.matching import (
     normalize_barcode,
     normalize_name,
 )
-from app.providers.discogs.models import ReleaseRequest, ReleaseResponse, Track
-from app.providers.itunes.client import ItunesClient
+from app.providers.discogs.catalog import DiscogsCatalog
+from app.providers.discogs.models import ReleaseResponse, Track
+from app.providers.itunes.catalog import ItunesCatalog
 from app.providers.itunes.models import (
     LookupRequest,
-    LookupResponse,
     MusicItem,
     SearchRequest,
-    SearchResponse,
 )
 
-router = APIRouter(prefix="/tracks", tags=["tracks"])
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-class ResolvedAlbum(list[MusicItem]):
-    def __init__(
-        self,
-        album: MusicItem | None = None,
-        tracks: list[MusicItem] | None = None,
-    ):
-        super().__init__(tracks or [])
-        self.album = album
+@dataclass(frozen=True)
+class ResolutionParams:
+    discogs_id: int
+    album_title: str
+    album_artist: str
+    barcode: str | None = None
+
+
+@dataclass(frozen=True)
+class ResolvedAlbum:
+    album: MusicItem | None = None
+    tracks: list[MusicItem] = field(default_factory=list)
 
 
 _LOOKUP_ERRORS = (httpx2.HTTPError, ValidationError)
 
 
-@router.get("/", response_model=TracklistResponse)
 async def resolve_tracks(
-    params: Annotated[TracklistRequest, Query()],
-    discogs: DiscogsClientDep,
-    itunes: ItunesClientDep,
-    cache: CacheBackendDep,
+    album_id: int,
+    barcode: str | None,
+    discogs: DiscogsCatalog,
+    itunes: ItunesCatalog,
+    cache: CacheBackend,
 ) -> TracklistResponse:
-    release_request = ReleaseRequest(release_id=params.discogs_id)
-    discogs_release = await cached_provider_call(
-        cache,
-        namespace="discogs:release",
-        request=release_request,
-        response_model=ReleaseResponse,
-        fetch=lambda: discogs.get_release(release_request),
-        ttl=DAY,
+    discogs_release = await get_release(album_id, discogs)
+
+    params = ResolutionParams(
+        discogs_id=album_id,
+        album_title=discogs_release.title,
+        album_artist=discogs_release.artists[0].name,
+        # album_artist=release_artist(discogs_release),
+        barcode=barcode,
     )
+
     discogs_tracks = [
         track
         for track in discogs_release.tracklist
         if track.title.strip() and track.type_ in (None, "track")
     ]
+
     if not discogs_tracks:
         return TracklistResponse()
 
     audio_tracks, _ = _split_cd_dvd_tracks(discogs_release, discogs_tracks)
-
-    artist_params = [params]
-
-    if len(discogs_release.artists) == 1:
-        canonical_artist = discogs_release.artists[0].name.strip()
-
-        left = normalize_name(canonical_artist)
-        right = normalize_name(params.album_artist)
-
-        if canonical_artist and left != right:
-            update = {"album_artist": canonical_artist}
-            copy = params.model_copy(update=update)
-            artist_params.insert(0, copy)
 
     for resolver in (
         _resolve_by_upc,
         _resolve_by_album_search,
         _resolve_by_artist_search,
     ):
-        for candidate_params in artist_params:
-            resolved = await resolver(itunes, cache, candidate_params, audio_tracks)
-            if resolved:
-                album = resolved.album
-                album_url = album.collectionViewUrl if album is not None else None
-                album_tracks = _itunes_tracklist(resolved)
-                return TracklistResponse(album_url=album_url, tracks=album_tracks)
+        resolved = await resolver(itunes, cache, params, audio_tracks)
+        if resolved.tracks:
+            album = resolved.album
+            album_url = None if album is None else album.collectionViewUrl
+            album_tracks = _itunes_tracklist(resolved.tracks)
+            return TracklistResponse(album_url=album_url, tracks=album_tracks)
 
-    logger.error(
+    logger.warning(
         "iTunes could not resolve tracks for Discogs release %s (%s by %s; barcode: %s)",
         params.discogs_id,
         params.album_title,
@@ -108,18 +97,20 @@ async def resolve_tracks(
 
 
 def _artist_id_cache_key(artist_name: str, country: str = "US") -> str:
-    request = SearchRequest(
-        term=normalize_name(artist_name),
-        entity="musicArtist",
-        country=country,
+    return catalog_cache_key(
+        "itunes:artist-id",
+        SearchRequest(
+            term=normalize_name(artist_name),
+            entity="musicArtist",
+            country=country,
+        ),
     )
-    return catalog_cache_key("itunes:artist-id", request)
 
 
 async def _resolve_by_upc(
-    itunes: ItunesClient,
-    cache: CacheBackend,
-    params: TracklistRequest,
+    itunes: ItunesCatalog,
+    _cache: CacheBackend,
+    params: ResolutionParams,
     discogs_tracks: list[Track],
 ) -> ResolvedAlbum:
     barcode = normalize_barcode(params.barcode)
@@ -128,15 +119,7 @@ async def _resolve_by_upc(
 
     try:
         request = LookupRequest(upc=barcode, entity="song")
-        lookup = await cached_provider_call(
-            cache,
-            namespace="itunes:lookup",
-            request=request,
-            response_model=LookupResponse,
-            fetch=lambda: itunes.lookup(request),
-            ttl=DAY,
-            empty_ttl=5 * MIN,
-        )
+        lookup = await itunes.lookup(request)
     except _LOOKUP_ERRORS:
         return ResolvedAlbum()
 
@@ -159,27 +142,19 @@ async def _resolve_by_upc(
         None,
     )
 
-    return ResolvedAlbum(album, tracks)
+    return ResolvedAlbum(album=album, tracks=tracks)
 
 
 async def _resolve_by_album_search(
-    itunes: ItunesClient,
-    cache: CacheBackend,
-    params: TracklistRequest,
+    itunes: ItunesCatalog,
+    _cache: CacheBackend,
+    params: ResolutionParams,
     discogs_tracks: list[Track],
 ) -> ResolvedAlbum:
     try:
         term = f"{params.album_artist} {params.album_title}"
         request = SearchRequest(term=term, entity="album")
-        search = await cached_provider_call(
-            cache,
-            namespace="itunes:search",
-            request=request,
-            response_model=SearchResponse,
-            fetch=lambda: itunes.search(request),
-            ttl=6 * HOUR,
-            empty_ttl=5 * MIN,
-        )
+        search = await itunes.search(request)
     except _LOOKUP_ERRORS:
         return ResolvedAlbum()
 
@@ -192,10 +167,10 @@ async def _resolve_by_album_search(
 
     if album is not None and album.collectionId is not None:
         tracks = await _get_matching_album_tracks(
-            itunes, cache, album.collectionId, discogs_tracks
+            itunes, album.collectionId, discogs_tracks
         )
         if tracks:
-            return ResolvedAlbum(album, tracks)
+            return ResolvedAlbum(album=album, tracks=tracks)
 
     # A physical release may have a long subtitle while its digital album does not.
     # Require the same artist, opening title word, and track count before looking
@@ -222,18 +197,18 @@ async def _resolve_by_album_search(
             continue
 
         tracks = await _get_matching_album_tracks(
-            itunes, cache, candidate.collectionId, discogs_tracks
+            itunes, candidate.collectionId, discogs_tracks
         )
         if tracks:
-            return ResolvedAlbum(candidate, tracks)
+            return ResolvedAlbum(album=candidate, tracks=tracks)
 
     return ResolvedAlbum()
 
 
 async def _resolve_by_artist_search(
-    itunes: ItunesClient,
+    itunes: ItunesCatalog,
     cache: CacheBackend,
-    params: TracklistRequest,
+    params: ResolutionParams,
     discogs_tracks: list[Track],
 ) -> ResolvedAlbum:
     artist_key = _artist_id_cache_key(params.album_artist)
@@ -247,15 +222,7 @@ async def _resolve_by_artist_search(
             search_request = SearchRequest(
                 term=params.album_artist, entity="musicArtist"
             )
-            search = await cached_provider_call(
-                cache,
-                namespace="itunes:search",
-                request=search_request,
-                response_model=SearchResponse,
-                fetch=lambda: itunes.search(search_request),
-                ttl=6 * HOUR,
-                empty_ttl=5 * MIN,
-            )
+            search = await itunes.search(search_request)
         except _LOOKUP_ERRORS:
             return ResolvedAlbum()
 
@@ -267,15 +234,7 @@ async def _resolve_by_artist_search(
 
     try:
         albums_request = LookupRequest(ids=[artist_id], entity="album")
-        albums = await cached_provider_call(
-            cache,
-            namespace="itunes:lookup",
-            request=albums_request,
-            response_model=LookupResponse,
-            fetch=lambda: itunes.lookup(albums_request),
-            ttl=6 * HOUR,
-            empty_ttl=5 * MIN,
-        )
+        albums = await itunes.lookup(albums_request)
     except _LOOKUP_ERRORS:
         return ResolvedAlbum()
 
@@ -290,32 +249,23 @@ async def _resolve_by_artist_search(
         return ResolvedAlbum()
 
     tracks = await _get_matching_album_tracks(
-        itunes, cache, album.collectionId, discogs_tracks
+        itunes, album.collectionId, discogs_tracks
     )
 
     if tracks and not cache_hit:
         await cache.set(artist_key, artist_id, ttl=7 * DAY)
 
-    return ResolvedAlbum(album, tracks) if tracks else ResolvedAlbum()
+    return ResolvedAlbum(album=album, tracks=tracks) if tracks else ResolvedAlbum()
 
 
 async def _get_matching_album_tracks(
-    itunes: ItunesClient,
-    cache: CacheBackend,
+    itunes: ItunesCatalog,
     album_id: int,
     discogs_tracks: list[Track],
 ) -> list[MusicItem]:
     try:
         request = LookupRequest(ids=[album_id], entity="song")
-        lookup = await cached_provider_call(
-            cache,
-            namespace="itunes:lookup",
-            request=request,
-            response_model=LookupResponse,
-            fetch=lambda: itunes.lookup(request),
-            ttl=DAY,
-            empty_ttl=5 * MIN,
-        )
+        lookup = await itunes.lookup(request)
     except _LOOKUP_ERRORS:
         return []
 

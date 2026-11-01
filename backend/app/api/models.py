@@ -1,6 +1,6 @@
 from typing import Annotated, Self
 
-from pydantic import BaseModel, Field, PositiveInt, StringConstraints, model_validator
+from pydantic import BaseModel, Field, StringConstraints, model_validator
 
 from app.core.country import Country
 
@@ -35,11 +35,11 @@ class AlbumCandidate(BaseModel):
     barcode: list[str] = Field(default_factory=list)
 
 
-class TracklistRequest(BaseModel):
-    discogs_id: PositiveInt
-    album_title: NonEmptyStr
-    album_artist: NonEmptyStr
-    barcode: NonEmptyStr | None = None
+# class TracklistRequest(BaseModel):
+#     discogs_id: PositiveInt
+#     album_title: NonEmptyStr
+#     album_artist: NonEmptyStr
+#     barcode: NonEmptyStr | None = None
 
 
 class TracklistTrack(BaseModel):

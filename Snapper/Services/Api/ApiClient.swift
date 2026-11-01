@@ -11,9 +11,7 @@ nonisolated protocol ApiClient: Sendable {
 
   func resolveTracks(
     discogsId: Int,
-    albumTitle: String,
-    albumArtist: String,
-    barcode: String?,
+        barcode: String?,
   ) async throws -> TracklistResponseDto
 }
 
@@ -30,9 +28,7 @@ struct NullApiClient: ApiClient {
 
   func resolveTracks(
     discogsId: Int,
-    albumTitle: String,
-    albumArtist: String,
-    barcode: String?,
+        barcode: String?,
   ) async throws -> TracklistResponseDto {
     .init(
       albumUrl: nil,

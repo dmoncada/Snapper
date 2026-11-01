@@ -134,27 +134,17 @@ nonisolated struct AlamofireApiClient: ApiClient {
 
   func resolveTracks(
     discogsId: Int,
-    albumTitle: String,
-    albumArtist: String,
     barcode: String? = nil,
   ) async throws -> TracklistResponseDto {
-    var parameters = [
-      "discogs_id": String(discogsId),
-      "album_title": albumTitle,
-      "album_artist": albumArtist,
-    ]
-
+    var parameters: [String: String] = [:]
     if let barcode { parameters["barcode"] = barcode }
 
     return
       try await session.request(
-        baseUrl.appending(path: "tracks"),
+        baseUrl.appending(path: "albums/\(discogsId)/tracks"),
         parameters: parameters,
         encoder: URLEncodedFormParameterEncoder.default,
-        headers: [
-          .accept("application/json"),
-          .contentType("application/json"),
-        ],
+        headers: [.accept("application/json")],
       )
       .validate(statusCode: 200 ..< 300)
       .serializingDecodable(TracklistResponseDto.self, decoder: decoder)
@@ -210,8 +200,6 @@ import Playgrounds
 
   _ = try await client.resolveTracks(
     discogsId: 28_581_574,
-    albumTitle: "Hackney Diamonds",
-    albumArtist: "Rolling Stones*",
     barcode: "6 02458 12256 5",
   )
 }
