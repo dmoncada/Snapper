@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct RoundedOutlineModifier: ViewModifier {
-  var radius: CGFloat = Radius.md
-  var lineWidth: CGFloat = LineWidth.md
-  var color: Color = .themePrimaryInverted
+  let radius: CGFloat
+  let lineWidth: CGFloat
+  let color: Color
 
   func body(content: Content) -> some View {
     content

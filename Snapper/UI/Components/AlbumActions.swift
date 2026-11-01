@@ -2,22 +2,22 @@ import SwiftData
 import SwiftUI
 
 struct FavoriteButton: View {
-  let album: Album
+  @Binding var isFavorite: Bool
 
   var body: some View {
     Button {
-      album.isFavorite.toggle()
+      isFavorite.toggle()
     } label: {
       HStack {
         Image(
           systemName:
-            album.isFavorite
-            ? "star.slash"
-            : "star"
+            isFavorite
+            ? "heart.slash"
+            : "heart"
         )
 
         Text(
-          album.isFavorite
+          isFavorite
             ? "Undo Favorite"
             : "Favorite"
         )
@@ -45,12 +45,14 @@ import SwiftData
   @Previewable @Query var albums: [Album]
 
   if let album = albums.first {
+    @Bindable var album = album
+
     NavigationStack {
       Text("Hello, world!")
         .toolbar {
           ToolbarItem(placement: .topBarTrailing) {
             Menu {
-              FavoriteButton(album: album)
+              FavoriteButton(isFavorite: $album.isFavorite)
               DeleteButton {}
             } label: {
               Image(systemName: "ellipsis")

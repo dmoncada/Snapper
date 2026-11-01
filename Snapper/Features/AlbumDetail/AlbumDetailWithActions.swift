@@ -7,11 +7,13 @@ struct AlbumDetailWithActions: View {
   let onDelete: (Album) -> Void
 
   var body: some View {
+    @Bindable var album = album
+
     AlbumDetailView(album: album)
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
           Menu {
-            FavoriteButton(album: album)
+            FavoriteButton(isFavorite: $album.isFavorite)
             DeleteButton {
               router.alertItem = AlertDestination(
                 title: "Delete Album?",

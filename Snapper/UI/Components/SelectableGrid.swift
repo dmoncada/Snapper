@@ -5,25 +5,23 @@ struct SelectableGrid<
   Header: View,
   Cell: View,
 >: View where Item.ID: Hashable {
+  @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
   let items: [Item]
   let isSelecting: Bool
   let onOpen: (Item) -> Void
 
   @Binding var selection: Set<Item.ID>
 
-  let columns: [GridItem]
-
   @ViewBuilder let header: () -> Header
   @ViewBuilder let cell: (Item, Bool) -> Cell
+
+  private let minimumCellWidth: CGFloat = 160
 
   init(
     _ items: [Item],
     selection: Binding<Set<Item.ID>>,
     isSelecting: Bool,
-    columns: [GridItem] = [
-      .init(.flexible(), spacing: Spacing.sm),
-      .init(.flexible(), spacing: Spacing.sm),
-    ],
     onOpen: @escaping (Item) -> Void,
     @ViewBuilder cell: @escaping (Item, Bool) -> Cell,
     @ViewBuilder header: @escaping () -> Header = { EmptyView() },
@@ -31,10 +29,23 @@ struct SelectableGrid<
     self.items = items
     self._selection = selection
     self.isSelecting = isSelecting
-    self.columns = columns
     self.onOpen = onOpen
     self.cell = cell
     self.header = header
+  }
+
+  private var columns: [GridItem] {
+    [
+      dynamicTypeSize.isAccessibilitySize
+        ? GridItem(
+          .flexible(),
+          spacing: Spacing.sm,
+        )
+        : GridItem(
+          .adaptive(minimum: minimumCellWidth),
+          spacing: Spacing.sm,
+        )
+    ]
   }
 
   var body: some View {

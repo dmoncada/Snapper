@@ -61,8 +61,8 @@ extension ApiClient {
     try await resolveTracks(
       // discogsId: album.id,
       discogsId: album.discogsId,
-      albumTitle: album.title,
-      albumArtist: album.artist,
+      // albumTitle: album.title,
+      // albumArtist: album.artist,
       barcode: album.barcode.first,
     )
   }

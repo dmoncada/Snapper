@@ -2,25 +2,6 @@ import SwiftData
 import SwiftUI
 
 struct HistoryView: View {
-  /*
-  @Environment(\.modelContext) private var context
-
-  var body: some View {
-    AlbumHistoryContent(context: context)
-  }
-}
-
-private struct AlbumHistoryContent: View {
-  @Environment(Router.self) private var router
-
-  @State private var vm: AlbumHistoryViewModel
-  @State private var path = NavigationPath()
-
-  init(context: ModelContext) {
-    _vm = State(initialValue: AlbumHistoryViewModel(context: context))
-  }
-   */
-
   @Environment(AlbumHistoryViewModel.self) private var vm
   @Environment(Router.self) private var router
 
@@ -37,6 +18,8 @@ private struct AlbumHistoryContent: View {
           isSelecting: vm.isSelecting,
           onOpen: { path.append($0) },
         ) { album, isSelected in
+          @Bindable var album = album
+
           AlbumSelectableCard(
             album: album,
             isSelecting: vm.isSelecting,
@@ -44,7 +27,7 @@ private struct AlbumHistoryContent: View {
           )
           .contextMenu {
             if vm.isSelecting == false {
-              FavoriteButton(album: album)
+              FavoriteButton(isFavorite: $album.isFavorite)
               DeleteButton {
                 router.alertItem = AlertDestination(
                   title: "Delete Album?",
@@ -195,6 +178,7 @@ private struct AlbumHistoryToolbar: ToolbarContent {
   }
   .withAlertDestination($router.alertItem)
   .environment(AlbumHistoryViewModel(context: context))
+  .environment(AlbumDetailViewModel(apiClient: .live))
   .environment(\.previewPlayer, .live)
   .environment(router)
 }

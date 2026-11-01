@@ -267,8 +267,7 @@ private struct TestPreviewPlayer: View {
   var body: some View {
     if titles.count == urls.count {
       VStack {
-        ForEach(Array(zip(titles, urls)).enumerated(), id: \.offset) { _, pair in
-          let (title, url) = pair
+        ForEach(Array(zip(titles, urls)), id: \.1) { title, url in
           let isPlaying = title == player.preview?.title
 
           LabeledContent(title) {

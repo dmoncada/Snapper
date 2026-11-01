@@ -9,8 +9,9 @@ struct AlbumCandidateRow: View {
     HStack {
       AlbumThumbnail(url: album.thumbnailUrl)
 
-      AlbumHeader(title: album.title, artist: album.artist)
-        // .minimumScaleFactor(0.75)
+      LabeledContent(album.artist, value: album.title)
+        .labeledContentStyle(.albumHeader)
+        .controlSize(.small)
         .lineLimit(1)
 
       Spacer()

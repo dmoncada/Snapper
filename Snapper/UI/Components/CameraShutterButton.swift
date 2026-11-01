@@ -27,16 +27,14 @@ struct CameraShutterButton: View {
 
 #if DEBUG
 #Preview {
-  @Previewable @State var router = Router()
+  @Previewable @State var alertItem: AlertDestination?
 
   CameraShutterButton {
-    router.alertItem = AlertDestination(
+    alertItem = .ok(
+      "You snapped a photo!",
       title: "Photo snapped",
-      message: "You snapped a photo!",
-      primary: .init(title: "Ok"),
     )
   }
-  .withAlertDestination($router.alertItem)
-  .environment(router)
+  .withAlertDestination($alertItem)
 }
 #endif

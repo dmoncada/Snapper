@@ -38,44 +38,6 @@ extension TextFieldStyle where Self == SearchTextFieldStyle {
   }
 }
 
-private struct SearchFieldModifier: ViewModifier {
-  @Binding var text: String
-
-  var isFocused: Bool
-
-  func body(content: Content) -> some View {
-    content
-      .safeAreaInset(edge: .leading) {
-        Image(systemName: "magnifyingglass")
-          .foregroundStyle(.secondary)
-      }
-      .safeAreaInset(edge: .trailing) {
-        Button("Clear", systemImage: "xmark.circle.fill") {
-          text = ""
-        }
-        .labelStyle(.iconOnly)
-        .foregroundStyle(.secondary)
-        .opacity(text.isEmpty ? 0 : 1)
-      }
-      .padding()
-      .roundedOutline(lineWidth: isFocused ? 2 : 1)
-  }
-}
-
-extension View {
-  func searchField(
-    text: Binding<String>,
-    isFocused: Bool,
-  ) -> some View {
-    modifier(
-      SearchFieldModifier(
-        text: text,
-        isFocused: isFocused,
-      )
-    )
-  }
-}
-
 struct WithColorSchemes<Content: View>: View {
   let content: Content
 
@@ -135,7 +97,7 @@ private struct TestSearchField: View {
   }
 }
 
-#Preview("Light & Dark") {
+#Preview {
   WithColorSchemes {
     TestSearchField()
   }

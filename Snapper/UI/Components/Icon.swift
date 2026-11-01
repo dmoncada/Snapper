@@ -1,25 +1,5 @@
 import SwiftUI
 
-struct Icon: View {
-  init(
-    systemName: String,
-    size: CGFloat = 20,
-  ) {
-    self.systemName = systemName
-    self.size = size
-  }
-
-  private let systemName: String
-  private let size: CGFloat
-
-  var body: some View {
-    Image(systemName: systemName)
-      .resizable()
-      .scaledToFill()
-      .frame(width: size, height: size)
-  }
-}
-
 struct FavoriteIconButton: View {
   @Binding var isFavorite: Bool
 
@@ -29,15 +9,13 @@ struct FavoriteIconButton: View {
     } label: {
       Group {
         if isFavorite {
-          Image(systemName: "star.fill")
+          Image(systemName: "heart.fill")
         } else {
-          Image(systemName: "star")
+          Image(systemName: "heart")
         }
       }
-      .scaleEffect(1.25)
     }
-    .symbolEffect(.bounce.up, options: .speed(2), value: isFavorite)
-    .foregroundStyle(.accent)
+    .favoriteIconStyle(isFavorite: isFavorite)
     .buttonStyle(.scale)
   }
 }
@@ -51,8 +29,22 @@ private struct ScaleButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == ScaleButtonStyle {
-  static var scale: ScaleButtonStyle {
-    ScaleButtonStyle()
+  static var scale: Self { Self() }
+}
+
+struct FavoriteIconStyle: ViewModifier {
+  let isFavorite: Bool
+
+  func body(content: Content) -> some View {
+    content
+      .symbolEffect(.bounce.up, options: .speed(2), value: isFavorite)
+      .foregroundStyle(.accent)
+  }
+}
+
+extension View {
+  func favoriteIconStyle(isFavorite: Bool) -> some View {
+    modifier(FavoriteIconStyle(isFavorite: isFavorite))
   }
 }
 
@@ -60,13 +52,14 @@ extension ButtonStyle where Self == ScaleButtonStyle {
 #Preview {
   @Previewable @State var isFavorite = false
 
-  FavoriteIconButton(isFavorite: $isFavorite)
+  VStack(spacing: 16) {
+    Image(systemName: "heart.fill")
+      .favoriteIconStyle(isFavorite: isFavorite)
+      .opacity(isFavorite ? 1 : 0)
+      .border(.red)
 
-  /*
-  ForEach([40, 30, 20], id: \.self) { size in
-    Icon(systemName: "star.fill", size: size)
-      .foregroundStyle(.accent)
+    FavoriteIconButton(isFavorite: $isFavorite)
+      .border(.red)
   }
-   */
 }
 #endif

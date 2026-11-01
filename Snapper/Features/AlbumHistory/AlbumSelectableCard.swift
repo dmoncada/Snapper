@@ -23,11 +23,11 @@ struct AlbumSelectableCard: View {
       if isSelecting {
         Group {
           if isSelected {
-            Icon(systemName: "checkmark.circle.fill")
+            Image(systemName: "checkmark.circle.fill")
               .transition(.symbolEffect(.drawOn, options: .speed(0.75)))
               .foregroundStyle(.selection)
           } else {
-            Icon(systemName: "circle")
+            Image(systemName: "circle")
               .foregroundStyle(.secondary)
           }
         }

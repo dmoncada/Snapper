@@ -83,6 +83,7 @@ struct FilterBar: View {
             ),
           )
           .toggleStyle(.badge)
+          .controlSize(.small)
         }
       }
       .padding(1)

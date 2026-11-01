@@ -19,6 +19,7 @@ final class AlbumScanFlowModel {
 
   private let apiClient: any ApiClient
 
+  // init(apiClient: any ApiClient = .null) {
   init(apiClient: any ApiClient = .live) {
     self.apiClient = apiClient
   }

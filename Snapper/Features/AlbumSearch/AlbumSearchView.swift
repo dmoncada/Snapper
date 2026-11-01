@@ -21,16 +21,10 @@ struct HomeView: View {
         VStack(spacing: Spacing.sm) {
           HStack(spacing: Spacing.sm) {
             PhotoPickerButton("Pick", onData: onData) { _ in }
-              .frame(width: 100)
 
             Button("Snap") { isPresented = true }
               .buttonStyle(.large)
           }
-
-          /*
-          SearchField(text: $searchText, placeholder: "Or search by artist, album")
-            .keyboardType(.webSearch)
-           */
 
           TextField(text: $searchText) {
             Text("Or search by artist, album")

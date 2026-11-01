@@ -9,43 +9,24 @@ struct AlbumHistoryCard: View {
         .roundedOutline(lineWidth: LineWidth.sm)
 
       HStack(alignment: .center) {
-        AlbumHeader(title: album.title, artist: album.artist)
+        LabeledContent(album.artist, value: album.title)
           .frame(maxWidth: .infinity, alignment: .leading)
-          // .minimumScaleFactor(0.75)
+          .labeledContentStyle(.albumHeader)
+          .controlSize(.small)
           .lineLimit(1)
 
         Spacer()
 
-        Icon(systemName: "star.fill")
+        Image(systemName: "heart.fill")
           .favoriteIconStyle(isFavorite: album.isFavorite)
+          .opacity(album.isFavorite ? 1 : 0)
 
-        Text((album.selectedAt.shortRelative(to: .now)))
+        Text(album.selectedAt.shortRelative(to: .now))
           .badgeStyle()
           .controlSize(.mini)
       }
-      .frame(height: 40)
+      .padding(.vertical, Padding.sm)
     }
-  }
-}
-
-struct FavoriteIconStyle: ViewModifier {
-  let isFavorite: Bool
-
-  func body(content: Content) -> some View {
-    content
-      .foregroundStyle(.accent)
-      .symbolEffect(
-        .bounce.up,
-        options: .speed(2),
-        value: isFavorite,
-      )
-      .opacity(isFavorite ? 1 : 0)
-  }
-}
-
-extension View {
-  func favoriteIconStyle(isFavorite: Bool) -> some View {
-    modifier(FavoriteIconStyle(isFavorite: isFavorite))
   }
 }
 
@@ -71,38 +52,57 @@ private struct AlbumCover: View {
 import SwiftData
 
 private struct TestHistoryCard: View {
-  let album1: Album
-  let album2: Album
+  let album: Album
 
   var body: some View {
-    HStack {
-      Button {
-        album1.isFavorite.toggle()
-      } label: {
-        AlbumHistoryCard(album: album1)
-          .contentShape(.rect)
-      }
-
-      Spacer()
-
-      Button {
-        album2.isFavorite.toggle()
-      } label: {
-        AlbumHistoryCard(album: album2)
-          .contentShape(.rect)
-      }
+    Button {
+      album.isFavorite.toggle()
+    } label: {
+      AlbumHistoryCard(album: album)
+        .contentShape(.rect)
     }
-    .buttonStyle(.plain)
   }
 }
 
-#Preview(traits: .withSampleData) {
+#Preview("Single Column", traits: .withSampleData) {
   @Previewable @Query(sort: \Album.selectedAt) var albums: [Album]
 
-  if albums.count > 1 {
-    WithColorSchemes {
-      TestHistoryCard(album1: albums[0], album2: albums[1])
+  if albums.isEmpty {
+    ProgressView()
+  } else {
+    ScrollView {
+      WithColorSchemes {
+        LazyVGrid(columns: [.init(.flexible())]) {
+          TestHistoryCard(album: albums[0])
+        }
         .padding()
+      }
+    }
+  }
+}
+
+#Preview("Double Column", traits: .withSampleData) {
+  @Previewable @Environment(\.dynamicTypeSize) var dynamicTypeSize
+
+  @Previewable @Query(sort: \Album.selectedAt) var albums: [Album]
+
+  var columns: [GridItem] {
+    [
+      dynamicTypeSize.isAccessibilitySize
+        ? GridItem(.flexible(minimum: 160))
+        : GridItem(.adaptive(minimum: 160))
+    ]
+  }
+
+  if albums.count > 1 {
+    ScrollView {
+      WithColorSchemes {
+        LazyVGrid(columns: columns) {
+          TestHistoryCard(album: albums[0])
+          TestHistoryCard(album: albums[1])
+        }
+        .padding()
+      }
     }
   } else {
     ProgressView()

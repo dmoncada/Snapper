@@ -72,7 +72,9 @@ private struct AlbumHeaderSection: View {
     @Bindable var album = album
 
     HStack(alignment: .top) {
-      AlbumHeader(title: album.title, artist: album.artist, size: .large)
+      LabeledContent(album.artist, value: album.title)
+        .labeledContentStyle(.albumHeader)
+        .controlSize(.large)
 
       Spacer()
 
@@ -291,21 +293,17 @@ private struct AlbumTrackRow: View {
       }
     } label: {
       HStack(spacing: Spacing.sm) {
-        HStack(spacing: Spacing.sm) {
-          ProgressView(value: player.progress)
-            .progressViewStyle(.playback(isPlaying: isPlaying))
+        ProgressView(value: player.progress)
+          .progressViewStyle(.playback(isPlaying: isPlaying))
+          .opacity(isPlaying ? 1 : 0.625)
 
-          // Text(track.position)
-
+        LabeledContent {
+          Text(track.duration)
+        } label: {
           Text(track.title)
-            .lineLimit(1)
+          // .lineLimit(1)
         }
-        .font(.sligoilMicroBold(.subheadline))
-
-        Spacer()
-
-        Text(track.duration)
-          .font(.sligoilMicro(.subheadline))
+        .labeledContentStyle(.withThemeFont(isActive: isPlaying))
       }
       .contentShape(.rect)
       .foregroundStyle(
@@ -313,10 +311,8 @@ private struct AlbumTrackRow: View {
           ? .accent
           : .themePrimaryInverted
       )
-      .opacity(isPlaying ? 1 : 0.625)
     }
     .buttonStyle(.plain)
-    .labeledContentStyle(.withThemeFont(isActive: isPlaying))
     .animation(.easeInOut, value: isPlaying)
     .disabled(track.previewUrl == nil)
   }
@@ -331,8 +327,8 @@ import SwiftData
   if let album = albums.first {
     NavigationStack {
       AlbumDetailView(album: album)
+        .environment(AlbumDetailViewModel())
         .environment(\.previewPlayer, .live)
-        .environment(AlbumDetailViewModel(apiClient: .live))
     }
   } else {
     ProgressView()
