@@ -8,10 +8,11 @@ struct HomeView: View {
   @Environment(\.locale) private var locale
 
   @Environment(AlbumSearchViewModel.self) private var vm
-  @Environment(Router.self) private var router
 
   @State private var searchText = ""
-  @State private var isPresented = false
+  @State private var selectedAlbum: Album?
+  @State private var isCameraPresented = false
+  @State private var isSettingsPresented = false
 
   @FocusState private var isFocused: Bool
 
@@ -22,12 +23,15 @@ struct HomeView: View {
           HStack(spacing: Spacing.sm) {
             PhotoPickerButton("Pick", onData: onData) { _ in }
 
-            Button("Snap") { isPresented = true }
-              .buttonStyle(.large)
+            Button("Snap", systemImage: "camera") {
+              isCameraPresented = true
+            }
+            .buttonStyle(.theme)
           }
 
           TextField(text: $searchText) {
             Text("Or search by artist, album")
+              .foregroundStyle(.themePlaceholder)
           }
           .autocorrectionDisabled(true)
           .keyboardType(.webSearch)
@@ -42,27 +46,27 @@ struct HomeView: View {
         .padding(Padding.xl)
 
         AlbumCandidateSection(vm: vm) { candidate in
-          router.sheetItem = .create(candidate)
+          selectedAlbum = candidate
         }
       }
       .frame(
         maxWidth: .infinity,
         maxHeight: .infinity,
       )
-      .fullScreenCover(isPresented: $isPresented) {
+      .fullScreenCover(isPresented: $isCameraPresented) {
         if openFirstResult {
           CameraAlbumScanScreen { data in
-            isPresented = false
+            isCameraPresented = false
             onData(data)
           }
         } else {
           CameraScanScreen(
             onBarcode: { barcode in
-              isPresented = false
+              isCameraPresented = false
               onBarcode(barcode)
             },
             onPhoto: { data in
-              isPresented = false
+              isCameraPresented = false
               onData(data)
             },
           )
@@ -72,16 +76,28 @@ struct HomeView: View {
         ToolbarTitle("MusicSnap")
         ToolbarItem(placement: .topBarTrailing) {
           Button("Settings", systemImage: "gearshape") {
-            router.sheetItem = .settings
+            isSettingsPresented = true
             dismissKeyboard()
           }
         }
       }
-      .fullBackground(.themePrimary)
+      .withFullBackground()
       .dismissKeyboardOnTap()
     }
     .task(id: searchText) {
       await vm.search(by: .term(searchText), locale: locale)
+    }
+    .sheet(isPresented: $isSettingsPresented) {
+      SettingsSheet()
+        .presentationDetents([
+          .medium
+        ])
+    }
+    .sheet(item: $selectedAlbum) { album in
+      AlbumCreation(album: album)
+        .presentationDetents([
+          .large
+        ])
     }
   }
 
@@ -132,6 +148,7 @@ private struct AlbumCandidateSection: View {
                   action(candidate)
                 } label: {
                   AlbumCandidateRow(album: candidate)
+                    .contentShape(.rect)
                 }
                 .buttonStyle(.plain)
               }
@@ -150,39 +167,19 @@ private struct AlbumCandidateSection: View {
 }
 
 #if DEBUG
-#Preview("Default", traits: .withoutData) {
-  @Previewable @State var router = Router()
-
+#Preview("Default", traits: .withSearchContext) {
   HomeView()
-    .withSheetDestination($router.sheetItem)
-    .environment(
-      AlbumSearchViewModel(
-        apiClient: .live,
-        recognizer: .stub(result: .barcode("843563174807")),
-      )
-    )
-    .environment(AlbumLocationCaptureCoordinator(locator: .stub(.newYork)))
-    .environment(\.previewPlayer, .live)
-    .environment(router)
 }
-
-#Preview("In tab", traits: .withoutData) {
-  @Previewable @State var router = Router()
-
-  TabView {
-    Tab {
-      HomeView()
-    }
-  }
-  .withSheetDestination($router.sheetItem)
-  .environment(
-    AlbumSearchViewModel(
-      apiClient: .live,
-      recognizer: .stub(result: .barcode("843563174807")),
-    )
-  )
-  .environment(AlbumLocationCaptureCoordinator(locator: .stub(.newYork)))
-  .environment(\.previewPlayer, .live)
-  .environment(router)
+#Preview("Loading", traits: .withSearchContext(kind: .slow)) {
+  HomeView()
+}
+#Preview("Failure", traits: .withSearchContext(kind: .fail)) {
+  HomeView()
+}
+#Preview("No items", traits: .withSearchContext(kind: .stub(0))) {
+  HomeView()
+}
+#Preview("With items", traits: .withSearchContext(kind: .stub(3))) {
+  HomeView()
 }
 #endif

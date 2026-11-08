@@ -286,7 +286,7 @@ private struct TestPreviewPlayer: View {
           .foregroundStyle(
             isPlaying
               ? .themeRed
-              : .themeSeafoam
+              : .themePrimary
           )
         }
       }

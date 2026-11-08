@@ -10,3 +10,12 @@ nonisolated struct TracklistResponseDto: Sendable, Codable {
   let albumUrl: String?
   let tracks: [TrackDto]
 }
+
+extension TracklistResponseDto {
+  static var empty: Self {
+    Self(
+      albumUrl: nil,
+      tracks: [],
+    )
+  }
+}

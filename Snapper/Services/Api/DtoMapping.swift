@@ -41,3 +41,46 @@ extension Track {
     )
   }
 }
+
+extension AlbumDto {
+  static func fromModel(_ model: Album) -> AlbumDto {
+    AlbumDto(
+      id: model.discogsId,
+      title: model.title,
+      artist: model.artist,
+
+      discogsUrl: model.discogsUrl?.absoluteString,
+      thumbnailUrl: model.thumbnailUrl?.absoluteString,
+      coverImageUrl: model.coverImageUrl?.absoluteString,
+
+      country: model.countryName,
+      countryInfo: model.countryCode.map {
+        CountryDto(
+          alpha2: $0,
+          alpha3: "",
+          numeric: "",
+          name: model.countryName ?? "",
+          officialName: model.countryName ?? "",
+        )
+      },
+
+      year: model.year,
+      format: model.format,
+      label: model.label,
+      genre: model.genre,
+      barcode: model.barcode,
+    )
+  }
+}
+
+extension TrackDto {
+  static func fromModel(_ model: Track) -> TrackDto {
+    TrackDto(
+      id: model.id.hashValue,
+      title: model.title,
+      position: model.position,
+      duration: model.duration,
+      previewUrl: model.previewUrl?.absoluteString,
+    )
+  }
+}
