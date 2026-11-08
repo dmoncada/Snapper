@@ -67,7 +67,7 @@ extension AlbumDto {
       year: model.year,
       format: model.format,
       label: model.label,
-      genre: model.genre,
+      genre: model.genre.map(\.name),
       barcode: model.barcode,
     )
   }

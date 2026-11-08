@@ -28,16 +28,14 @@ final class AlbumHistoryViewModel {
   func refreshAvailableFilters() {
     let albums = (try? context.fetch(FetchDescriptor<Album>())) ?? []
 
-    let genres = Set(albums.flatMap(\.genre).compactMap(Genre.init(value:)))
+    let genres = Set(albums.flatMap(\.genre).map(\.name))
 
     availableFilters =
       [
         .all,
         .favorites,
       ]
-      + Genre.allCases
-      .filter { genres.contains($0) }
-      .map(AlbumHistoryFilter.genre)
+      + genres.sorted().map(AlbumHistoryFilter.genre)
   }
 
   func toggleFilter(_ filter: AlbumHistoryFilter) {
@@ -75,9 +73,27 @@ final class AlbumHistoryViewModel {
         || album.title.localizedStandardContains(searchText)
     }
 
+    let selectedGenreNames = selectedFilters.compactMap { filter in
+      if case .genre(let name) = filter { return name }
+      return nil
+    }
+
+    let isGenre: Predicate<Album>
+    if selectedGenreNames.isEmpty {
+      isGenre = #Predicate { _ in true }
+    } else {
+      isGenre = #Predicate { album in
+        album.genre.contains { genre in
+          selectedGenreNames.contains(genre.name)
+        }
+      }
+    }
+
     var descriptor = FetchDescriptor<Album>(
       predicate: #Predicate { album in
-        isFavorite.evaluate(album) && isMatch.evaluate(album)
+        isFavorite.evaluate(album)
+          && isMatch.evaluate(album)
+          && isGenre.evaluate(album)
       }
     )
 

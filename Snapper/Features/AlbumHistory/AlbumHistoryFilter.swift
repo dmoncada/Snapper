@@ -3,7 +3,7 @@ import Foundation
 enum AlbumHistoryFilter: Hashable, Identifiable {
   case all
   case favorites
-  case genre(Genre)
+  case genre(String)
 
   var id: Self { self }
 
@@ -11,7 +11,7 @@ enum AlbumHistoryFilter: Hashable, Identifiable {
     switch self {
     case .all: "All"
     case .favorites: "Favorites"
-    case .genre(let genre): genre.rawValue
+    case .genre(let genre): genre
     }
   }
 }

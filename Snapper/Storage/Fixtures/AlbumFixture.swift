@@ -45,7 +45,7 @@ struct AlbumFixture: Codable {
 
     format = album.format
     label = album.label
-    genre = album.genre
+    genre = album.genre.map(\.name)
     barcode = album.barcode
 
     selectedAt = album.selectedAt

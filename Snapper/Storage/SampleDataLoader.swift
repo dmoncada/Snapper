@@ -79,8 +79,12 @@ enum SampleDataLoader {
       limit.map { Array(file.albums.prefix(max(0, $0))) }
       ?? file.albums
 
+    var genreCatalog = try GenreCatalog(context: context)
+
     for fixture in albums {
-      context.insert(fixture.makeModel())
+      let album = fixture.makeModel()
+      genreCatalog.link(album)
+      context.insert(album)
     }
 
     try context.save()

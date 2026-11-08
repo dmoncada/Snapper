@@ -1,19 +1,11 @@
-import Foundation
+import SwiftData
 
-enum Genre: String, CaseIterable, Hashable, Identifiable {
-  case blues = "Blues"
-  case electronic = "Electronic"
-  case hipHop = "Hip Hop"
-  case jazz = "Jazz"
-  case latin = "Latin"
-  case pop = "Pop"
-  case rock = "Rock"
+@Model
+final class Genre {
+  var name: String
+  var albums: [Album] = []
 
-  init?(value: String) {
-    self.init(rawValue: value.trimmingCharacters(in: .whitespacesAndNewlines))
+  init(name: String) {
+    self.name = name
   }
-
-  var id: Self { self }
-
-  var title: String { rawValue.capitalized }
 }

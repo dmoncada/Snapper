@@ -3,14 +3,14 @@ import SwiftUI
 struct Item: Identifiable {
   let id: UUID
   let title: String
-  let genres: Set<Genre>
+  let genres: Set<String>
   var isFavorite: Bool
 }
 
 enum ItemFilter: Hashable, Identifiable {
   case all
   case favorites
-  case genre(Genre)
+  case genre(String)
 
   var id: Self { self }
 
@@ -18,7 +18,7 @@ enum ItemFilter: Hashable, Identifiable {
     switch self {
     case .all: "All"
     case .favorites: "Favorites"
-    case .genre(let genre): genre.title
+    case .genre(let genre): genre
     }
   }
 }
@@ -82,19 +82,19 @@ struct ItemListView: View {
     Item(
       id: UUID(),
       title: "Item 1",
-      genres: [.rock, .pop, .jazz],
+      genres: ["Rock", "Pop", "Jazz"],
       isFavorite: true,
     ),
     Item(
       id: UUID(),
       title: "Item 2",
-      genres: [.pop, .jazz],
+      genres: ["Pop", "Jazz"],
       isFavorite: false,
     ),
     Item(
       id: UUID(),
       title: "Item 3",
-      genres: [.jazz, .electronic],
+      genres: ["Jazz", "Electronic"],
       isFavorite: true,
     ),
   ]
@@ -107,9 +107,7 @@ struct ItemListView: View {
         .all,
         .favorites,
       ]
-      + Genre.allCases
-      .filter { availableGenres.contains($0) }
-      .map(ItemFilter.genre)
+      + availableGenres.sorted().map(ItemFilter.genre)
   }
 
   private var filteredItems: [Item] {
@@ -145,7 +143,6 @@ struct ItemListView: View {
           LabeledContent {
             Text(
               item.genres
-                .map(\.title)
                 .sorted()
                 .joined(separator: ", ")
             )

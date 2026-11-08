@@ -34,12 +34,14 @@ struct AlbumCreation: View {
   }
 
   private func save() {
-    album.selectedAt = .now
-    album.locationStatusRaw = AlbumLocationStatus.pending.rawValue
-
-    context.insert(album)
-
     do {
+      album.selectedAt = .now
+      album.locationStatusRaw = AlbumLocationStatus.pending.rawValue
+
+      var genreCatalog = try GenreCatalog(context: context)
+      genreCatalog.link(album)
+      context.insert(album)
+
       try context.save()
 
       WidgetCenter.shared.reloadTimelines(ofKind: "SnapperWidget")

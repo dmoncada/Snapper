@@ -133,11 +133,9 @@ private struct LocationSection: View {
   var body: some View {
     switch locationStatus {
     case .pending:
-      LabeledContent {
+      LabeledContent("Location") {
         ProgressView()
           .controlSize(.small)
-      } label: {
-        Text("Location")
       }
 
     case .captured:

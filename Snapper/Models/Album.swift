@@ -21,7 +21,13 @@ final class Album: Identifiable {
 
   var format: [String]
   var label: [String]
-  var genre: [String]
+
+  @Relationship(
+    deleteRule: .nullify,
+    inverse: \Genre.albums,
+  )
+  var genre: [Genre] = []
+
   var barcode: [String]
 
   var selectedAt: Date
@@ -67,7 +73,11 @@ final class Album: Identifiable {
     self.year = year
     self.format = format
     self.label = label
-    self.genre = genre
+    self.genre =
+      genre
+      .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+      .filter { $0.isEmpty == false }
+      .map { Genre(name: $0) }
     self.barcode = barcode
     self.selectedAt = selectedAt
   }
