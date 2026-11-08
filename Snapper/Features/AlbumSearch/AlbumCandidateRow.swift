@@ -9,14 +9,23 @@ struct AlbumCandidateRow: View {
     HStack {
       AlbumThumbnail(url: album.thumbnailUrl)
 
-      LabeledContent(album.artist, value: album.title)
-        .labeledContentStyle(.albumHeader)
-        .controlSize(.small)
-        .lineLimit(1)
+      LabeledContent {
+        Text(album.title)
+          .font(Typography.albumRowTitle)
+      } label: {
+        Text(album.artist)
+          .font(Typography.albumRowArtist)
+      }
+      .frame(
+        maxWidth: .infinity,
+        alignment: .leading,
+      )
+      .labeledContentStyle(.albumHeader)
+      .lineLimit(1)
 
       Spacer()
 
-      HStack(spacing: Spacing.xs) {
+      FlowLayout(alignment: .trailing) {
         if let country = album.countryCode {
           Text(country)
             .badgeStyle()
@@ -32,6 +41,7 @@ struct AlbumCandidateRow: View {
             .badgeStyle()
         }
       }
+      .frame(maxWidth: 120)
       .controlSize(.mini)
     }
   }
@@ -51,8 +61,9 @@ private struct AlbumThumbnail: View {
 
   var body: some View {
     CachedImage(url: url)
+      .scaledToFill()
       .frame(width: size, height: size)
-      .clipShape(.rect(cornerRadius: Radius.sm))
+      .roundedOutline(radius: Radius.sm, lineWidth: 1)
   }
 }
 
@@ -90,7 +101,6 @@ import SwiftData
         // No-op.
       } label: {
         AlbumCandidateRow(album: album)
-          .border(.red)
       }
       .padding()
     }

@@ -3,13 +3,13 @@ import SwiftUI
 struct ThemeSectionHeaderModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
-      .font(.libreCaslonTextBold(.headline))
-      .foregroundStyle(.themePrimaryInverted)
+      .font(Typography.sectionHeader)
+      .foregroundStyle(Color.themePrimary)
   }
 }
 
 extension View {
-  func withThemeSectionHeader() -> some View {
+  func withThemeSectionHeaderStyle() -> some View {
     modifier(ThemeSectionHeaderModifier())
   }
 }

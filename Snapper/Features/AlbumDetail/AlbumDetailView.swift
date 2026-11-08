@@ -40,7 +40,7 @@ struct AlbumDetailView: View {
       }
     }
     .ignoresSafeArea(.all, edges: .top)
-    .fullBackground(.themePrimary)
+    .withFullBackground()
   }
 }
 
@@ -58,6 +58,7 @@ private struct AlbumCover: View {
 
   var body: some View {
     CachedImage(url: url)
+      .scaledToFill()
       .frame(maxWidth: .infinity)
       .frame(height: height)
       .clipped()
@@ -71,14 +72,20 @@ private struct AlbumHeaderSection: View {
   var body: some View {
     @Bindable var album = album
 
-    HStack(alignment: .top) {
-      LabeledContent(album.artist, value: album.title)
-        .labeledContentStyle(.albumHeader)
-        .controlSize(.large)
+    HStack(alignment: .firstTextBaseline) {
+      LabeledContent {
+        Text(album.title)
+          .font(Typography.albumDetailTitle)
+      } label: {
+        Text(album.artist)
+          .font(Typography.albumDetailArtist)
+      }
+      .labeledContentStyle(.albumHeader)
 
       Spacer()
 
       FavoriteIconButton(isFavorite: $album.isFavorite)
+        .foregroundStyle(.accent)
         .disabled(showMetadata == false)
         .opacity(showMetadata ? 1 : 0)
     }
@@ -110,7 +117,6 @@ private struct AlbumDetailSection: View {
         }
       }
     }
-    .labeledContentStyle(.withThemeFont)
   }
 }
 
@@ -124,8 +130,6 @@ private struct LocationSection: View {
   let location: CLLocation?
   let locationStatus: AlbumLocationStatus
 
-  @State private var isExpanded = false
-
   var body: some View {
     switch locationStatus {
     case .pending:
@@ -138,11 +142,8 @@ private struct LocationSection: View {
 
     case .captured:
       if let location = location {
-        DisclosureGroup(isExpanded: $isExpanded) {
+        DisclosureGroup("Location") {
           MapView(location: location)
-        } label: {
-          Text("Location")
-            .font(.sligoilMicroBold(.subheadline))
         }
         .disclosureGroupStyle(.plain)
       } else {
@@ -255,7 +256,7 @@ private struct AlbumTrackSectionFooter: View {
   let musicUrl: URL?
 
   var body: some View {
-    VStack(alignment: .trailing) {
+    VStack(alignment: .leading) {
       Text("Tracks provided courtesy of iTunes.")
 
       if let musicUrl {
@@ -269,10 +270,6 @@ private struct AlbumTrackSectionFooter: View {
         }
       }
     }
-    .frame(
-      maxWidth: .infinity,
-      alignment: .trailing,
-    )
   }
 }
 
@@ -295,22 +292,14 @@ private struct AlbumTrackRow: View {
       HStack(spacing: Spacing.sm) {
         ProgressView(value: player.progress)
           .progressViewStyle(.playback(isPlaying: isPlaying))
-          .opacity(isPlaying ? 1 : 0.625)
 
-        LabeledContent {
-          Text(track.duration)
-        } label: {
-          Text(track.title)
-          // .lineLimit(1)
-        }
-        .labeledContentStyle(.withThemeFont(isActive: isPlaying))
+        LabeledContent(track.title, value: track.duration)
       }
-      .contentShape(.rect)
       .foregroundStyle(
-        isPlaying
-          ? .accent
-          : .themePrimaryInverted
+        isPlaying ? .accent : .themePrimary,
+        isPlaying ? .accent : .themeSecondary,
       )
+      .contentShape(.rect)
     }
     .buttonStyle(.plain)
     .animation(.easeInOut, value: isPlaying)
@@ -321,15 +310,11 @@ private struct AlbumTrackRow: View {
 #if DEBUG
 import SwiftData
 
-#Preview(traits: .withSampleData) {
+#Preview(traits: .withSearchContext) {
   @Previewable @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
 
   if let album = albums.first {
-    NavigationStack {
-      AlbumDetailView(album: album)
-        .environment(AlbumDetailViewModel())
-        .environment(\.previewPlayer, .live)
-    }
+    AlbumDetailView(album: album)
   } else {
     ProgressView()
   }

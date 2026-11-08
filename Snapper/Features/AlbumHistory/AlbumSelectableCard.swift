@@ -7,37 +7,122 @@ struct AlbumSelectableCard: View {
 
   var body: some View {
     ZStack {
-      if isSelecting && isSelected {
-        ConcentricRectangle(
-          uniformTopCorners: .concentric,
-          uniformBottomCorners: .fixed(0),
-        )
-        .fill(.accent.opacity(0.25))
+      ConcentricRectangle(
+        uniformTopCorners: .concentric,
+        uniformBottomCorners: .fixed(0),
+      )
+      .fill(
+        isSelecting && isSelected
+          ? .accent.opacity(0.5)
+          : .clear
+      )
+
+      VStack(alignment: .leading) {
+        AlbumCover(url: album.coverImageUrl)
+          .overlay {
+            ConcentricRectangle(
+              corners: .concentric,
+              isUniform: true,
+            )
+            .stroke(
+              .themeSeparatorOpaque,
+              lineWidth: LineWidth.sm,
+            )
+          }
+          .overlay(alignment: .topTrailing) {
+            SelectionIndicator(
+              isSelecting: isSelecting,
+              isSelected: isSelected,
+            )
+            .padding(Padding.sm)
+          }
+          .overlay(alignment: .bottomTrailing) {
+            AlbumMetadata(album: album)
+              .padding(Padding.sm)
+          }
+
+        LabeledContent {
+          Text(album.title)
+            .font(Typography.albumRowTitle)
+        } label: {
+          Text(album.artist)
+            .font(Typography.albumRowArtist)
+        }
+        .labeledContentStyle(.albumHeader)
+        .lineLimit(1)
+      }
+      .padding(8)
+    }
+    .containerShape(.rect(cornerRadius: 16))
+  }
+}
+
+private struct AlbumCover: View {
+  let url: URL?
+
+  private let shape = ConcentricRectangle(
+    corners: .concentric,
+    isUniform: true,
+  )
+
+  var body: some View {
+    shape
+      .fill(.themePlaceholder)
+      .frame(maxWidth: .infinity)
+      .aspectRatio(1, contentMode: .fit)
+      .overlay {
+        CachedImage(url: url)
+          .aspectRatio(contentMode: .fill)
+      }
+      .clipShape(shape)
+  }
+}
+
+private struct AlbumMetadata: View {
+  let album: Album
+
+  var body: some View {
+    HStack(spacing: Spacing.xs) {
+      Image(systemName: "heart.fill")
+        .favoriteIconStyle(isFavorite: album.isFavorite)
+        .foregroundStyle(.themeSurface1)
+        .opacity(album.isFavorite ? 1 : 0)
+
+      if album.location != nil {
+        Image(systemName: "location.circle.fill")
+          .symbolRenderingMode(.palette)
+          .foregroundStyle(
+            .themePrimaryActive,
+            .themeSurface1,
+          )
       }
 
-      AlbumHistoryCard(album: album)
-        .padding(Padding.sm)
+      Text("\(album.selectedAt.shortRelative(to: .now)) ago")
+        .badgeStyle(appearance: .highlighted)
+        .controlSize(.mini)
     }
-    .containerShape(.rect(cornerRadius: Radius.md))
-    .overlay(alignment: .topTrailing) {
-      if isSelecting {
-        Group {
-          if isSelected {
-            Image(systemName: "checkmark.circle.fill")
-              .transition(.symbolEffect(.drawOn, options: .speed(0.75)))
-              .foregroundStyle(.selection)
-          } else {
-            Image(systemName: "circle")
-              .foregroundStyle(.secondary)
-          }
-        }
-        .padding(Padding.lg)
+  }
+}
+
+private struct SelectionIndicator: View {
+  let isSelecting: Bool
+  let isSelected: Bool
+
+  var body: some View {
+    if isSelecting {
+      if isSelected {
+        Image(systemName: "checkmark.circle.fill")
+          .transition(.symbolEffect(.drawOn, options: .speed(0.75)))
+          .symbolRenderingMode(.palette)
+          .foregroundStyle(
+            .themePrimaryInverted,
+            .selection,
+          )
+      } else {
+        Image(systemName: "circle")
+          .foregroundStyle(.themeSeparator)
       }
     }
-    .animation(
-      .easeOut(duration: 0.25),
-      value: isSelected,
-    )
   }
 }
 
@@ -45,7 +130,16 @@ struct AlbumSelectableCard: View {
 import SwiftData
 
 private struct TestSelectableGrid: View {
-  let albums: [Album]
+  @Query(descriptor) var albums: [Album]
+
+  static let descriptor = FetchDescriptor<Album>(
+    predicate: #Predicate { album in
+      album.artist.starts(with: "Natalia")
+    },
+    sortBy: [
+      SortDescriptor(\Album.selectedAt, order: .reverse)
+    ],
+  )
 
   @State private var selection = Set<Album.ID>()
 
@@ -72,17 +166,12 @@ private struct TestSelectableGrid: View {
           .disabled(selection.isEmpty)
         }
       }
+      .withFullBackground()
     }
   }
 }
 
 #Preview(traits: .withSampleData) {
-  @Previewable @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
-
-  if albums.isEmpty {
-    ProgressView()
-  } else {
-    TestSelectableGrid(albums: albums)
-  }
+  TestSelectableGrid()
 }
 #endif

@@ -46,9 +46,9 @@ struct TransitionView<
     showFirst: showFirst,
     animation: .easeInOut,
   ) {
-    Text("First").fullBackground(.red)
+    Text("First").withFullBackground(.red)
   } second: {
-    Text("Second").fullBackground(.blue)
+    Text("Second").withFullBackground(.blue)
   }
   .task {
     while Task.isCancelled == false {

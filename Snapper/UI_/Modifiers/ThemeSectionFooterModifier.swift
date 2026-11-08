@@ -3,13 +3,13 @@ import SwiftUI
 struct ThemeSectionFooterModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
-      .font(.libreCaslonTextRegular(.footnote))
-      .foregroundStyle(.themePrimaryInverted)
+      .font(Typography.sectionFooter)
+      .foregroundStyle(Color.themeSecondary)
   }
 }
 
 extension View {
-  func withThemeSectionFooter() -> some View {
+  func withThemeSectionFooterStyle() -> some View {
     modifier(ThemeSectionFooterModifier())
   }
 }

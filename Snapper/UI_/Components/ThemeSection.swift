@@ -12,7 +12,7 @@ struct ThemeSection<Content: View>: View {
       VStack(alignment: .leading, spacing: 0) {
         if section.header.isEmpty == false {
           section.header
-            .withThemeSectionHeader()
+            .withThemeSectionHeaderStyle()
             .padding(.bottom, Padding.xl)
         }
 
@@ -24,6 +24,7 @@ struct ThemeSection<Content: View>: View {
 
               if index < rows.count - 1 {
                 Divider()
+                  .withThemeDividerStyle()
               }
             }
           }
@@ -31,11 +32,16 @@ struct ThemeSection<Content: View>: View {
 
         if section.footer.isEmpty == false {
           section.footer
-            .withThemeSectionFooter()
+            .withThemeSectionFooterStyle()
             .padding(.top, Padding.xl)
         }
       }
     }
+    .labeledContentStyle(.withThemeFont)
+    .foregroundStyle(
+      .themePrimary,
+      .themeSecondary,
+    )
   }
 }
 
@@ -71,18 +77,16 @@ private struct ButtonRow: View {
       HStack(spacing: Spacing.sm) {
         ProgressView(value: 0.25)
           .progressViewStyle(.playback(isPlaying: isActive))
-          .border(.red)
 
-        Text(leading)
-        Spacer()
-        Text(trailing)
+        LabeledContent(leading, value: trailing)
       }
-      .foregroundStyle(isActive ? AnyShapeStyle(.tint) : AnyShapeStyle(.themePrimaryInverted))
-      // .labeledContentStyle(.withThemeFont(isActive: isActive))
+      .foregroundStyle(
+        isActive ? .accent : .themePrimary,
+        isActive ? .accent : .themeSecondary,
+      )
       .contentShape(.rect)
     }
     .buttonStyle(.plain)
-    .border(.red)
   }
 }
 
@@ -109,14 +113,11 @@ private struct ButtonRow: View {
           }
 
         case .located:
-          DisclosureGroup {
+          DisclosureGroup("Location") {
             Rectangle()
               .fill(.red)
               .frame(height: 200)
               .frame(maxWidth: .infinity)
-          } label: {
-            Text("Location")
-              .font(.sligoilMicroBold(.subheadline))
           }
           .disclosureGroupStyle(.plain)
         }
@@ -124,7 +125,6 @@ private struct ButtonRow: View {
         Text("Album Information")
       }
     }
-    .labeledContentStyle(.withThemeFont)
 
     ThemeSection {
       Section {
@@ -145,6 +145,6 @@ private struct ButtonRow: View {
     .buttonStyle(.borderedProminent)
   }
   .padding(.horizontal)
-  .fullBackground(.themePrimary)
+  .withFullBackground()
 }
 #endif

@@ -12,8 +12,7 @@ final class AlbumDetailViewModel {
     // case failure(LocalizedError)
   }
 
-  // init(apiClient: any ApiClient = .null) {
-  init(apiClient: any ApiClient = .live) {
+  init(apiClient: any ApiClient = .null) {
     self.apiClient = apiClient
   }
 
@@ -59,10 +58,7 @@ extension Array where Element == Track {
 extension ApiClient {
   fileprivate func resolveTracks(for album: Album) async throws -> TracklistResponseDto {
     try await resolveTracks(
-      // discogsId: album.id,
       discogsId: album.discogsId,
-      // albumTitle: album.title,
-      // albumArtist: album.artist,
       barcode: album.barcode.first,
     )
   }

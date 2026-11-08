@@ -22,6 +22,10 @@ struct SearchTextFieldStyle: TextFieldStyle {
         .opacity(text.isEmpty ? 0 : 1)
       }
       .padding()
+      .foregroundStyle(
+        .themePrimary,
+        .themeSeparator,
+      )
       .roundedOutline(lineWidth: isFocused ? 2 : 1)
   }
 }
@@ -49,12 +53,12 @@ struct WithColorSchemes<Content: View>: View {
     VStack(spacing: 0) {
       content
         .frame(maxWidth: .infinity)
-        .background(.themePrimary)
+        .background(.themeBackground)
         .environment(\.colorScheme, .light)
 
       content
         .frame(maxWidth: .infinity)
-        .background(.themePrimary)
+        .background(.themeBackground)
         .environment(\.colorScheme, .dark)
     }
   }
@@ -91,7 +95,6 @@ private struct TestSearchField: View {
         }
       }
       .buttonStyle(.borderedProminent)
-      .foregroundStyle(.themePrimary)
     }
     .padding()
   }

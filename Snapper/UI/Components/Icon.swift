@@ -16,20 +16,8 @@ struct FavoriteIconButton: View {
       }
     }
     .favoriteIconStyle(isFavorite: isFavorite)
-    .buttonStyle(.scale)
+    .buttonStyle(.pressedScale(0.9))
   }
-}
-
-private struct ScaleButtonStyle: ButtonStyle {
-  func makeBody(configuration: Configuration) -> some View {
-    configuration.label
-      .scaleEffect(configuration.isPressed ? 0.9 : 1)
-      .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
-  }
-}
-
-extension ButtonStyle where Self == ScaleButtonStyle {
-  static var scale: Self { Self() }
 }
 
 struct FavoriteIconStyle: ViewModifier {
@@ -38,7 +26,6 @@ struct FavoriteIconStyle: ViewModifier {
   func body(content: Content) -> some View {
     content
       .symbolEffect(.bounce.up, options: .speed(2), value: isFavorite)
-      .foregroundStyle(.accent)
   }
 }
 
@@ -61,5 +48,6 @@ extension View {
     FavoriteIconButton(isFavorite: $isFavorite)
       .border(.red)
   }
+  .foregroundStyle(.accent)
 }
 #endif

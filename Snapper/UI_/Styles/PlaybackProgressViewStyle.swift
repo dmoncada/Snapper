@@ -13,7 +13,7 @@ struct PlaybackProgressViewStyle: ProgressViewStyle {
       if isEnabled {
         Circle()
           .fill(.clear)
-          .stroke(.secondary.opacity(0.5), lineWidth: scaledWidth)
+          .stroke(.secondary.opacity(0.25), lineWidth: scaledWidth)
 
         Circle()
           .trim(
@@ -21,10 +21,11 @@ struct PlaybackProgressViewStyle: ProgressViewStyle {
             to: isPlaying ? (configuration.fractionCompleted ?? 0) : 1,
           )
           .stroke(
+            .primary,
             style: StrokeStyle(
               lineWidth: scaledWidth,
               lineCap: .round,
-            )
+            ),
           )
           .rotationEffect(.degrees(-90))
       }
@@ -84,17 +85,14 @@ struct TestPlaybackIndicator: View {
             .progressViewStyle(.playback(isPlaying: isPlaying))
             .border(.green)
 
-          Text("Song")
-            .lineLimit(1)
-            .border(.blue)
-
-          Spacer()
-
-          Text("5:35")
-            .border(.blue)
+          LabeledContent("Song", value: "5:35")
         }
         .contentShape(.rect)
       }
+      .foregroundStyle(
+        isPlaying ? .accent : .themePrimary,
+        isPlaying ? .accent : .themeSecondary,
+      )
       .buttonStyle(.plain)
       .onChange(of: progress >= 1) { _, finished in
         guard finished, isPlaying else { return }

@@ -15,7 +15,9 @@ struct FullBackgroundModifier<Background: ShapeStyle>: ViewModifier {
 }
 
 extension View {
-  func fullBackground<Background: ShapeStyle>(_ background: Background) -> some View {
+  func withFullBackground<Background: ShapeStyle>(
+    _ background: Background = .themeBackground
+  ) -> some View {
     modifier(FullBackgroundModifier(background: background))
   }
 }

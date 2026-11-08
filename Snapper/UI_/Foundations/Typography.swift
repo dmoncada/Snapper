@@ -8,11 +8,13 @@ enum CustomFont: String, CaseIterable, Identifiable {
   case libreCaslonTextItalic = "LibreCaslonText-Italic"
   case libreCaslonTextBold = "LibreCaslonText-Bold"
 
-  case sligoilMicro = "Sligoil-Micro"
-  case sligoilMicroMedium = "Sligoil-MicroMedium"
-  case sligoilMicroBold = "Sligoil-MicroBold"
+  case interRegular = "Inter-Regular"
+  case interItalic = "Inter-Italic"
 
-  case vg5000 = "VG5000-Regular"
+  case zillaSlabRegular = "ZillaSlab-Regular"
+  case zillaSlabItalic = "ZillaSlab-Italic"
+  case zillaSlabBold = "ZillaSlab-Bold"
+  case zillaSlabBoldItalic = "ZillaSlab-BoldItalic"
 
   var id: String { rawValue }
 }
@@ -65,6 +67,10 @@ extension PlatformFont.TextStyle {
 }
 
 extension Font {
+  static func custom(_ fontName: String, _ textStyle: Font.TextStyle) -> Font {
+    .custom(fontName, size: baseSize(for: textStyle), relativeTo: textStyle)
+  }
+
   static func custom(_ font: CustomFont, _ textStyle: Font.TextStyle) -> Font {
     .custom(font.id, size: baseSize(for: textStyle), relativeTo: textStyle)
   }
@@ -107,20 +113,12 @@ extension Font {
     .custom(.libreCaslonTextBold, textStyle)
   }
 
-  static func sligoilMicro(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.sligoilMicro, textStyle)
+  static func inter(_ textStyle: Font.TextStyle) -> Font {
+    .custom(.interRegular, textStyle)
   }
 
-  static func sligoilMicroMedium(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.sligoilMicroMedium, textStyle)
-  }
-
-  static func sligoilMicroBold(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.sligoilMicroBold, textStyle)
-  }
-
-  static func vg5000(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.vg5000, textStyle)
+  static func zillaSlab(_ textStyle: Font.TextStyle) -> Font {
+    .custom(.zillaSlabRegular, textStyle)
   }
 }
 
@@ -148,7 +146,7 @@ private struct InstalledFontsList: View {
     List(fontNames, id: \.self) { name in
       Text(name)
         .font(.custom(name, size: 32, relativeTo: .title))
-        .minimumScaleFactor(0.5)
+        .minimumScaleFactor(0.3)
     }
   }
 }
@@ -173,5 +171,35 @@ private struct FontSpecimenView: View {
 
 #Preview("Specimens") {
   FontSpecimenView()
+}
+
+#Preview("Zilla Slab Styles") {
+  List {
+    Text("Zilla Slab Regular")
+      .font(.zillaSlab(.title))
+    Text("Zilla Slab Italic")
+      .font(.zillaSlab(.title).italic())
+    Text("Zilla Slab Bold")
+      .font(.zillaSlab(.title).bold())
+    Text("Zilla Slab Bold Italic")
+      .font(.zillaSlab(.title).bold().italic())
+  }
+}
+
+#Preview("Inter Styles") {
+  List {
+    Text("Inter Regular")
+      .font(.inter(.title))
+    Text("Inter Italic")
+      .font(.inter(.title).italic())
+    Text("Inter Medium")
+      .font(.inter(.title).weight(.medium))
+    Text("Inter Semibold")
+      .font(.inter(.title).weight(.semibold))
+    Text("Inter Bold")
+      .font(.inter(.title).bold())
+    Text("Inter Bold Italic")
+      .font(.inter(.title).bold().italic())
+  }
 }
 #endif

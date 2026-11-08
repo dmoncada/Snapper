@@ -1,38 +1,21 @@
 import SwiftUI
 
 struct ThemeLabeledContentStyle: LabeledContentStyle {
-  let isActive: Bool
-
-  init(isActive: Bool = false) {
-    self.isActive = isActive
-  }
-
   func makeBody(configuration: Configuration) -> some View {
     HStack {
       configuration.label
-        .font(.sligoilMicroBold(.subheadline))
+        .font(Typography.labelBody)
+        .foregroundStyle(.primary)
 
       Spacer()
 
       configuration.content
-        .font(.sligoilMicro(.subheadline))
+        .font(Typography.labelBody)
+        .foregroundStyle(.secondary)
     }
-    .contentShape(.rect)
-    .foregroundStyle(
-      isActive
-        ? .accent
-        : .themePrimaryInverted
-    )
-    .opacity(0.625)
   }
 }
 
 extension LabeledContentStyle where Self == ThemeLabeledContentStyle {
-  static var withThemeFont: Self {
-    Self(isActive: false)
-  }
-
-  static func withThemeFont(isActive: Bool = false) -> Self {
-    Self(isActive: isActive)
-  }
+  static var withThemeFont: Self { Self() }
 }

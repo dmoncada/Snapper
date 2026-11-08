@@ -48,6 +48,19 @@ struct SelectableGrid<
     ]
   }
 
+  /*
+  private var columns: [GridItem] {
+    dynamicTypeSize.isAccessibilitySize
+      ? [
+        GridItem(.flexible(), spacing: Spacing.sm)
+      ]
+      : [
+        GridItem(.flexible(), spacing: Spacing.sm),
+        GridItem(.flexible(), spacing: Spacing.sm),
+      ]
+  }
+   */
+
   var body: some View {
     ScrollView(.vertical) {
       VStack(spacing: Spacing.sm) {

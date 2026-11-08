@@ -15,7 +15,7 @@ struct ToolbarTitle: ToolbarContent {
           alignment: .leading,
         )
         .font(.basteleurBold(.title))
-        .foregroundStyle(.themePrimaryInverted)
+        .foregroundStyle(.primary)
     }
     .sharedBackgroundVisibility(.hidden)
   }

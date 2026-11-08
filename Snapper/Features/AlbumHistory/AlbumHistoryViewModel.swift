@@ -7,21 +7,63 @@ import os
 @Observable
 final class AlbumHistoryViewModel {
   var searchText = ""
-  var favoritesOnly = false
+  var selectedFilters: Set<AlbumHistoryFilter> = [.all]
   var sort = SortModel()
 
   var isSelecting = false
   var selectedIds: Set<Album.ID> = []
 
+  @ObservationIgnored private let context: ModelContext
+
+  private(set) var availableFilters: [AlbumHistoryFilter] = [
+    .all,
+    .favorites,
+  ]
+
   init(context: ModelContext) {
     self.context = context
+    refreshAvailableFilters()
   }
 
-  @ObservationIgnored private let context: ModelContext
+  func refreshAvailableFilters() {
+    let albums = (try? context.fetch(FetchDescriptor<Album>())) ?? []
+
+    let genres = Set(albums.flatMap(\.genre).compactMap(Genre.init(value:)))
+
+    availableFilters =
+      [
+        .all,
+        .favorites,
+      ]
+      + Genre.allCases
+      .filter { genres.contains($0) }
+      .map(AlbumHistoryFilter.genre)
+  }
+
+  func toggleFilter(_ filter: AlbumHistoryFilter) {
+    if filter == .all {
+      selectedFilters = [.all]
+      return
+    }
+
+    selectedFilters.remove(.all)
+
+    if selectedFilters.contains(filter) {
+      selectedFilters.remove(filter)
+    } else {
+      selectedFilters.insert(filter)
+    }
+
+    if selectedFilters.isEmpty {
+      selectedFilters = [.all]
+    }
+  }
 
   var descriptor: FetchDescriptor<Album> {
     let criterion = sort.criterion
     let order = sort.getOrder(for: criterion)
+
+    let favoritesOnly = selectedFilters.contains(.favorites)
 
     let isFavorite = #Predicate<Album> { album in
       favoritesOnly == false || album.isFavorite
@@ -88,6 +130,7 @@ final class AlbumHistoryViewModel {
 
   func delete(_ album: Album) {
     context.delete(album)
+    refreshAvailableFilters()
     saveAndReloadWidget()
   }
 
@@ -98,6 +141,7 @@ final class AlbumHistoryViewModel {
       context.delete(album)
     }
 
+    refreshAvailableFilters()
     saveAndReloadWidget()
     clearSelection()
   }

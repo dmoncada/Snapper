@@ -1,89 +1,73 @@
 import SwiftUI
 
-struct BadgeStyleModifier: ViewModifier {
-  let isActive: Bool
+struct Item: Identifiable {
+  let id: UUID
+  let title: String
+  let genres: Set<Genre>
+  var isFavorite: Bool
+}
 
-  @Environment(\.controlSize) private var controlSize
+enum ItemFilter: Hashable, Identifiable {
+  case all
+  case favorites
+  case genre(Genre)
 
-  private var textStyle: Font.TextStyle {
-    switch controlSize {
-    case .mini: .caption2
-    case .small: .caption
-    case .regular: .body
-    case .large: .title3
-    case .extraLarge: .title2
-    @unknown default: .body
+  var id: Self { self }
+
+  var title: String {
+    switch self {
+    case .all: "All"
+    case .favorites: "Favorites"
+    case .genre(let genre): genre.title
     }
   }
-
-  func body(content: Content) -> some View {
-    content
-      .padding(Padding.md)
-      .font(.sligoilMicroBold(textStyle))
-      .foregroundStyle(
-        isActive
-          ? .themePrimary
-          : .themePrimaryInverted
-      )
-      .background {
-        if isActive {
-          RoundedRectangle(cornerRadius: Radius.md)
-            .fill(.tint)
-        } else {
-          RoundedRectangle(cornerRadius: Radius.md)
-            .stroke(.themePrimaryInverted, lineWidth: LineWidth.sm)
-        }
-      }
-  }
-}
-
-struct BadgeToggleStyle: ToggleStyle {
-  func makeBody(configuration: Configuration) -> some View {
-    Button {
-      configuration.isOn.toggle()
-    } label: {
-      configuration.label
-        .badgeStyle(isActive: configuration.isOn)
-        .animation(nil, value: configuration.isOn)
-    }
-    .buttonStyle(.plain)
-  }
-}
-
-extension View {
-  func badgeStyle(isActive: Bool = false) -> some View {
-    modifier(BadgeStyleModifier(isActive: isActive))
-  }
-}
-
-extension ToggleStyle where Self == BadgeToggleStyle {
-  static var badge: Self { Self() }
 }
 
 struct FilterBar: View {
-  enum Filter: String, CaseIterable, Identifiable {
-    case all, favorites, rock, pop
+  @Binding var selectedFilters: Set<ItemFilter>
 
-    var id: Self { self }
+  let filters: [ItemFilter]
 
-    var title: String { rawValue.capitalized }
+  private func toggle(_ filter: ItemFilter) {
+    if filter == .all {
+      selectedFilters = [.all]
+      return
+    }
+
+    selectedFilters.remove(.all)
+
+    if selectedFilters.contains(filter) {
+      selectedFilters.remove(filter)
+    } else {
+      selectedFilters.insert(filter)
+    }
+
+    if selectedFilters.isEmpty {
+      selectedFilters = [.all]
+    }
   }
-
-  @Binding var selectedFilter: Filter
 
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(spacing: Spacing.sm) {
-        ForEach(Filter.allCases) { filter in
+        ForEach(filters) { filter in
+          let isOn = selectedFilters.contains(filter)
+
           Toggle(
             filter.title,
+            systemImage: "checkmark",
             isOn: Binding(
-              get: { selectedFilter == filter },
-              set: { if $0 { selectedFilter = filter } },
+              get: { isOn },
+              set: { _ in toggle(filter) },
             ),
           )
-          .toggleStyle(.badge)
-          .controlSize(.small)
+          .titleAndIconBadgeToggleStyle(
+            labelStyle: .expand,
+            appearance: isOn
+              ? .highlighted
+              : .default,
+          )
+          .imageScale(.small)
         }
       }
       .padding(1)
@@ -91,92 +75,109 @@ struct FilterBar: View {
   }
 }
 
-#if DEBUG
-private struct TestBadge: View {
-  @State private var isOn1 = false
-  @State private var isOn2 = false
+struct ItemListView: View {
+  @State private var selectedFilters: Set<ItemFilter> = [.all]
 
-  var body: some View {
-    VStack {
-      Text("Badge")
-        .badgeStyle()
-        .controlSize(.small)
+  @State private var items: [Item] = [
+    Item(
+      id: UUID(),
+      title: "Item 1",
+      genres: [.rock, .pop, .jazz],
+      isFavorite: true,
+    ),
+    Item(
+      id: UUID(),
+      title: "Item 2",
+      genres: [.pop, .jazz],
+      isFavorite: false,
+    ),
+    Item(
+      id: UUID(),
+      title: "Item 3",
+      genres: [.jazz, .electronic],
+      isFavorite: true,
+    ),
+  ]
 
-      Toggle("Toggle", isOn: $isOn1)
-        .toggleStyle(.badge)
-        .controlSize(.regular)
+  private var filters: [ItemFilter] {
+    let availableGenres = Set(items.flatMap(\.genres))
 
-      Toggle("Tinted toggle", isOn: $isOn2)
-        .toggleStyle(.badge)
-        .controlSize(.large)
-        .tint(.blue)
-    }
+    return
+      [
+        .all,
+        .favorites,
+      ]
+      + Genre.allCases
+      .filter { availableGenres.contains($0) }
+      .map(ItemFilter.genre)
   }
-}
-
-private struct CompleteView: View {
-  private struct Item: Identifiable {
-    let id: Int
-    let category: FilterBar.Filter
-
-    var title: String {
-      "Item \(id)"
-    }
-  }
-
-  @State private var selectedFilter: FilterBar.Filter = .all
-
-  private let items: [Item] = (1 ... 100)
-    .map { index in
-      let categories: [FilterBar.Filter] = [.favorites, .rock, .pop]
-
-      return Item(
-        id: index,
-        category: categories[(index - 1) % categories.count],
-      )
-    }
 
   private var filteredItems: [Item] {
-    if selectedFilter == .all {
+    if selectedFilters.contains(.all) {
       return items
     }
 
-    return items.filter { $0.category == selectedFilter }
+    return items.filter { item in
+      selectedFilters.contains { filter in
+        switch filter {
+        case .all:
+          true
+
+        case .favorites:
+          item.isFavorite
+
+        case .genre(let genre):
+          item.genres.contains(genre)
+        }
+      }
+    }
   }
 
   var body: some View {
-    ScrollView(.vertical) {
-      FilterBar(selectedFilter: $selectedFilter)
+    ScrollView {
+      FilterBar(
+        selectedFilters: $selectedFilters,
+        filters: filters,
+      )
 
       LazyVStack(spacing: 0) {
         ForEach(filteredItems) { item in
           LabeledContent {
-            Text(item.category.title)
-              .font(.caption)
-              .foregroundStyle(.secondary)
+            Text(
+              item.genres
+                .map(\.title)
+                .sorted()
+                .joined(separator: ", ")
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
           } label: {
-            Text(item.title)
+            HStack {
+              Text(item.title)
+
+              if item.isFavorite {
+                Image(systemName: "heart.fill")
+                  .foregroundStyle(.red)
+              }
+            }
           }
           .padding(.vertical)
-          .tag(item.id)
 
           Divider()
         }
       }
     }
     .padding(.horizontal)
+    .onChange(of: filters) { _, newFilters in
+      selectedFilters.formIntersection(newFilters)
+
+      if selectedFilters.isEmpty {
+        selectedFilters = [.all]
+      }
+    }
   }
 }
 
-#Preview("Filter Bar") {
-  CompleteView()
+#Preview {
+  ItemListView()
 }
-
-#Preview("Component") {
-  WithColorSchemes {
-    TestBadge()
-      .frame(maxWidth: .infinity)
-      .padding()
-  }
-}
-#endif

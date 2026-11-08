@@ -74,23 +74,25 @@ private struct _CachedImage: View {
 private struct CachedImageContent: View {
   let phase: AsyncImagePhase
 
-  let placeholder = Rectangle().fill(.placeholder)
+  let placeholder = Rectangle().fill(.themePlaceholder)
 
   var body: some View {
     switch phase {
     case .empty:
-      ZStack {
-        placeholder
-        ProgressView()
-      }
+      placeholder
+        .overlay {
+          ProgressView()
+        }
+
+    case .failure:
+      placeholder
+        .overlay {
+          Image(systemName: "xmark.circle")
+        }
 
     case .success(let image):
       image
         .resizable()
-        .scaledToFill()
-
-    case .failure:
-      placeholder
 
     @unknown default:
       placeholder
@@ -122,12 +124,6 @@ extension URLSession {
   let size: CGFloat = 200
 
   VStack {
-    LabeledContent("Success") {
-      CachedImage(url: URL(string: url))
-        .frame(width: size, height: size)
-        .clipped()
-    }
-
     LabeledContent("Empty") {
       CachedImageContent(phase: .empty)
         .frame(width: size, height: size)
@@ -136,6 +132,12 @@ extension URLSession {
     LabeledContent("Failure") {
       CachedImageContent(phase: .failure(URLError(.badURL)))
         .frame(width: size, height: size)
+    }
+
+    LabeledContent("Success") {
+      CachedImage(url: URL(string: url))
+        .frame(width: size, height: size)
+        .clipped()
     }
   }
   .padding()

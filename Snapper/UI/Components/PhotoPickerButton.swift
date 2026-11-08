@@ -21,9 +21,9 @@ struct PhotoPickerButton: View {
 
   var body: some View {
     PhotosPicker(selection: $selection, matching: .images) {
-      Text(label)
+      Label(label, systemImage: "photo")
     }
-    .buttonStyle(.large)
+    .buttonStyle(.theme)
     .task(id: selectionId) {
       await load()
     }

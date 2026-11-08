@@ -40,17 +40,11 @@ struct HistoryView: View {
           }
         } header: {
           if vm.albumCount > 0 {
-            FilterBar(
-              selectedFilter: Binding(
-                get: { vm.favoritesOnly ? .favorites : .all },
-                set: { vm.favoritesOnly = $0 == .favorites },
-              )
-            )
-            .padding(.vertical, Padding.md)
-            .disabled(vm.isSelecting)
+            AlbumHistoryFilterBar(vm: vm)
+              .disabled(vm.isSelecting)
           }
         }
-        // .onAppear { vm.isSelecting = false }
+        .onAppear { vm.refreshAvailableFilters() }
         .overlay {
           if filteredHistory.isEmpty {
             if vm.searchText.isEmpty {
@@ -79,7 +73,7 @@ struct HistoryView: View {
             path.removeLast()
           }
         }
-        .fullBackground(.themePrimary)
+        .withFullBackground()
       }
     }
   }
@@ -147,6 +141,37 @@ private struct AlbumHistoryToolbar: ToolbarContent {
       primary: .delete { vm.batchDelete(ids: vm.selectedIds) },
       secondary: .cancel,
     )
+  }
+}
+
+private struct AlbumHistoryFilterBar: View {
+  @Bindable var vm: AlbumHistoryViewModel
+
+  var body: some View {
+    ScrollView(.horizontal, showsIndicators: false) {
+      HStack(spacing: Spacing.sm) {
+        ForEach(vm.availableFilters) { filter in
+          let isOn = vm.selectedFilters.contains(filter)
+
+          Toggle(
+            filter.title,
+            systemImage: "checkmark",
+            isOn: Binding(
+              get: { vm.selectedFilters.contains(filter) },
+              set: { _ in vm.toggleFilter(filter) },
+            ),
+          )
+          .titleAndIconBadgeToggleStyle(
+            labelStyle: .expand,
+            appearance: isOn
+              ? .highlighted
+              : .default,
+          )
+          .imageScale(.small)
+        }
+      }
+      .padding(LineWidth.sm)
+    }
   }
 }
 
