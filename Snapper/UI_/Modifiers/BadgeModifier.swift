@@ -46,7 +46,7 @@ extension View {
 
 #if DEBUG
 #Preview {
-  WithColorSchemes {
+  WithColorSchemes(axis: .horizontal) {
     VStack {
       Text("Mini")
         .badgeStyle()

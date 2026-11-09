@@ -4,6 +4,16 @@ struct BadgeAppearance {
   let text: Color
   let line: Color
   let fill: Color
+
+  init(
+    text: Color = .themePrimary,
+    line: Color = .themeSeparator,
+    fill: Color = .clear,
+  ) {
+    self.text = text
+    self.line = line
+    self.fill = fill
+  }
 }
 
 extension BadgeAppearance {
