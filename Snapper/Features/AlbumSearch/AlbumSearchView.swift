@@ -36,6 +36,7 @@ struct HomeView: View {
           .autocorrectionDisabled(true)
           .keyboardType(.webSearch)
           .focused($isFocused)
+          .accessibilityIdentifier("album-search-field")
           .textFieldStyle(
             .searchField(
               text: $searchText,

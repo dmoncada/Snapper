@@ -106,10 +106,23 @@ struct StubApiClient: ApiClient {
     limit: Int,
   ) async throws -> [AlbumDto] {
     guard limit > 0 else { return [] }
+
+    let matches = albums.filter { album in
+      if let term, term.isEmpty == false {
+        let matchesTitle = album.title.localizedStandardContains(term)
+        let matchesArtist = album.artist.localizedStandardContains(term)
+        return matchesTitle || matchesArtist
+      }
+      if let barcode, barcode.isEmpty == false {
+        return album.barcode.contains(barcode)
+      }
+      return true
+    }
+
     return
-      albums
+      matches
       .prefix(limit)
-      .map { AlbumDto.fromModel($0) }
+      .map(AlbumDto.fromModel)
   }
 
   func resolveTracks(
@@ -117,7 +130,7 @@ struct StubApiClient: ApiClient {
     barcode: String?,
   ) async throws -> TracklistResponseDto {
     let album = albums.first(where: { $0.discogsId == discogsId })
-    let tracks = album?.tracks.map { TrackDto.fromModel($0) } ?? []
+    let tracks = album?.tracks.map(TrackDto.fromModel) ?? []
 
     return TracklistResponseDto(
       albumUrl: nil,

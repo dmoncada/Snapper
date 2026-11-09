@@ -58,8 +58,9 @@ Carthage/Build/
 
 fastlane/report.xml
 fastlane/Preview.html
-fastlane/screenshots/**/*.png
+fastlane/screenshots/
 fastlane/test_output
+.ruby-lsp/
 
 Configuration/Settings.xcconfig
 .DS_Store

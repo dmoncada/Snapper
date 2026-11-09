@@ -73,8 +73,8 @@
           "target": "SnapperWidget",
           "inclusions": [
             "App/Constants.swift",
-            "Helpers/Genre.swift",
             "Models/Album.swift",
+            "Models/Genre.swift",
             "Models/Track.swift",
             "Resources/Fonts/basteleur/Basteleur-Bold.ttf",
             "Resources/Fonts/basteleur/Basteleur-Moonlight.ttf",

@@ -1,0 +1,5 @@
+project("Snapper.xcodeproj")
+scheme("Snapper")
+devices(["iPhone 18 Pro"])
+languages(["en-US"])
+output_directory("screenshots")

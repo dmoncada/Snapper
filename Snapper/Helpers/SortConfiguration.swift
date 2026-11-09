@@ -95,7 +95,7 @@ class SortModel {
   private let encoder = JSONEncoder()
 
   init() {
-    configuration = Self.load()
+    configuration = Application.isTest ? .default : Self.load()
   }
 
   var criterion: SortCriterion {

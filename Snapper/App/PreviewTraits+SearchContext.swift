@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 enum SearchContextKind {
-  case live
+  // case live
   case slow
   case fail
   case stub(Int = 10)
@@ -23,7 +23,7 @@ struct SearchContextModifier: PreviewModifier {
 
   private func makeClient(_ container: ModelContainer) -> (ApiClient, Int) {
     switch kind {
-    case .live: (.live, 10)
+    // case .live: (.live, 10)
     case .fail: (.fail, 10)
     case .slow: (.slow, 10)
     case .stub(let count): (.stub(container), count)
@@ -65,23 +65,9 @@ private struct SearchPreview: View {
     self.count = count
     self.load = load
 
-    _searchViewModel = State(
-      initialValue: AlbumSearchViewModel(
-        apiClient: apiClient
-      )
-    )
-
-    _detailViewModel = State(
-      initialValue: AlbumDetailViewModel(
-        apiClient: apiClient
-      )
-    )
-
-    _locationCoordinator = State(
-      initialValue: AlbumLocationCaptureCoordinator(
-        locator: .stub(.newYork)
-      )
-    )
+    _searchViewModel = State(initialValue: .init(apiClient: apiClient))
+    _detailViewModel = State(initialValue: .init(apiClient: apiClient))
+    _locationCoordinator = State(initialValue: .init(locator: .stub(.newYork)))
   }
 
   var body: some View {
@@ -91,6 +77,7 @@ private struct SearchPreview: View {
       .environment(detailViewModel)
       .environment(locationCoordinator)
       .environment(\.previewPlayer, .live)
+      .environment(\.dateTimeProvider, .stub)
       .task {
         guard load else { return }
         await searchViewModel.search(
@@ -104,7 +91,7 @@ private struct SearchPreview: View {
 
 extension PreviewTrait where T == Preview.ViewTraits {
   @MainActor static var withSearchContext: Self =
-    .modifier(SearchContextModifier(kind: .live, load: false))
+    .modifier(SearchContextModifier(kind: .stub(10), load: false))
 
   @MainActor static func withSearchContext(kind: SearchContextKind, load: Bool = true) -> Self {
     .modifier(SearchContextModifier(kind: kind, load: load))

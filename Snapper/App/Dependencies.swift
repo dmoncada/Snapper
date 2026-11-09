@@ -11,6 +11,7 @@ struct Dependencies {
   let previewPlayer: any PreviewPlaying
   let imageRecognizer: any ImageRecognizing
   let locationProvider: any LocationProviding
+  let dateTimeProvider: any DateTimeProviding
 
   let searchViewModel: AlbumSearchViewModel
   let detailViewModel: AlbumDetailViewModel
@@ -24,7 +25,20 @@ struct Dependencies {
       print(location)
     }
 
+    #if DEBUG
+    apiClient =
+      Application.isTest
+      ? .stub(modelContainer)
+      : .live
+    dateTimeProvider =
+      Application.isTest
+      ? .stub(modelContainer)
+      : .live
+    #else
     apiClient = .live
+    dateTimeProvider = .live
+    #endif
+
     previewPlayer = .live
     imageRecognizer = .live
     locationProvider = .live
@@ -47,8 +61,8 @@ struct Dependencies {
   private static func initContainer() -> ModelContainer {
     do {
       #if DEBUG
-      if ProcessInfo.processInfo.arguments.contains("-ui-testing-seed-albums") {
-        return try SampleDataStore.makeContainer(limit: 2)
+      if Application.isTest {
+        return try SampleDataStore.makeContainer()
       }
       return try SnapperStore.makeContainer()
       #else

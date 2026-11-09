@@ -191,7 +191,7 @@ private struct AlbumHistoryFilterBar: View {
   .environment(router)
 }
 
-#Preview("With data", traits: .withSampleData) {
+#Preview("With data", traits: .withSearchContext) {
   @Previewable @Environment(\.modelContext) var context
 
   @Previewable @State var router = Router()
@@ -203,8 +203,8 @@ private struct AlbumHistoryFilterBar: View {
   }
   .withAlertDestination($router.alertItem)
   .environment(AlbumHistoryViewModel(context: context))
-  .environment(AlbumDetailViewModel(apiClient: .live))
-  .environment(\.previewPlayer, .live)
+  // .environment(AlbumDetailViewModel(apiClient: .live))
+  // .environment(\.previewPlayer, .live)
   .environment(router)
 }
 #endif

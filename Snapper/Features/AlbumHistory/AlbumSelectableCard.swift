@@ -79,6 +79,8 @@ private struct AlbumCover: View {
 }
 
 private struct AlbumMetadata: View {
+  @Environment(\.dateTimeProvider) private var provider
+
   let album: Album
 
   var body: some View {
@@ -97,7 +99,7 @@ private struct AlbumMetadata: View {
           )
       }
 
-      Text("\(album.selectedAt.shortRelative(to: .now)) ago")
+      Text("\(album.selectedAt.shortRelative(to: provider.now)) ago")
         .badgeStyle(appearance: .highlighted)
         .controlSize(.mini)
     }
@@ -171,7 +173,7 @@ private struct TestSelectableGrid: View {
   }
 }
 
-#Preview(traits: .withSampleData) {
+#Preview(traits: .withSearchContext) {
   TestSelectableGrid()
 }
 #endif

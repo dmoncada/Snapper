@@ -4,15 +4,19 @@ struct CachedImage: View {
   let url: URL?
 
   var body: some View {
-    #if compiler(>=6.4)
-    if #available(iOS 27, *) {
-      _CachedImage27(url: url)
+    if let url, url.scheme == "assets" {
+      AssetCatalogImage(url: url)
     } else {
+      #if compiler(>=6.4)
+      if #available(iOS 27, *) {
+        _CachedImage27(url: url)
+      } else {
+        _CachedImage(url: url)
+      }
+      #else
       _CachedImage(url: url)
+      #endif
     }
-    #else
-    _CachedImage(url: url)
-    #endif
   }
 }
 
@@ -71,6 +75,23 @@ private struct _CachedImage: View {
   }
 }
 
+private struct AssetCatalogImage: View {
+  let url: URL
+
+  var body: some View {
+    Group {
+      let name = url.lastPathComponent
+
+      if UIImage(named: name, in: .main, compatibleWith: nil) == nil {
+        CachedImageContent(phase: .failure(URLError(.fileDoesNotExist)))
+      } else {
+        Image(name)
+          .resizable()
+      }
+    }
+  }
+}
+
 private struct CachedImageContent: View {
   let phase: AsyncImagePhase
 
@@ -104,8 +125,8 @@ enum ImageUrlSession {
   static let shared: URLSession = {
     let configuration = URLSessionConfiguration.default
     configuration.urlCache = URLCache(
-      memoryCapacity: 20 * 1024 * 1024,
-      diskCapacity: 100 * 1024 * 1024,
+      memoryCapacity: 20 * StorageUnit.mb,
+      diskCapacity: 100 * StorageUnit.mb,
     )
     configuration.requestCachePolicy = .useProtocolCachePolicy
 
@@ -120,6 +141,8 @@ extension URLSession {
 #if DEBUG
 #Preview {
   let url = "https://picsum.photos/600/400"
+
+  let assetUrl = "assets:///Album-11544847"
 
   let size: CGFloat = 200
 
@@ -136,6 +159,12 @@ extension URLSession {
 
     LabeledContent("Success") {
       CachedImage(url: URL(string: url))
+        .frame(width: size, height: size)
+        .clipped()
+    }
+
+    LabeledContent("Asset Catalog") {
+      CachedImage(url: URL(string: assetUrl))
         .frame(width: size, height: size)
         .clipped()
     }
