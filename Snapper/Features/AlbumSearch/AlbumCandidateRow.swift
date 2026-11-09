@@ -11,10 +11,10 @@ struct AlbumCandidateRow: View {
 
       LabeledContent {
         Text(album.title)
-          .font(Typography.albumRowTitle)
+          .font(Typography.albumRow.title)
       } label: {
         Text(album.artist)
-          .font(Typography.albumRowArtist)
+          .font(Typography.albumRow.artist)
       }
       .frame(
         maxWidth: .infinity,

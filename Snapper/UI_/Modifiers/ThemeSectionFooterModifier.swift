@@ -3,7 +3,7 @@ import SwiftUI
 struct ThemeSectionFooterModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
-      .font(Typography.sectionFooter)
+      .font(Typography.section.footer)
       .foregroundStyle(Color.themeSecondary)
   }
 }

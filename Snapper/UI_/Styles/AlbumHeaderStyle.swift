@@ -27,10 +27,10 @@ import SwiftData
       VStack(alignment: .leading, spacing: 16) {
         LabeledContent {
           Text(album.title)
-            .font(Typography.albumRowTitle)
+            .font(Typography.albumRow.title)
         } label: {
           Text(album.artist)
-            .font(Typography.albumRowArtist)
+            .font(Typography.albumRow.artist)
         }
         .labeledContentStyle(.albumHeader)
         .lineLimit(1)

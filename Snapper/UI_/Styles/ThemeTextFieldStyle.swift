@@ -42,28 +42,6 @@ extension TextFieldStyle where Self == SearchTextFieldStyle {
   }
 }
 
-struct WithColorSchemes<Content: View>: View {
-  let content: Content
-
-  init(@ViewBuilder content: () -> Content) {
-    self.content = content()
-  }
-
-  var body: some View {
-    VStack(spacing: 0) {
-      content
-        .frame(maxWidth: .infinity)
-        .background(.themeBackground)
-        .environment(\.colorScheme, .light)
-
-      content
-        .frame(maxWidth: .infinity)
-        .background(.themeBackground)
-        .environment(\.colorScheme, .dark)
-    }
-  }
-}
-
 #if DEBUG
 private struct TestSearchField: View {
   @FocusState private var isFocused: Bool

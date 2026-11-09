@@ -75,10 +75,10 @@ private struct AlbumHeaderSection: View {
     HStack(alignment: .firstTextBaseline) {
       LabeledContent {
         Text(album.title)
-          .font(Typography.albumDetailTitle)
+          .font(Typography.albumDetail.title)
       } label: {
         Text(album.artist)
-          .font(Typography.albumDetailArtist)
+          .font(Typography.albumDetail.artist)
       }
       .labeledContentStyle(.albumHeader)
 

@@ -30,17 +30,27 @@ nonisolated enum LineWidth {
 }
 
 enum Typography {
-  static let albumDetailTitle: Font = .zillaSlab(.title).bold()
-  static let albumDetailArtist: Font = .inter(.title2)
+  struct AlbumDetail {
+    let title: Font = .zillaSlab(.title).bold()
+    let artist: Font = .gillSans(.title2)
+  }
 
-  static let albumRowTitle: Font = .zillaSlab(.caption).bold()
-  static let albumRowArtist: Font = .inter(.caption2)
+  struct AlbumRow {
+    let title: Font = .zillaSlab(.headline).bold()
+    let artist: Font = .gillSans(.subheadline)
+  }
 
-  static let sectionHeader: Font = .zillaSlab(.title3).bold()
-  static let sectionFooter: Font = .zillaSlab(.footnote)
+  struct Section {
+    let header: Font = .zillaSlab(.title3).bold()
+    let footer: Font = .zillaSlab(.footnote)
+  }
 
-  static let buttonBody: Font = .inter(.body)
-  static let labelBody: Font = .inter(.body)
+  static let albumDetail = AlbumDetail()
+  static let albumRow = AlbumRow()
+  static let section = Section()
+
+  static let buttonBody: Font = .gillSans(.body)
+  static let labelBody: Font = .gillSans(.body)
 
   static func badge(for size: ControlSize) -> Font {
     .zillaSlab(.fromControlSize(size)).bold()

@@ -113,6 +113,10 @@ extension Font {
     .custom(.libreCaslonTextBold, textStyle)
   }
 
+  static func gillSans(_ textStyle: Font.TextStyle) -> Font {
+    .custom("Gill Sans", textStyle)
+  }
+
   static func inter(_ textStyle: Font.TextStyle) -> Font {
     .custom(.interRegular, textStyle)
   }
@@ -159,7 +163,7 @@ private struct FontSpecimenView: View {
           .font(.custom(font, .title))
         Text(font.id)
           .font(.caption)
-          .foregroundStyle(.secondary)
+          .foregroundStyle(.blue.mix(with: .black, by: 0.125))
       }
     }
   }
@@ -186,20 +190,18 @@ private struct FontSpecimenView: View {
   }
 }
 
-#Preview("Inter Styles") {
-  List {
-    Text("Inter Regular")
-      .font(.inter(.title))
-    Text("Inter Italic")
-      .font(.inter(.title).italic())
-    Text("Inter Medium")
-      .font(.inter(.title).weight(.medium))
-    Text("Inter Semibold")
-      .font(.inter(.title).weight(.semibold))
-    Text("Inter Bold")
-      .font(.inter(.title).bold())
-    Text("Inter Bold Italic")
-      .font(.inter(.title).bold().italic())
+#Preview("Gill Sans Typeface") {
+  let font = "Gill Sans"
+  List(Font.Weight.allCases, id: \.self) { weight in
+    Text("\(font) \(weight.name)")
+      .font(.custom(font, .title).weight(weight))
+  }
+}
+
+#Preview("Inter Typeface") {
+  List(Font.Weight.allCases, id: \.self) { weight in
+    Text("Inter \(weight.name)")
+      .font(.inter(.title).weight(weight))
   }
 }
 #endif
