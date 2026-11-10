@@ -49,7 +49,8 @@ enum Typography {
   static let albumRow = AlbumRow()
   static let section = Section()
 
-  static let buttonBody: Font = .gillSans(.body)
+  static let buttonBody: Font = .gillSans(.title2)
+
   static let labelBody: Font = .gillSans(.body)
 
   static func badge(for size: ControlSize) -> Font {

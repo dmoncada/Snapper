@@ -24,8 +24,11 @@ struct FlowLayout: Layout {
       $0.sizeThatFits(.unspecified)
     }
 
+    let priorities = subviews.map(\.priority)
+
     let result = arrange(
       sizes: sizes,
+      priorities: priorities,
       maxWidth: proposal.width ?? .infinity,
     )
 
@@ -45,8 +48,11 @@ struct FlowLayout: Layout {
       $0.sizeThatFits(.unspecified)
     }
 
+    let priorities = subviews.map(\.priority)
+
     let result = arrange(
       sizes: sizes,
+      priorities: priorities,
       maxWidth: bounds.width,
     )
 
@@ -64,6 +70,7 @@ struct FlowLayout: Layout {
 
   private func arrange(
     sizes: [CGSize],
+    priorities: [Double],
     maxWidth: CGFloat,
   ) -> (
     positions: [CGPoint],
@@ -74,6 +81,16 @@ struct FlowLayout: Layout {
       return ([], 0, 0)
     }
 
+    // Higher-priority subviews are placed first.
+    // Preserve declaration order for equal priorities.
+    let orderedIndices = sizes.indices.sorted {
+      if priorities[$0] != priorities[$1] {
+        return priorities[$0] > priorities[$1]
+      }
+
+      return $0 < $1
+    }
+
     var rows: [[Int]] = []
     var currentRow: [Int] = []
 
@@ -82,16 +99,22 @@ struct FlowLayout: Layout {
     var totalHeight: CGFloat = 0
     var maxRowWidth: CGFloat = 0
 
-    for (index, size) in sizes.enumerated() {
+    for index in orderedIndices {
+      let size = sizes[index]
+
       if currentRow.isEmpty == false && x + size.width > maxWidth {
         rows.append(currentRow)
+
+        maxRowWidth = max(
+          maxRowWidth,
+          x - spacing,
+        )
 
         currentRow = []
 
         x = 0
 
         totalHeight += rowHeight + lineSpacing
-        maxRowWidth = max(maxRowWidth, x - spacing)
 
         rowHeight = 0
       }
@@ -104,8 +127,13 @@ struct FlowLayout: Layout {
 
     if currentRow.isEmpty == false {
       rows.append(currentRow)
+
       totalHeight += rowHeight
-      maxRowWidth = max(maxRowWidth, x - spacing)
+
+      maxRowWidth = max(
+        maxRowWidth,
+        x - spacing,
+      )
     }
 
     let alignmentWidth =
@@ -277,7 +305,9 @@ private var sampleTags: some View {
     tag("US")
     tag("2026")
     tag("Vinyl")
+      .layoutPriority(1)
     tag("Limited Edition")
+      .layoutPriority(2)
     tag("New")
     tag("Collector")
     tag("Record Store")

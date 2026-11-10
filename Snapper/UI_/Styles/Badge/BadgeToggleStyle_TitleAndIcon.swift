@@ -220,7 +220,7 @@ extension View {
   @Previewable @State var isOn3 = false
   @Previewable @State var isOn4 = false
 
-  WithColorSchemes {
+  WithColorSchemes(axis: .horizontal) {
     VStack(spacing: 12) {
       Toggle("Expand lead", systemImage: "arrow.left", isOn: $isOn1)
         .titleAndIconBadgeToggleStyle(labelStyle: .expand)

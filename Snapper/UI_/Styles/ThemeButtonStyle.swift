@@ -50,16 +50,19 @@ struct ThemeButonLabelStyle: LabelStyle {
       configuration.icon
       configuration.title
     }
-    .font(Typography.buttonBody)
     .padding(.vertical, Padding.xl)
     .frame(maxWidth: .infinity)
+    .font(Typography.buttonBody)
+    .imageScale(.small)
     .background(
       scheme == .dark
         ? .themeSeafoam
         : .themeGray
     )
     .contentShape(.rect)
-    .roundedOutline()
+    .roundedOutline(
+      lineStyle: .clear
+    )
   }
 }
 
