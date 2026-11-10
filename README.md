@@ -14,9 +14,11 @@
 </p>
 
 <p align="center">
-  <img src="assets/screen1.png" width="30%" alt="MusicSnap search results">
+  <img src="assets/screen1.png" width="20%" alt="MusicSnap search">
   &nbsp;&nbsp;
-  <img src="assets/screen2.png" width="30%" alt="MusicSnap history">
+  <img src="assets/screen2.png" width="20%" alt="MusicSnap history">
   &nbsp;&nbsp;
-  <img src="assets/screen3.png" width="30%" alt="MusicSnap album details">
+  <img src="assets/screen3.png" width="20%" alt="MusicSnap details">
+  &nbsp;&nbsp;
+  <img src="assets/screen4.png" width="20%" alt="MusicSnap spatial">
 </p>
