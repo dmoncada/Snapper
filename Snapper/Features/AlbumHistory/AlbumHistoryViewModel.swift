@@ -1,7 +1,7 @@
+import Logging
 import SwiftData
 import SwiftUI
 import WidgetKit
-import os
 
 @MainActor
 @Observable
@@ -13,14 +13,19 @@ final class AlbumHistoryViewModel {
   var isSelecting = false
   var selectedIds: Set<Album.ID> = []
 
-  @ObservationIgnored private let context: ModelContext
-
   private(set) var availableFilters: [AlbumHistoryFilter] = [
     .all,
     .favorites,
   ]
 
-  init(context: ModelContext) {
+  private let logger: Logger
+  private let context: ModelContext
+
+  init(
+    logger: Logger = .current,
+    context: ModelContext,
+  ) {
+    self.logger = logger
     self.context = context
     refreshAvailableFilters()
   }
@@ -167,8 +172,7 @@ final class AlbumHistoryViewModel {
       try context.save()
       WidgetCenter.shared.reloadTimelines(ofKind: "SnapperWidget")
     } catch {
-      Logger(subsystem: "net.dmoncada.Snapper", category: "AlbumHistory")
-        .error("History save failed: \(error.localizedDescription, privacy: .public)")
+      logger.error("History save failed.", error: error)
     }
   }
 }

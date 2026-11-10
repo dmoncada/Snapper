@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct SnapperApp: App {
-  @State private var dependencies = Dependencies()
+  @State private var dependencies = AppState()
 
   var body: some Scene {
     WindowGroup {

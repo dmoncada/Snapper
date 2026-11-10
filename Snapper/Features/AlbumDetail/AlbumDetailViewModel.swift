@@ -1,3 +1,4 @@
+import Logging
 import SwiftUI
 
 @MainActor
@@ -12,12 +13,17 @@ final class AlbumDetailViewModel {
     // case failure(LocalizedError)
   }
 
-  init(apiClient: any ApiClient = .null) {
+  init(
+    logger: Logger = .current,
+    apiClient: any ApiClient = .null,
+  ) {
+    self.logger = logger
     self.apiClient = apiClient
   }
 
   private(set) var state: State = .ready
 
+  private let logger: Logger
   private let apiClient: ApiClient
 
   func resolveTracks(for album: Album) async {
@@ -39,6 +45,7 @@ final class AlbumDetailViewModel {
 
       album.musicUrl = response.albumUrl.flatMap(URL.init(string:))
       album.tracks = response.tracks.map { Track(dto: $0, album: album) }
+      logger.debug("Resolved: \(album.tracks.count)")
 
       state = .success(album.tracks.positionSorted)
     } catch is CancellationError {

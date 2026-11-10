@@ -1,16 +1,5 @@
 import Foundation
 import SwiftData
-import SwiftUI
-
-enum Application {
-  static var isTest: Bool {
-    #if DEBUG
-    ProcessInfo.processInfo.arguments.contains("-screenshot-fixtures")
-    #else
-    false
-    #endif
-  }
-}
 
 protocol DateTimeProviding {
   var now: Date { get }

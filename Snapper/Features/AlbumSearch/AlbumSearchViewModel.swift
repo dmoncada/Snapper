@@ -20,12 +20,12 @@ final class AlbumSearchViewModel {
 
   private(set) var state: State = .ready
 
-  private let logger: Logger?
+  private let logger: Logger
   private let apiClient: any ApiClient
   private let recognizer: any ImageRecognizing
 
   init(
-    logger: Logger? = nil,
+    logger: Logger = .current,
     apiClient: any ApiClient = .null,
     recognizer: any ImageRecognizing = .null,
   ) {
@@ -68,7 +68,7 @@ final class AlbumSearchViewModel {
 
       let results = candidates.map { Album(dto: $0) }
 
-      logger?.info("Found: \(results.count) albums for: '\(term ?? barcode ?? "nil")'")
+      logger.info("Found: \(results.count) albums for: '\(term ?? barcode ?? "nil")'")
 
       state = .success(results)
     } catch is CancellationError {

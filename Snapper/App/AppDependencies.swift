@@ -3,8 +3,17 @@ import Sentry
 import SentrySwiftLog
 import SwiftData
 
-@MainActor
-struct Dependencies {
+protocol AppDependencies {
+  var modelContainer: ModelContainer { get }
+
+  var apiClient: any ApiClient { get }
+  var previewPlayer: any PreviewPlaying { get }
+  var imageRecognizer: any ImageRecognizing { get }
+  var locationProvider: any LocationProviding { get }
+  var dateTimeProvider: any DateTimeProviding { get }
+}
+
+struct LiveDependencies: AppDependencies {
   let modelContainer: ModelContainer
 
   let apiClient: any ApiClient
@@ -13,64 +22,24 @@ struct Dependencies {
   let locationProvider: any LocationProviding
   let dateTimeProvider: any DateTimeProviding
 
-  let searchViewModel: AlbumSearchViewModel
-  let detailViewModel: AlbumDetailViewModel
-  let historyViewModel: AlbumHistoryViewModel
-  let locationCoordinator: AlbumLocationCaptureCoordinator
-
   init() {
-    modelContainer = Self.initContainer()
+    do {
+      modelContainer = try SnapperStore.makeContainer()
+    } catch {
+      fatalError("Unable to create schema.")
+    }
 
     if let location = modelContainer.mainContext.sqliteLocation {
       print(location)
     }
 
-    #if DEBUG
-    apiClient =
-      Application.isTest
-      ? .stub(modelContainer)
-      : .live
-    dateTimeProvider =
-      Application.isTest
-      ? .stub(modelContainer)
-      : .live
-    #else
-    apiClient = .live
-    dateTimeProvider = .live
-    #endif
+    Self.initLogging()
 
+    apiClient = .live
     previewPlayer = .live
     imageRecognizer = .live
     locationProvider = .live
-
-    Self.initLogging()
-
-    let logger = Logger(label: Constants.appId)
-
-    searchViewModel = AlbumSearchViewModel(
-      logger: logger,
-      apiClient: apiClient,
-      recognizer: imageRecognizer,
-    )
-
-    detailViewModel = AlbumDetailViewModel(apiClient: apiClient)
-    historyViewModel = AlbumHistoryViewModel(context: modelContainer.mainContext)
-    locationCoordinator = AlbumLocationCaptureCoordinator(locator: locationProvider)
-  }
-
-  private static func initContainer() -> ModelContainer {
-    do {
-      #if DEBUG
-      if Application.isTest {
-        return try SampleDataStore.makeContainer()
-      }
-      return try SnapperStore.makeContainer()
-      #else
-      return try SnapperStore.makeContainer()
-      #endif
-    } catch {
-      fatalError("Unable to create schema.")
-    }
+    dateTimeProvider = .live
   }
 
   private static func initLogging() {
@@ -103,5 +72,33 @@ struct Dependencies {
     sentryHandler.metadata["environment"] = "development"
 
     return sentryHandler
+  }
+}
+
+struct TestDependencies: AppDependencies {
+  let modelContainer: ModelContainer
+
+  let apiClient: any ApiClient
+  let previewPlayer: any PreviewPlaying
+  let imageRecognizer: any ImageRecognizing
+  let locationProvider: any LocationProviding
+  let dateTimeProvider: any DateTimeProviding
+
+  init() {
+    do {
+      modelContainer = try SampleDataStore.makeContainer()
+    } catch {
+      fatalError("Unable to create schema.")
+    }
+
+    LoggingSystem.bootstrap({ _ in SwiftLogNoOpLogHandler() })
+
+    apiClient = .stub(modelContainer)
+
+    previewPlayer = .null
+    imageRecognizer = .null
+    locationProvider = .null
+
+    dateTimeProvider = .stub(modelContainer)
   }
 }

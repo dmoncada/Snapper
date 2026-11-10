@@ -72,22 +72,44 @@ private struct AlbumHeaderSection: View {
   var body: some View {
     @Bindable var album = album
 
-    HStack(alignment: .firstTextBaseline) {
-      LabeledContent {
-        Text(album.title)
-          .font(Typography.albumDetail.title)
-      } label: {
-        Text(album.artist)
-          .font(Typography.albumDetail.artist)
+    VStack(spacing: Spacing.md) {
+      HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
+        LabeledContent {
+          Text(album.title)
+            .font(Typography.albumDetail.title)
+        } label: {
+          Text(album.artist)
+            .font(Typography.albumDetail.artist)
+        }
+        .labeledContentStyle(.albumHeader)
+
+        Spacer()
+
+        FavoriteIconButton(isFavorite: $album.isFavorite)
+          .foregroundStyle(.accent)
+          .disabled(showMetadata == false)
+          .opacity(showMetadata ? 1 : 0)
       }
-      .labeledContentStyle(.albumHeader)
 
-      Spacer()
+      AlbumGenresSection(genres: album.genre)
+    }
+  }
+}
 
-      FavoriteIconButton(isFavorite: $album.isFavorite)
-        .foregroundStyle(.accent)
-        .disabled(showMetadata == false)
-        .opacity(showMetadata ? 1 : 0)
+private struct AlbumGenresSection: View {
+  init(genres: [Genre]) {
+    self.genres = genres.map(\.name).sorted()
+  }
+
+  private let genres: [String]
+
+  var body: some View {
+    FlowLayout(alignment: .leading, spacing: Spacing.xs) {
+      ForEach(genres, id: \.self) { genre in
+        Text(genre)
+          .badgeStyle()
+          .controlSize(.small)
+      }
     }
   }
 }

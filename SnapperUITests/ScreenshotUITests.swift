@@ -6,7 +6,7 @@ final class ScreenshotUITests: XCTestCase {
     let app = XCUIApplication()
     setupSnapshot(app)
     app.launchArguments.append(contentsOf: [
-      "-screenshot-fixtures", "-colorSchemePreference", "system",
+      AppLaunchConfiguration.uiTest, "-colorSchemePreference", "system",
     ])
     app.launchEnvironment["TZ"] = "UTC"
     app.launch()
