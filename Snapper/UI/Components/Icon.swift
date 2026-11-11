@@ -1,5 +1,19 @@
 import SwiftUI
 
+struct FavoriteIconToggleStyle: ToggleStyle {
+  func makeBody(configuration: Configuration) -> some View {
+    Button {
+      configuration.isOn.toggle()
+    } label: {
+      Image(systemName: "heart")
+        .symbolVariant(configuration.isOn ? .fill : .none)
+    }
+    .favoriteIconStyle(isFavorite: configuration.isOn)
+    .buttonStyle(.pressedScale(0.9))
+  }
+}
+
+/*
 struct FavoriteIconButton: View {
   @Binding var isFavorite: Bool
 
@@ -19,13 +33,24 @@ struct FavoriteIconButton: View {
     .buttonStyle(.pressedScale(0.9))
   }
 }
+ */
 
 struct FavoriteIconStyle: ViewModifier {
   let isFavorite: Bool
 
   func body(content: Content) -> some View {
     content
-      .symbolEffect(.bounce.up, options: .speed(2), value: isFavorite)
+      .symbolEffect(
+        .bounce.up,
+        options: .speed(2),
+        value: isFavorite,
+      )
+  }
+}
+
+extension ToggleStyle where Self == FavoriteIconToggleStyle {
+  static var favoriteIcon: Self {
+    Self()
   }
 }
 
@@ -45,7 +70,8 @@ extension View {
       .opacity(isFavorite ? 1 : 0)
       .border(.red)
 
-    FavoriteIconButton(isFavorite: $isFavorite)
+    Toggle("Favorite", isOn: $isFavorite)
+      .toggleStyle(.favoriteIcon)
       .border(.red)
   }
   .foregroundStyle(.accent)

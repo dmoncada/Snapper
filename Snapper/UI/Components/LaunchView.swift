@@ -5,7 +5,7 @@ struct LaunchView: View {
     Image(.musicSnap)
       .resizable()
       .scaledToFit()
-      .padding(Padding.xxl)
+      .padding(Padding.xxxl)
       .withFullBackground()
   }
 }

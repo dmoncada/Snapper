@@ -5,7 +5,8 @@ nonisolated enum Padding {
   static let md: CGFloat = 6
   static let lg: CGFloat = 8
   static let xl: CGFloat = 16
-  static let xxl: CGFloat = 32
+  static let xxl: CGFloat = 24
+  static let xxxl: CGFloat = 32
 }
 
 nonisolated enum Spacing {
@@ -45,15 +46,18 @@ enum Typography {
     let footer: Font = .zillaSlab(.footnote)
   }
 
+  struct Badge {
+    func `for`(_ size: ControlSize) -> Font {
+      .zillaSlab(.fromControlSize(size)).bold()
+    }
+  }
+
   static let albumDetail = AlbumDetail()
   static let albumRow = AlbumRow()
   static let section = Section()
+  static let badge = Badge()
 
   static let buttonBody: Font = .gillSans(.title2)
 
   static let labelBody: Font = .gillSans(.body)
-
-  static func badge(for size: ControlSize) -> Font {
-    .zillaSlab(.fromControlSize(size)).bold()
-  }
 }

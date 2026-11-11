@@ -85,7 +85,8 @@ private struct AlbumHeaderSection: View {
 
         Spacer()
 
-        FavoriteIconButton(isFavorite: $album.isFavorite)
+        Toggle("Favorite", isOn: $album.isFavorite)
+          .toggleStyle(.favoriteIcon)
           .foregroundStyle(.accent)
           .disabled(showMetadata == false)
           .opacity(showMetadata ? 1 : 0)

@@ -44,7 +44,7 @@ struct BadgeLabelStyle<
       }
     }
     .padding(Padding.md)
-    .font(Typography.badge(for: controlSize))
+    .font(Typography.badge.for(controlSize))
     .background {
       RoundedRectangle(cornerRadius: Radius.md)
         .fill(fillStyle)

@@ -21,6 +21,9 @@ struct SnapperAppShell: View {
       Tab("History", systemImage: "clock") {
         HistoryView()
       }
+      Tab("Spatial", systemImage: "map") {
+        AlbumMapView()
+      }
       #if DEBUG
       Tab("Export", systemImage: "square.and.arrow.up") {
         SampleDataExportView()
@@ -45,7 +48,5 @@ struct SnapperAppShell: View {
 #if DEBUG
 #Preview(traits: .withSampleData) {
   SnapperAppShell()
-    .environment(AlbumSearchViewModel())
-    .environment(AlbumLocationCaptureCoordinator())
 }
 #endif

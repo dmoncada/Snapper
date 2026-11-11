@@ -151,8 +151,6 @@ private struct AlbumHistoryFilterBar: View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(spacing: Spacing.sm) {
         ForEach(vm.availableFilters) { filter in
-          let isOn = vm.selectedFilters.contains(filter)
-
           Toggle(
             filter.title,
             systemImage: "checkmark",
@@ -161,11 +159,13 @@ private struct AlbumHistoryFilterBar: View {
               set: { _ in vm.toggleFilter(filter) },
             ),
           )
-          .titleAndIconBadgeToggleStyle(
-            labelStyle: .expand,
-            appearance: isOn
-              ? .highlighted
-              : .default,
+          .toggleStyle(
+            .titleAndIconBadge(
+              labelStyle: .expand,
+              appearance: vm.selectedFilters.contains(filter)
+                ? .highlighted
+                : .default,
+            )
           )
           .imageScale(.small)
         }

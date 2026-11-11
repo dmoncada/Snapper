@@ -6,7 +6,7 @@ struct BadgeModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .padding(Padding.md)
-      .font(Typography.badge(for: controlSize))
+      .font(Typography.badge.for(controlSize))
       .foregroundStyle(.primary)
       .background {
         RoundedRectangle(cornerRadius: Radius.md)

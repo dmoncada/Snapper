@@ -5,10 +5,18 @@ nonisolated enum IconPlacement {
   case trailing
 }
 
-struct TitleAndIconBadgeToggleStyle<Style: LabelStyle>: ToggleStyle {
+enum LabelBehavior {
+  case expand(IconPlacement)
+  case slide(IconPlacement)
+
+  static var expand: Self { .expand(.leading) }
+  static var slide: Self { .slide(.leading) }
+}
+
+struct TitleAndIconBadgeToggleStyle: ToggleStyle {
   @Environment(\.controlSize) private var controlSize
 
-  let labelStyle: Style
+  let labelStyle: LabelBehavior
   let appearance: BadgeAppearance
 
   func makeBody(configuration: Configuration) -> some View {
@@ -17,10 +25,10 @@ struct TitleAndIconBadgeToggleStyle<Style: LabelStyle>: ToggleStyle {
         configuration.isOn.toggle()
       }
     } label: {
-      configuration.label
+      styled(configuration.label)
         .environment(\.isActive, configuration.isOn)
         .padding(Padding.md)
-        .font(Typography.badge(for: controlSize))
+        .font(Typography.badge.for(controlSize))
         .foregroundStyle(appearance.text)
         .background {
           RoundedRectangle(cornerRadius: Radius.md)
@@ -30,14 +38,26 @@ struct TitleAndIconBadgeToggleStyle<Style: LabelStyle>: ToggleStyle {
               lineWidth: LineWidth.sm,
             )
         }
-        .labelStyle(labelStyle)
         .contentShape(.rect)
     }
     .buttonStyle(.plain)
   }
+
+  @ViewBuilder
+  private func styled(_ label: Configuration.Label) -> some View {
+    switch labelStyle {
+    case .expand(let placement):
+      label
+        .labelStyle(ExpandLabelStyle(placement: placement))
+
+    case .slide(let placement):
+      label
+        .labelStyle(SlideLabelStyle(placement: placement))
+    }
+  }
 }
 
-struct ExpandLabelStyle: LabelStyle {
+private struct ExpandLabelStyle: LabelStyle {
   @Environment(\.isActive) private var isOn: Bool
 
   let placement: IconPlacement
@@ -66,7 +86,7 @@ struct ExpandLabelStyle: LabelStyle {
   }
 }
 
-struct SlideLabelStyle: LabelStyle {
+private struct SlideLabelStyle: LabelStyle {
   @Environment(\.isActive) private var isOn: Bool
 
   let placement: IconPlacement
@@ -91,7 +111,7 @@ struct SlideLabelStyle: LabelStyle {
 }
 
 extension SlideLabelStyle {
-  fileprivate struct ShiftLabelLayout: Layout {
+  private struct ShiftLabelLayout: Layout {
     let placement: IconPlacement
     let spacing: CGFloat
     let isOn: Bool
@@ -164,6 +184,7 @@ extension SlideLabelStyle {
   }
 }
 
+/*
 extension LabelStyle where Self == ExpandLabelStyle {
   static var expand: Self {
     Self(placement: .leading)
@@ -212,6 +233,26 @@ extension View {
     )
   }
 }
+ */
+
+extension ToggleStyle where Self == TitleAndIconBadgeToggleStyle {
+  static var titleAndIconBadge: Self {
+    Self(
+      labelStyle: .expand(.leading),
+      appearance: .default,
+    )
+  }
+
+  static func titleAndIconBadge(
+    labelStyle: LabelBehavior,
+    appearance: BadgeAppearance = .default,
+  ) -> Self {
+    Self(
+      labelStyle: labelStyle,
+      appearance: appearance,
+    )
+  }
+}
 
 #if DEBUG
 #Preview {
@@ -223,28 +264,32 @@ extension View {
   WithColorSchemes(axis: .horizontal) {
     VStack(spacing: 12) {
       Toggle("Expand lead", systemImage: "arrow.left", isOn: $isOn1)
-        .titleAndIconBadgeToggleStyle(labelStyle: .expand)
+        .toggleStyle(.titleAndIconBadge)
         .controlSize(.mini)
 
       Toggle("Expand trail", systemImage: "arrow.right", isOn: $isOn2)
-        .titleAndIconBadgeToggleStyle(
-          labelStyle: .expand(.trailing),
-          appearance: isOn2
-            ? .highlighted
-            : .default,
+        .toggleStyle(
+          .titleAndIconBadge(
+            labelStyle: .expand(.trailing),
+            appearance: isOn2
+              ? .highlighted
+              : .default,
+          )
         )
         .controlSize(.small)
 
       Toggle("Slide lead", systemImage: "arrow.left", isOn: $isOn3)
-        .titleAndIconBadgeToggleStyle(labelStyle: .slide)
+        .toggleStyle(.titleAndIconBadge(labelStyle: .slide))
         .controlSize(.regular)
 
       Toggle("Slide trail", systemImage: "arrow.right", isOn: $isOn4)
-        .titleAndIconBadgeToggleStyle(
-          labelStyle: .slide(.trailing),
-          appearance: isOn4
-            ? .highlighted
-            : .default,
+        .toggleStyle(
+          .titleAndIconBadge(
+            labelStyle: .slide(.trailing),
+            appearance: isOn4
+              ? .highlighted
+              : .default,
+          )
         )
         .controlSize(.large)
     }
