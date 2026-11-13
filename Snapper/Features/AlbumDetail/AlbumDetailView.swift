@@ -178,7 +178,7 @@ private struct LocationSection: View {
 }
 
 @Observable
-private final class StoreSelection {
+final class StoreSelection {
   var selectedStoreId: RecordStoreCandidate.ID?
 
   subscript(isSelected storeId: RecordStoreCandidate.ID) -> Bool {
@@ -208,6 +208,7 @@ private struct MapView: View {
             .foregroundStyle(.themeBlue.opacity(0.25))
             .stroke(.themeBlue.opacity(0.5), lineWidth: 1)
         }
+
         Marker("Location", coordinate: location.coordinate)
       }
       .frame(height: 200)
@@ -235,31 +236,11 @@ private struct MapView: View {
           ScrollView(.horizontal) {
             HStack(spacing: Spacing.xs) {
               ForEach(candidateStores) { store in
-                Toggle(
-                  isOn: $storeSelection[isSelected: store.id]
-                ) {
-                  Label {
-                    HStack(spacing: Spacing.xs) {
-                      Text(store.name)
-                      Text("•")
-                        .font(.zillaSlab(.caption2).weight(.ultraLight))
-                      Text(store.distanceLabel(from: location))
-                        .font(.zillaSlab(.caption2).monospaced())
-                    }
-                  } icon: {
-                    Image(systemName: "mappin.and.ellipse")
-                  }
-                }
-                .toggleStyle(
-                  .titleAndIconBadge(
-                    labelStyle: .expand,
-                    appearance: storeSelection[isSelected: store.id]
-                      ? .highlighted
-                      : .default,
-                  )
+                RecordStoreToggle(
+                  location: location,
+                  candidate: store,
+                  selection: storeSelection,
                 )
-                .controlSize(.small)
-                .imageScale(.small)
               }
             }
             .padding(1)
@@ -296,18 +277,6 @@ private struct MapView: View {
     } else {
       position = location.position
     }
-  }
-}
-
-extension RecordStoreCandidate {
-  fileprivate func distanceLabel(from location: CLLocation) -> String {
-    Measurement(
-      value: distance(from: location),
-      unit: UnitLength.meters,
-    )
-    .formatted(
-      .measurement(width: .narrow)
-    )
   }
 }
 

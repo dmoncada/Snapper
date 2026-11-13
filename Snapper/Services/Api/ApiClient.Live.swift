@@ -6,8 +6,6 @@ nonisolated struct AlamofireApiClient: ApiClient {
   private let session: Session
   private let decoder: JSONDecoder
 
-  // private let recognitionSession: Session
-
   init(baseUrl: URL = .baseUrl) {
     self.baseUrl = baseUrl
 
@@ -55,8 +53,6 @@ nonisolated struct AlamofireApiClient: ApiClient {
         ]
       ),
     )
-
-    // recognitionSession = Self.makeSession(timeout: 90)
   }
 
   func health() async throws {
@@ -72,36 +68,6 @@ nonisolated struct AlamofireApiClient: ApiClient {
       .serializingData(emptyResponseCodes: Set(200 ..< 300))
       .value
   }
-
-  /*
-  func recognizeAlbum(
-    image: Data,
-    ocrText: String,
-  ) async throws -> [AlbumDto] {
-    // let decoder = Self.makeDecoder()
-
-    return
-      try await recognitionSession.upload(
-        multipartFormData: { form in
-          form.append(
-            Data(ocrText.utf8),
-            withName: "ocr_text",
-          )
-          form.append(
-            image,
-            withName: "image",
-            fileName: "cover.jpg",
-            mimeType: "image/jpeg",
-          )
-        },
-        to: baseUrl.appending(path: "albums/recognize"),
-        headers: [.accept("application/json")],
-      )
-      .validate(statusCode: 200 ..< 300)
-      .serializingDecodable([AlbumDto].self, decoder: decoder)
-      .value
-  }
-   */
 
   func searchAlbums(
     term: String? = nil,

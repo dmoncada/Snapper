@@ -99,15 +99,18 @@ private struct AlbumMetadata: View {
           )
       }
 
-      Text(
-        album.selectedAt,
-        format: .relative(
-          presentation: .numeric,
-          unitsStyle: .narrow,
-        ),
-      )
-      .badgeStyle(appearance: .highlighted)
-      .controlSize(.mini)
+      TimelineView(.periodic(from: album.selectedAt, by: 60)) { timeline in
+        Text(
+          timeline.date.formatted(
+            Date.AnchoredRelativeFormatStyle(
+              anchor: album.selectedAt,
+              unitsStyle: .narrow,
+            )
+          )
+        )
+        .badgeStyle(appearance: .highlighted)
+        .controlSize(.mini)
+      }
     }
   }
 }

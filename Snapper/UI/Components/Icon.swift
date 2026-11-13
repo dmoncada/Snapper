@@ -13,28 +13,6 @@ struct FavoriteIconToggleStyle: ToggleStyle {
   }
 }
 
-/*
-struct FavoriteIconButton: View {
-  @Binding var isFavorite: Bool
-
-  var body: some View {
-    Button {
-      isFavorite.toggle()
-    } label: {
-      Group {
-        if isFavorite {
-          Image(systemName: "heart.fill")
-        } else {
-          Image(systemName: "heart")
-        }
-      }
-    }
-    .favoriteIconStyle(isFavorite: isFavorite)
-    .buttonStyle(.pressedScale(0.9))
-  }
-}
- */
-
 struct FavoriteIconStyle: ViewModifier {
   let isFavorite: Bool
 
