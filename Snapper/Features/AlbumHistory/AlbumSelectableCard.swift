@@ -178,8 +178,8 @@ private struct TestSelectableGrid: View {
 
         guard albums.count >= offsets.count else { return }
 
-        for (album, offset) in albums.withOffsets(offsets, stride: 1) {
-          album.selectedAt = album.selectedAt.subtract(
+        for (album, offset) in albums.paired(with: offsets) {
+          album.selectedAt = album.selectedAt.subtracting(
             offset.value,
             unit: offset.unit,
           )

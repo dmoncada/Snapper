@@ -1,7 +1,7 @@
-SWIFT := /usr/bin/swift
-SOURCES := ./Snapper ./SnapperWidget ./SnapperUITests ./SnapperTests
+SWIFT := xcrun swift
+SOURCES := ./Snapper ./SnapperTests ./SnapperUITests ./SnapperWidget
 
-TEST_DESTINATION ?= platform=iOS Simulator,name=iPhone 12 mini,OS=27.0
+TEST_DESTINATION ?= platform=iOS Simulator,name=iPhone 18 Pro,OS=27.2
 
 TEST_RESULT_BUNDLE_PATH ?=
 TEST_RESULT_BUNDLE_ARG = $(if $(TEST_RESULT_BUNDLE_PATH),-resultBundlePath '$(TEST_RESULT_BUNDLE_PATH)')
@@ -33,11 +33,13 @@ build:
 		-destination 'generic/platform=iOS Simulator' \
 		| xcbeautify
 
-.PHONY: test test-unit test-ui
-test: TEST_SCHEME = Snapper
-test-unit: TEST_SCHEME = SnapperTests
+.PHONY: test
+test: TEST_SCHEME = SnapperTests
+
+.PHONY: test-ui
 test-ui: TEST_SCHEME = SnapperUITests
-test test-unit test-ui:
+
+test test-ui:
 	@set -o pipefail; xcodebuild test \
 		CODE_SIGN_STYLE='Automatic' \
 		CODE_SIGN_IDENTITY='-' \
@@ -45,5 +47,6 @@ test test-unit test-ui:
 		-scheme $(TEST_SCHEME) \
 		-configuration Debug \
 		-destination '$(TEST_DESTINATION)' \
-		-parallel-testing-enabled NO $(TEST_RESULT_BUNDLE_ARG) \
+		-parallel-testing-enabled NO \
+		$(TEST_RESULT_BUNDLE_ARG) \
 		| xcbeautify

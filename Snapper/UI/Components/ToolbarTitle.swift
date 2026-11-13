@@ -14,7 +14,7 @@ struct ToolbarTitle: ToolbarContent {
           maxWidth: .infinity,
           alignment: .leading,
         )
-        .font(.basteleurBold(.title))
+        .font(.zillaSlab(.largeTitle).bold())
         .foregroundStyle(.primary)
     }
     .sharedBackgroundVisibility(.hidden)
@@ -27,7 +27,12 @@ struct ToolbarTitle: ToolbarContent {
     ScrollView {
       Text("Hello, world!")
     }
-    .toolbar { ToolbarTitle("Hello") }
+    .toolbar {
+      ToolbarTitle("Hello")
+      ToolbarItem(placement: .topBarTrailing) {
+        Button(role: .cancel) {}
+      }
+    }
     .toolbarBackground(.thinMaterial, for: .navigationBar)
     .toolbarBackgroundVisibility(.visible, for: .navigationBar)
   }

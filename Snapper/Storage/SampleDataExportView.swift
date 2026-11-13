@@ -16,6 +16,10 @@ struct SampleDataExportView: View {
     context.getCount(for: Album.self)
   }
 
+  private var genreCount: Int {
+    context.getCount(for: Genre.self)
+  }
+
   private var trackCount: Int {
     context.getCount(for: Track.self)
   }
@@ -24,6 +28,7 @@ struct SampleDataExportView: View {
     List {
       Section("Model counts") {
         LabeledContent("Album count", value: String(albumCount))
+        LabeledContent("Genre count", value: String(genreCount))
         LabeledContent("Track count", value: String(trackCount))
       }
 

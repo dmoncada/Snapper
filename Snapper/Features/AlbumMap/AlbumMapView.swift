@@ -193,7 +193,7 @@ private struct AlbumClusterSheet: View {
       }
       .navigationBarTitleDisplayMode(.inline)
       .presentationDetents([.medium, .large])
-      .sheetCloseButton()
+      .withCloseButton()
     }
   }
 }
@@ -205,7 +205,7 @@ private struct AlbumDetailSheet: View {
     NavigationStack {
       AlbumDetailView(album: album)
         .presentationDetents([.large])
-        .sheetCloseButton()
+        .withCloseButton()
     }
   }
 }
@@ -226,7 +226,7 @@ struct SheetCloseButton: ViewModifier {
 }
 
 extension View {
-  func sheetCloseButton() -> some View {
+  func withCloseButton() -> some View {
     modifier(SheetCloseButton())
   }
 }

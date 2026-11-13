@@ -12,7 +12,7 @@ struct AlbumClusterView: View {
   private let groups: [AlbumDateGroup]
   private let onSelect: (Album) -> Void
 
-  private let dateCutoff: Date = .now.subtract(1, unit: .weekOfYear)
+  private let dateCutoff: Date = .now.subtracting(1, unit: .weekOfYear)
 
   var body: some View {
     ScrollView {
@@ -52,16 +52,14 @@ private struct AlbumDateGroup: Identifiable {
 
 extension AlbumDateGroup {
   func formattedDate(
-    cutoff: Date = .now.subtract(1, unit: .weekOfYear)
+    cutoff: Date = .now.subtracting(1, unit: .weekOfYear)
   ) -> String {
-    let formatted: String
-
     if Calendar.current.isDateInToday(date) {
       return String(localized: "Today")
-    } else if date < cutoff {
-      return date.formatted(.dateTime.day().month().year()).capitalizingFirstLetter()
-    } else {
+    } else if cutoff < date {
       return date.formatted(.relative(presentation: .named)).capitalizingFirstLetter()
+    } else {
+      return date.formatted(date: .long, time: .omitted).capitalizingFirstLetter()
     }
   }
 }
@@ -69,10 +67,6 @@ extension AlbumDateGroup {
 extension String {
   func capitalizingFirstLetter() -> String {
     prefix(1).capitalized + dropFirst()
-  }
-
-  mutating func capitalizeFirstLetter() {
-      self = self.capitalizingFirstLetter()
   }
 }
 
@@ -118,8 +112,8 @@ private struct TestAlbumClusterView: View {
 
         guard albums.count >= offsets.count else { return }
 
-        for (album, offset) in albums.withOffsets(offsets, stride: 2) {
-          album.selectedAt = album.selectedAt.subtract(
+        for (album, offset) in albums.paired(with: offsets, stride: 2) {
+          album.selectedAt = album.selectedAt.subtracting(
             offset.value,
             unit: offset.unit,
           )

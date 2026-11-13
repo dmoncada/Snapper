@@ -177,6 +177,16 @@ private struct LocationSection: View {
   }
 }
 
+@Observable
+private final class StoreSelection {
+  var selectedStoreId: RecordStoreCandidate.ID?
+
+  subscript(isSelected storeId: RecordStoreCandidate.ID) -> Bool {
+    get { selectedStoreId == storeId }
+    set { selectedStoreId = newValue ? storeId : nil }
+  }
+}
+
 private struct MapView: View {
   let location: CLLocation
   let accuracyRadius: Double?
@@ -187,9 +197,11 @@ private struct MapView: View {
   }
 
   @State private var position: MapCameraPosition = .automatic
+  @State private var candidateStores: [RecordStoreCandidate] = []
+  @State private var storeSelection = StoreSelection()
 
   var body: some View {
-    ZStack(alignment: .bottomTrailing) {
+    VStack(alignment: .leading, spacing: Spacing.sm) {
       Map(position: $position) {
         if let accuracyRadius, accuracyRadius > 0 {
           MapCircle(center: location.coordinate, radius: accuracyRadius)
@@ -200,19 +212,73 @@ private struct MapView: View {
       }
       .frame(height: 200)
       .clipShape(.rect(cornerRadius: Radius.md))
+      .overlay(alignment: .bottomTrailing) {
+        Button("Re-center", systemImage: "location.fill") {
+          withAnimation(.easeInOut(duration: 0.5)) {
+            recenter()
+          }
+        }
+        .padding(Padding.md)
+        .labelStyle(.iconOnly)
+        .glassEffect(.regular.tint(.themeBlue.opacity(0.25)))
+        .offset(
+          x: -Padding.lg,
+          y: -Padding.lg,
+        )
+      }
 
-      Button("Re-center", systemImage: "location.fill") {
-        withAnimation(.easeInOut(duration: 0.5)) {
-          recenter()
+      if candidateStores.isEmpty == false {
+        HStack(spacing: Spacing.sm) {
+          Text("Nearby:")
+            .font(.gillSans(.caption))
+
+          ScrollView(.horizontal) {
+            HStack(spacing: Spacing.xs) {
+              ForEach(candidateStores) { store in
+                Toggle(
+                  isOn: $storeSelection[isSelected: store.id]
+                ) {
+                  Label {
+                    HStack(spacing: Spacing.xs) {
+                      Text(store.name)
+                      Text("•")
+                        .font(.zillaSlab(.caption2).weight(.ultraLight))
+                      Text(store.distanceLabel(from: location))
+                        .font(.zillaSlab(.caption2).monospaced())
+                    }
+                  } icon: {
+                    Image(systemName: "mappin.and.ellipse")
+                  }
+                }
+                .toggleStyle(
+                  .titleAndIconBadge(
+                    labelStyle: .expand,
+                    appearance: storeSelection[isSelected: store.id]
+                      ? .highlighted
+                      : .default,
+                  )
+                )
+                .controlSize(.small)
+                .imageScale(.small)
+              }
+            }
+            .padding(1)
+          }
+          .scrollIndicators(.hidden)
         }
       }
-      .padding(Padding.md)
-      .labelStyle(.iconOnly)
-      .glassEffect(.regular.tint(.themeBlue.opacity(0.25)))
-      .offset(x: -8, y: -8)
     }
     .onAppear {
       recenter()
+    }
+    .task {
+      if let stores = try? await RecordStoreLocator.findNearby(
+        near: location,
+        within: .kilometers(5),
+        limit: 3,
+      ) {
+        candidateStores = stores
+      }
     }
   }
 
@@ -230,6 +296,18 @@ private struct MapView: View {
     } else {
       position = location.position
     }
+  }
+}
+
+extension RecordStoreCandidate {
+  fileprivate func distanceLabel(from location: CLLocation) -> String {
+    Measurement(
+      value: distance(from: location),
+      unit: UnitLength.meters,
+    )
+    .formatted(
+      .measurement(width: .narrow)
+    )
   }
 }
 
@@ -336,6 +414,23 @@ import SwiftData
 
   if let album = albums.first {
     AlbumDetailView(album: album)
+      .task {
+        guard
+          let location = album.location,
+          let stores = try? await RecordStoreLocator.findNearby(
+            near: location,
+            within: .meters(500),
+            limit: 3,
+          )
+        else { return }
+
+        for store in stores {
+          print(store.name)
+          print(store.distance(from: location))
+          print(store.address ?? "")
+          print()
+        }
+      }
   } else {
     ProgressView()
   }
