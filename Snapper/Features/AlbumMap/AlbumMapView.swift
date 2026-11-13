@@ -184,7 +184,13 @@ private struct AlbumClusterSheet: View {
       .sheet(item: $selectedAlbum) { album in
         AlbumDetailSheet(album: album)
       }
-      .navigationTitle("\(pin.albums.count) Albums")
+      .toolbar {
+        ToolbarItem(placement: .principal) {
+          Text("\(pin.albums.count) albums")
+            .font(.zillaSlab(.headline).bold())
+            .foregroundStyle(.primary)
+        }
+      }
       .navigationBarTitleDisplayMode(.inline)
       .presentationDetents([.medium, .large])
       .sheetCloseButton()

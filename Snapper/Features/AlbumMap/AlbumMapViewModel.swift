@@ -12,9 +12,11 @@ final class AlbumMapViewModel {
     pointForCoordinate: (CLLocationCoordinate2D) -> CGPoint?,
   ) {
     let visible = albums.compactMap { album -> (Album, CLLocationCoordinate2D, CGPoint)? in
-      guard let coordinate = album.mapCoordinate,
+      guard
+        let coordinate = album.mapCoordinate,
         let point = pointForCoordinate(coordinate)
       else { return nil }
+
       return (album, coordinate, point)
     }
 
@@ -23,6 +25,7 @@ final class AlbumMapViewModel {
 
     for index in visible.indices {
       let point = visible[index].2
+
       if let groupIndex = groups.firstIndex(where: { group in
         group.contains { member in
           let other = visible[member].2
@@ -40,10 +43,14 @@ final class AlbumMapViewModel {
       let albums = members.map(\.0)
       let latitude = members.map(\.1.latitude).reduce(0, +) / Double(members.count)
       let longitude = members.map(\.1.longitude).reduce(0, +) / Double(members.count)
+
       return AlbumMapPin(
         id: albums[0].id,
         albums: albums,
-        coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
+        coordinate: CLLocationCoordinate2D(
+          latitude: latitude,
+          longitude: longitude,
+        ),
       )
     }
   }

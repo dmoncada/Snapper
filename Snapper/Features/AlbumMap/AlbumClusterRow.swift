@@ -24,7 +24,7 @@ struct AlbumClusterRow: View {
           .lineLimit(1)
 
         HStack(spacing: Spacing.xs) {
-          Text(album.selectedAt, format: .dateTime.day().month().year())
+          Text(album.selectedAt, format: .dateTime.hour().minute())
             .font(.inter(.caption))
             .foregroundStyle(.themeSecondary)
 
@@ -44,3 +44,23 @@ struct AlbumClusterRow: View {
     }
   }
 }
+
+#if DEBUG
+import SwiftData
+
+#Preview(traits: .withSearchContext) {
+  @Previewable @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
+
+  if let album = albums.first {
+    WithColorSchemes {
+      AlbumClusterRow(album: album)
+        .padding()
+        .task {
+          album.isFavorite = true
+        }
+    }
+  } else {
+    ProgressView()
+  }
+}
+#endif

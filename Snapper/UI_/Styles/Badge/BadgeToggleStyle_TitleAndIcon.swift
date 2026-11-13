@@ -92,7 +92,7 @@ private struct SlideLabelStyle: LabelStyle {
   let placement: IconPlacement
 
   func makeBody(configuration: Configuration) -> some View {
-    ShiftLabelLayout(
+    SlideLabelLayout(
       placement: placement,
       spacing: Spacing.xs,
       isOn: isOn,
@@ -111,7 +111,7 @@ private struct SlideLabelStyle: LabelStyle {
 }
 
 extension SlideLabelStyle {
-  private struct ShiftLabelLayout: Layout {
+  private struct SlideLabelLayout: Layout {
     let placement: IconPlacement
     let spacing: CGFloat
     let isOn: Bool
@@ -183,57 +183,6 @@ extension SlideLabelStyle {
     }
   }
 }
-
-/*
-extension LabelStyle where Self == ExpandLabelStyle {
-  static var expand: Self {
-    Self(placement: .leading)
-  }
-
-  static func expand(_ placement: IconPlacement) -> Self {
-    Self(placement: placement)
-  }
-}
-
-extension LabelStyle where Self == SlideLabelStyle {
-  static var slide: Self {
-    Self(placement: .leading)
-  }
-
-  static func slide(_ placement: IconPlacement) -> Self {
-    Self(placement: placement)
-  }
-}
-
-struct TitleAndIconBadgeToggleModifier<S: LabelStyle>: ViewModifier {
-  let labelStyle: S
-  let appearance: BadgeAppearance
-
-  func body(content: Content) -> some View {
-    content
-      .toggleStyle(
-        TitleAndIconBadgeToggleStyle(
-          labelStyle: labelStyle,
-          appearance: appearance,
-        )
-      )
-  }
-}
-
-extension View {
-  func titleAndIconBadgeToggleStyle<S: LabelStyle>(
-    labelStyle: S,
-    appearance: BadgeAppearance = .default,
-  ) -> some View {
-    modifier(
-      TitleAndIconBadgeToggleModifier(
-        labelStyle: labelStyle,
-        appearance: appearance,
-      )
-    )
-  }
-}
- */
 
 extension ToggleStyle where Self == TitleAndIconBadgeToggleStyle {
   static var titleAndIconBadge: Self {

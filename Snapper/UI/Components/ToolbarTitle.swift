@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct ToolbarTitle: ToolbarContent {
-  let title: String
+  let title: LocalizedStringKey
 
-  init(_ title: String) {
+  init(_ title: LocalizedStringKey) {
     self.title = title
   }
 

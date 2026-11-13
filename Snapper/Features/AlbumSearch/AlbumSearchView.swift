@@ -74,7 +74,7 @@ struct HomeView: View {
         }
       }
       .toolbar {
-        ToolbarTitle("MusicSnap")
+        ToolbarTitle("Home")
         ToolbarItem(placement: .topBarTrailing) {
           Button("Settings", systemImage: "gearshape") {
             isSettingsPresented = true

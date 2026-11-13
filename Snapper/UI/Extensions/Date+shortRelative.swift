@@ -1,5 +1,6 @@
 import Foundation
 
+/*
 extension Date {
   func shortRelative(to now: Date = .now) -> String {
     let seconds = max(0, now.timeIntervalSince(self))
@@ -25,5 +26,41 @@ extension Date {
     default:
       return "\(Int(seconds / year))y"
     }
+  }
+}
+ */
+
+extension Collection {
+  func withOffsets(
+    _ offsets: [(value: Int, unit: Calendar.Component)],
+    stride: Int,
+  ) -> [(element: Element, offset: (value: Int, unit: Calendar.Component))] {
+    guard offsets.isEmpty == false, stride > 0 else { return [] }
+
+    return enumerated()
+      .map { index, element in
+        (
+          element: element,
+          offset: offsets[
+            Swift.min(
+              index / stride,
+              offsets.count - 1,
+            )
+          ],
+        )
+      }
+  }
+}
+
+extension Date {
+  func subtract(
+    _ value: Int,
+    unit: Calendar.Component,
+  ) -> Date {
+    Calendar.current.date(
+      byAdding: unit,
+      value: -value,
+      to: self,
+    ) ?? self
   }
 }

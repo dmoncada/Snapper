@@ -22,7 +22,7 @@ struct AlbumDetailView: View {
         AlbumCover(url: album.coverImageUrl)
           .stretchable()
 
-        VStack(alignment: .leading, spacing: Padding.xxl) {
+        VStack(alignment: .leading, spacing: Spacing.lg) {
           AlbumHeaderSection(album: album, showMetadata: showMetadata)
           AlbumDetailSection(album: album, showMetadata: showMetadata)
           AlbumTrackSection(vm: vm, musicUrl: album.musicUrl)

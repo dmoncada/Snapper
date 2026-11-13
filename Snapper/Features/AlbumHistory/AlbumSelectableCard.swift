@@ -51,7 +51,7 @@ struct AlbumSelectableCard: View {
         .labeledContentStyle(.albumHeader)
         .lineLimit(1)
       }
-      .padding(8)
+      .padding(4)
     }
     .containerShape(.rect(cornerRadius: 16))
   }
@@ -99,9 +99,15 @@ private struct AlbumMetadata: View {
           )
       }
 
-      Text("\(album.selectedAt.shortRelative(to: provider.now)) ago")
-        .badgeStyle(appearance: .highlighted)
-        .controlSize(.mini)
+      Text(
+        album.selectedAt,
+        format: .relative(
+          presentation: .numeric,
+          unitsStyle: .narrow,
+        ),
+      )
+      .badgeStyle(appearance: .highlighted)
+      .controlSize(.mini)
     }
   }
 }
@@ -132,16 +138,7 @@ private struct SelectionIndicator: View {
 import SwiftData
 
 private struct TestSelectableGrid: View {
-  @Query(descriptor) var albums: [Album]
-
-  static let descriptor = FetchDescriptor<Album>(
-    predicate: #Predicate { album in
-      album.artist.starts(with: "Natalia")
-    },
-    sortBy: [
-      SortDescriptor(\Album.selectedAt, order: .reverse)
-    ],
-  )
+  @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
 
   @State private var selection = Set<Album.ID>()
 
@@ -169,6 +166,25 @@ private struct TestSelectableGrid: View {
         }
       }
       .withFullBackground()
+      .task {
+        let offsets: [(value: Int, unit: Calendar.Component)] = [
+          (1, .minute),
+          (1, .hour),
+          (1, .day),
+          (1, .weekOfYear),
+          (1, .month),
+          (1, .year),
+        ]
+
+        guard albums.count >= offsets.count else { return }
+
+        for (album, offset) in albums.withOffsets(offsets, stride: 1) {
+          album.selectedAt = album.selectedAt.subtract(
+            offset.value,
+            unit: offset.unit,
+          )
+        }
+      }
     }
   }
 }
