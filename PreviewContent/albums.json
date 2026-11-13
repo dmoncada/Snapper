@@ -1,0 +1,1243 @@
+{
+  "albums": [
+    {
+      "artist": "Ladytron",
+      "barcode": [
+        "7 30003 73714 5",
+        "0730003737145",
+        "Sony DADC [Four Manufacturing Services logo] FOURMANUFACTURING.COM A0103115845-0101 15 A00",
+        "IFPI L555",
+        "IFPI 943A"
+      ],
+      "countryName": "Europe",
+      "coverImageUrl": "https:\/\/i.discogs.com\/4-w-GwlFAmre9wgg6-ZFxPBI9i-XVZ6dSn-mtvPQsvA\/rs:fit\/g:sm\/q:90\/h:592\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEzODcy\/OTc4LTE1NjMwMzM0\/NDYtNTI4Ni5qcGVn.jpeg",
+      "discogsId": 13872978,
+      "discogsUrl": "\/release\/13872978-Ladytron-Ladytron",
+      "format": ["CD", "Album", "Deluxe Edition"],
+      "genre": ["Pop", "Electronic"],
+      "id": "B9DD1977-C9E1-43C8-8CF5-EABDBB9B8BF1",
+      "isFavorite": false,
+      "label": [
+        "Ladytron Music",
+        "Four Manufacturing Services",
+        "Ladytron Ltd.",
+        "Ladytron Ltd.",
+        "Alchemy Mastering",
+        "Sony DADC",
+        "Pledge Music"
+      ],
+      "latitude": 40.729417,
+      "longitude": -74.001487,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/ladytron\/1825970261?uo=4",
+      "selectedAt": "2026-11-12T21:44:25Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/NPEijd_W2L6TEWYRgmGXjmimt4n8CjObalgWk24G4UY\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEzODcy\/OTc4LTE1NjMwMzM0\/NDYtNTI4Ni5qcGVn.jpeg",
+      "title": "Ladytron",
+      "tracks": [
+        {
+          "duration": "5:35",
+          "id": "6C712BB5-1C57-4813-969D-0F8A10555287",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/4f\/49\/ed\/4f49edc9-a981-bc44-fb7c-30eb06a1858c\/mzaf_7732224612958070848.plus.aac.p.m4a",
+          "title": "Until the Fire"
+        },
+        {
+          "duration": "4:32",
+          "id": "6793857B-6B54-4489-8697-800AB2FD7883",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/ba\/fe\/a5\/bafea562-8b78-af08-0a37-d9fe4798456b\/mzaf_2436061458046553262.plus.aac.p.m4a",
+          "title": "The Animals"
+        },
+        {
+          "duration": "3:59",
+          "id": "F662865D-76F5-4A03-9E72-5EE1632E2B94",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/ea\/81\/47\/ea8147e9-dc8e-167a-e5f3-f9c8b04f6a41\/mzaf_10703155047214391690.plus.aac.p.m4a",
+          "title": "Tower of Glass"
+        },
+        {
+          "duration": "3:35",
+          "id": "B03FF011-C986-4356-B0C7-69F6E662418B",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/69\/35\/bc\/6935bced-94f8-a2fb-195e-f8029426d7e9\/mzaf_7588087100329666238.plus.aac.p.m4a",
+          "title": "Far from Home"
+        },
+        {
+          "duration": "4:26",
+          "id": "7E0238BE-530D-42F9-AB97-B75080D02DEF",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/81\/14\/89\/81148954-64c0-94c1-731a-3e48e8bf06d3\/mzaf_6736794532070907532.plus.aac.p.m4a",
+          "title": "Deadzone"
+        },
+        {
+          "duration": "4:37",
+          "id": "D2B1AD0C-031E-4699-BA53-4787AEBF46DE",
+          "position": "1-13",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/e3\/47\/ff\/e347ffaf-1deb-7daa-0997-2e472ef7c60f\/mzaf_4921515160779263902.plus.aac.p.m4a",
+          "title": "Tomorrow Is Another Day"
+        },
+        {
+          "duration": "3:19",
+          "id": "C0E5D1A3-CE60-4844-BCAA-089A9ED17AE0",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/2e\/ae\/c0\/2eaec089-6630-8d9e-5284-ead896e9a503\/mzaf_18407678313932832341.plus.aac.p.m4a",
+          "title": "Horrorscope"
+        },
+        {
+          "duration": "2:51",
+          "id": "1566493C-F145-46B1-9FCC-6D6EB9743340",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/93\/b4\/2a\/93b42a47-df81-239f-c4ff-6edae3937e8c\/mzaf_5946460947323081762.plus.aac.p.m4a",
+          "title": "Run"
+        },
+        {
+          "duration": "3:37",
+          "id": "5C05387A-4979-4D1D-B1E1-90AD0C268E21",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/82\/40\/3d\/82403da7-05b4-0043-83b4-7a83325c5cd1\/mzaf_7590286564038744090.plus.aac.p.m4a",
+          "title": "Paper Highways"
+        },
+        {
+          "duration": "4:32",
+          "id": "F1509F6F-0A1C-4141-9604-55BC91407D19",
+          "position": "1-12",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/b4\/de\/b1\/b4deb114-bb75-9038-8884-2d19a77a2bcd\/mzaf_14162790593882533378.plus.aac.p.m4a",
+          "title": "The Mountain"
+        },
+        {
+          "duration": "4:04",
+          "id": "34C60870-CF36-4AB1-BAB4-30BD528572AC",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/c1\/4e\/2e\/c14e2e30-eb85-792f-755c-1d3ed98d3c3f\/mzaf_13323778220752627510.plus.aac.p.m4a",
+          "title": "The Island"
+        },
+        {
+          "duration": "4:06",
+          "id": "E868C811-846F-41D3-916E-0513E0C1BF8F",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/4d\/25\/93\/4d259372-a79d-32f2-7a74-1f96ec328615\/mzaf_1376565947689098423.plus.aac.p.m4a",
+          "title": "Figurine"
+        },
+        {
+          "duration": "4:28",
+          "id": "781D6D5F-D5DB-403B-8EA1-C8DE896D1AEA",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/ca\/b2\/06\/cab2063e-6ac7-6b8a-84ba-9762768ab0b7\/mzaf_7433214249489602507.plus.aac.p.m4a",
+          "title": "You've Changed"
+        }
+      ],
+      "year": 2019
+    },
+    {
+      "artist": "Rodrigo Amarante",
+      "barcode": [
+        "6 44110 04222 4",
+        "644110042224",
+        "PRC422CD 6745-CD-4585 21-147-00-2",
+        "IFPI LY89",
+        "PRC422CD 6745-CD-4585 21-147-00-2",
+        "IFPI LY89",
+        "IFPI L814"
+      ],
+      "countryCode": "US",
+      "countryName": "United States",
+      "coverImageUrl": "https:\/\/i.discogs.com\/dTwH8Z-qe0zhifyLpYPvoKjYWERFEKXl3PPCcTknyqc\/rs:fit\/g:sm\/q:90\/h:605\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTE5ODI5\/Mjg3LTE2Mjg3MjEx\/OTctOTczNC5qcGVn.jpeg",
+      "discogsId": 19829287,
+      "discogsUrl": "\/release\/19829287-Rodrigo-Amarante-Drama",
+      "format": ["CD", "Album"],
+      "genre": ["Rock", "Pop"],
+      "id": "E274BD17-ECA6-4078-9D2A-281B1E218721",
+      "isFavorite": false,
+      "label": [
+        "Polyvinyl Record Company",
+        "Polyvinyl Record Company",
+        "Polyvinyl Record Company",
+        "Quatro Mãos",
+        "MCJ Studio",
+        "The ADS Group"
+      ],
+      "latitude": 40.729417,
+      "longitude": -74.001487,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/drama\/1651276420?uo=4",
+      "selectedAt": "2026-11-12T21:47:07Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/zy17vldfF6zBSLdxZsk9dnKvHaixZxMZOBm2NVdmwL8\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTE5ODI5\/Mjg3LTE2Mjg3MjEx\/OTctOTczNC5qcGVn.jpeg",
+      "title": "Drama",
+      "tracks": [
+        {
+          "duration": "4:18",
+          "id": "498A1FEB-707A-4589-8431-83993EE297A3",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/cf\/62\/5f\/cf625f43-c23d-930d-ca88-4a2e51969157\/mzaf_11371304491796055859.plus.aac.p.m4a",
+          "title": "The End"
+        },
+        {
+          "duration": "3:58",
+          "id": "25CA3493-949D-4BCA-BA77-E5EF2506FC4A",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/f9\/5d\/0c\/f95d0c9b-475a-2ba3-3bf5-4cbe17cbe821\/mzaf_17132961590765241688.plus.aac.p.m4a",
+          "title": "Tanto"
+        },
+        {
+          "duration": "4:20",
+          "id": "22153A52-83A2-430D-A599-6572656B4077",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/c9\/83\/f9\/c983f98d-588e-c3ce-00c8-f3fc4565f576\/mzaf_5360605865206788402.plus.aac.p.m4a",
+          "title": "Um Milhão"
+        },
+        {
+          "duration": "4:13",
+          "id": "5B7F45FA-0B71-46F7-B460-F55C1376AEDE",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/50\/de\/b4\/50deb41b-e2a8-5967-103e-405af4a4d1b5\/mzaf_9575243147960689228.plus.aac.p.m4a",
+          "title": "Tara"
+        },
+        {
+          "duration": "1:45",
+          "id": "C291BC81-BB1B-4741-AAA4-6F74909B9F6C",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/94\/40\/51\/9440516f-efcc-cf01-99ce-39887eff71b8\/mzaf_14744307729300789013.plus.aac.p.m4a",
+          "title": "Drama"
+        },
+        {
+          "duration": "3:42",
+          "id": "4D31BFEB-46E9-4E1D-9157-6411E4AE4FE8",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/4e\/52\/56\/4e525643-65f8-25e6-92f5-f3489e58ca49\/mzaf_6499043464586916404.plus.aac.p.m4a",
+          "title": "Tango"
+        },
+        {
+          "duration": "3:32",
+          "id": "80AFB542-49CE-414A-B272-C053479CA598",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/a4\/15\/eb\/a415eb9c-faec-c2a1-f3e7-8544cdbb6649\/mzaf_9384425464115747770.plus.aac.p.m4a",
+          "title": "Eu Com Você"
+        },
+        {
+          "duration": "3:33",
+          "id": "64F8BD33-7185-453A-9600-98A6319BF496",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/e0\/75\/26\/e0752682-97cf-6f14-8d9d-3fad2b4822e2\/mzaf_18419457257963982480.plus.aac.p.m4a",
+          "title": "Maré"
+        },
+        {
+          "duration": "4:01",
+          "id": "FF10A4C4-1922-47AC-A065-1A45E38EB0FB",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/b1\/93\/22\/b19322c9-1a25-94b8-2204-27b48909c4b9\/mzaf_14583021395505617771.plus.aac.p.m4a",
+          "title": "Sky Beneath"
+        },
+        {
+          "duration": "3:37",
+          "id": "5ECC159E-21FA-46F6-A8B4-CF4F9DC9FD9E",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/24\/9f\/73\/249f73da-649e-96ce-123e-7566d62e5e42\/mzaf_2843797045912290253.plus.aac.p.m4a",
+          "title": "I Can't Wait"
+        },
+        {
+          "duration": "4:32",
+          "id": "0C53BE7D-D4C5-4D6B-9664-76A9BE41EE75",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/a1\/19\/67\/a11967d8-373c-78f2-52c3-b5e3e4b8f9ce\/mzaf_6196321904980443313.plus.aac.p.m4a",
+          "title": "Tao"
+        }
+      ],
+      "year": 2021
+    },
+    {
+      "artist": "The Rolling Stones",
+      "barcode": ["602508773228"],
+      "countryCode": "US",
+      "countryName": "United States",
+      "coverImageUrl": "https:\/\/i.discogs.com\/I7viAiS3XnH1RQDdh-719TROSiCaK3GcxLztMtaRCzQ\/rs:fit\/g:sm\/q:90\/h:600\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTI4OTky\/MjI2LTE3MDA5NjMx\/NTktMjAyNS5qcGVn.jpeg",
+      "discogsId": 28992226,
+      "discogsUrl": "\/release\/28992226-The-Rolling-Stones-Its-Only-Rock-N-Roll",
+      "format": ["Vinyl", "LP", "Album", "Reissue", "Remastered"],
+      "genre": ["Rock"],
+      "id": "46E5B5C9-7995-4B2D-9A01-AAC5BE5FE7BD",
+      "isFavorite": false,
+      "label": [
+        "Rolling Stones Records",
+        "Promotone B.V.",
+        "Promotone B.V.",
+        "Universal International Music B.V.",
+        "Musicland Studios",
+        "EMI Publishing Ltd",
+        "EMI Music Publishing Ltd.",
+        "EMI Songs Ltd.",
+        "Stone Agate Music",
+        "Promopub",
+        "Abbey Road Studios",
+        "Abbey Road Studios",
+        "Mastered At Abbey Road Studios - Half Speed Mastering"
+      ],
+      "latitude": 40.729417,
+      "longitude": -74.001487,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/its-only-rock-n-roll-2009-remaster\/1440812139?uo=4",
+      "selectedAt": "2026-11-12T21:47:23Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/PrItBnBqnFmcJTW3SjfdcmDRd64MpquzDYIrc-NMips\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTI4OTky\/MjI2LTE3MDA5NjMx\/NTktMjAyNS5qcGVn.jpeg",
+      "title": "It's Only Rock 'N Roll",
+      "tracks": [
+        {
+          "duration": "5:07",
+          "id": "3A85CFFB-8943-47D1-A5D7-5A19918F7A59",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/4b\/15\/6a\/4b156a42-768e-e703-3898-b8db0c834c70\/mzaf_15873874345575566693.plus.aac.p.m4a",
+          "title": "It's Only Rock 'N' Roll (But I Like It)"
+        },
+        {
+          "duration": "2:43",
+          "id": "F0EE280C-2876-41D2-8677-33C020285DAD",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/7f\/ff\/b0\/7fffb016-ae25-2f73-c1e8-278471e8f015\/mzaf_9226169929345377981.plus.aac.p.m4a",
+          "title": "Short and Curlies"
+        },
+        {
+          "duration": "6:38",
+          "id": "2D725501-5559-4FE4-9868-18B315AFA87A",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/8e\/68\/7c\/8e687c0f-6c61-074d-15ea-4b5c85d73cc9\/mzaf_2663932092185891694.plus.aac.p.m4a",
+          "title": "Time Waits for No One"
+        },
+        {
+          "duration": "6:17",
+          "id": "8764D840-EF42-4E8E-9934-11F54650D7C5",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/1c\/ad\/99\/1cad9905-2f0e-bb4c-5c97-f8d22581812e\/mzaf_1817726447746154757.plus.aac.p.m4a",
+          "title": "If You Really Want to Be My Friend"
+        },
+        {
+          "duration": "3:30",
+          "id": "1732CDC1-1DED-4B29-AE01-2BB5A16211B5",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/2e\/79\/a8\/2e79a88a-c38e-b4f2-66c0-dcdd90b6bc67\/mzaf_9021877943036465678.plus.aac.p.m4a",
+          "title": "Ain't Too Proud to Beg"
+        },
+        {
+          "duration": "6:33",
+          "id": "41325C4C-73C2-4E3F-A554-87C3540C881E",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/2a\/d6\/fe\/2ad6fe65-1eee-f7a7-2c72-ce4b8bc14e4b\/mzaf_9787570130140071940.plus.aac.p.m4a",
+          "title": "Fingerprint File"
+        },
+        {
+          "duration": "4:36",
+          "id": "0F06D8EB-F9E8-4C03-A3A1-033C2B50E70B",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/79\/b6\/d1\/79b6d1b8-8b0a-b7e4-5308-f2a59dfc3ca7\/mzaf_6072497712137758338.plus.aac.p.m4a",
+          "title": "Till the Next Goodbye"
+        },
+        {
+          "duration": "3:47",
+          "id": "57EB8446-3BB1-468F-A732-BA34BC0FF11D",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/aa\/b7\/33\/aab733bf-d9ff-e6d5-4328-5bb1dbd2d7a2\/mzaf_14430574696438200710.plus.aac.p.m4a",
+          "title": "If You Can't Rock Me"
+        },
+        {
+          "duration": "4:11",
+          "id": "A5CB0BA4-9FD9-432C-85CF-C4545490F32D",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/a9\/fd\/d0\/a9fdd09b-905b-bedb-81ad-0d1204dd24a0\/mzaf_16074486040992609664.plus.aac.p.m4a",
+          "title": "Dance Little Sister"
+        },
+        {
+          "duration": "5:01",
+          "id": "CA2BD009-9152-4038-886D-187C2448F027",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/f2\/95\/b8\/f295b882-bb54-188b-bd78-536bae2c0865\/mzaf_3462561086475220725.plus.aac.p.m4a",
+          "title": "Luxury"
+        }
+      ],
+      "year": 2018
+    },
+    {
+      "artist": "Harry Styles",
+      "barcode": ["199584177328"],
+      "countryName": "Worldwide",
+      "coverImageUrl": "https:\/\/i.discogs.com\/dpQWH86qj1HFNpilFWqDy5fTjeexm6LdIDnzPGEjqso\/rs:fit\/g:sm\/q:90\/h:536\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTM2Njkw\/NzIxLTE3NzQ0Nzk2\/MTYtMjk2NS5qcGVn.jpeg",
+      "discogsId": 36690721,
+      "discogsUrl": "\/release\/36690721-Harry-Styles-Kiss-All-The-Time-Disco-Occasionally",
+      "format": ["CD", "Album"],
+      "genre": ["Rock", "Pop", "Electronic", "Funk \/ Soul"],
+      "id": "B8CB90DD-B474-4AAC-BA50-1024BC891D95",
+      "isFavorite": false,
+      "label": [
+        "Erskine Records",
+        "Columbia",
+        "Sony Music",
+        "Erskine Records Limited",
+        "Erskine Records Limited",
+        "Columbia Records",
+        "Sony Music Entertainment",
+        "Sony Music Entertainment",
+        "Sony Music Entertainment International Services GmbH",
+        "Sony Music UK",
+        "Sony Music Entertainment"
+      ],
+      "latitude": 40.729417,
+      "longitude": -74.001487,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/kiss-all-the-time-disco-occasionally\/1870984032?uo=4",
+      "selectedAt": "2026-11-12T21:47:39Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/8WgJZDjJoPwxtT33IeZvXq-M2uwSAY1dqu66KulpEmI\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTM2Njkw\/NzIxLTE3NzQ0Nzk2\/MTYtMjk2NS5qcGVn.jpeg",
+      "title": "Kiss All The Time. Disco, Occasionally.",
+      "tracks": [
+        {
+          "duration": "2:40",
+          "id": "60462519-FB86-4838-8BE0-4EBADE6BADCC",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/7f\/5e\/d4\/7f5ed413-955a-4542-5720-3b1e220046be\/mzaf_8161415601894480566.plus.aac.p.m4a",
+          "title": "Ready, Steady, Go!"
+        },
+        {
+          "duration": "3:33",
+          "id": "CCE23B07-C9AA-4968-BA4A-E655E8A249E4",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/25\/41\/ca\/2541ca67-332b-8491-2110-a8d1f6645640\/mzaf_3738225504365022653.plus.aac.p.m4a",
+          "title": "American Girls"
+        },
+        {
+          "duration": "3:36",
+          "id": "A2246E4B-C8AB-4747-8236-F4F5C887F752",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/35\/b6\/a0\/35b6a026-26bc-cfb1-30d3-9c3c1820c63f\/mzaf_8281785747956416426.plus.aac.p.m4a",
+          "title": "Pop"
+        },
+        {
+          "duration": "4:08",
+          "id": "5771C9A6-5840-45AB-B7AB-2D2059E8C328",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/44\/f1\/8a\/44f18a73-1e7b-90c1-8f0d-55e9f257463e\/mzaf_12931732484760057017.plus.aac.p.m4a",
+          "title": "Coming Up Roses"
+        },
+        {
+          "duration": "4:13",
+          "id": "4CCC2696-7547-46F5-80EC-B4B21A7DB6EF",
+          "position": "1-12",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/b9\/5e\/79\/b95e7950-f1f0-e29f-fdac-e179633b90ea\/mzaf_7418190039749211142.plus.aac.p.m4a",
+          "title": "Carla's Song"
+        },
+        {
+          "duration": "3:49",
+          "id": "4FE0F1AE-794D-4869-BFF8-9455B932F12B",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/88\/43\/a9\/8843a95f-6267-f745-e5b9-afa82ac48a5c\/mzaf_11031730838053819085.plus.aac.p.m4a",
+          "title": "Season 2 Weight Loss"
+        },
+        {
+          "duration": "2:49",
+          "id": "4D054EDF-7DEC-4B5C-910F-1B66B5FF6332",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/8a\/18\/ae\/8a18ae51-6c18-e644-e023-18f4159ffa15\/mzaf_1619785511900890190.plus.aac.p.m4a",
+          "title": "The Waiting Game"
+        },
+        {
+          "duration": "5:11",
+          "id": "41EAA4DC-E016-45DA-AAF8-57F05899E807",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/46\/f9\/0e\/46f90e9b-0d1a-b986-c3f9-0e690e79c79b\/mzaf_8629808582610321991.plus.aac.p.m4a",
+          "title": "Aperture"
+        },
+        {
+          "duration": "3:41",
+          "id": "0BED77B3-CA21-41E2-A994-52E1972D927E",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/b3\/3d\/b8\/b33db8c2-50cd-4e5a-02ae-10ff562ce463\/mzaf_3432159379565923960.plus.aac.p.m4a",
+          "title": "Taste Back"
+        },
+        {
+          "duration": "3:14",
+          "id": "A19547FA-0110-4E19-A5DA-93E6F4792461",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/6c\/cb\/d2\/6ccbd263-d00e-fd35-845f-c4c62ac2eaa6\/mzaf_12931026909161789512.plus.aac.p.m4a",
+          "title": "Dance No More"
+        },
+        {
+          "duration": "2:27",
+          "id": "00B48DB5-3AF8-459C-AFE8-576CB14D5568",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/43\/1e\/7d\/431e7d55-ff57-dd0a-cbce-c0dbc353813e\/mzaf_16598264389486764665.plus.aac.p.m4a",
+          "title": "Paint By Numbers"
+        },
+        {
+          "duration": "3:12",
+          "id": "4074A11B-F1CA-44FC-B2CB-C2C66847532F",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/41\/f2\/31\/41f2315b-2337-cbbb-c38e-a3d8840c2687\/mzaf_2410819894149721984.plus.aac.p.m4a",
+          "title": "Are You Listening Yet?"
+        }
+      ],
+      "year": 2026
+    },
+    {
+      "artist": "Dragonette",
+      "barcode": ["637872101025", "A 7227 IS1954 E80918-07"],
+      "countryCode": "US",
+      "countryName": "United States",
+      "coverImageUrl": "https:\/\/i.discogs.com\/C1WFIJL_x7qSYhY8v-7hJ-3wgDdAnGsH8x_chVZDcdk\/rs:fit\/g:sm\/q:90\/h:596\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTI0NzI1\/NzUtMTI4NjAyMDI3\/My5qcGVn.jpeg",
+      "discogsId": 2472575,
+      "discogsUrl": "\/release\/2472575-Dragonette-Galore",
+      "format": ["CD", "Album"],
+      "genre": ["Rock", "Pop", "Electronic"],
+      "id": "09905570-BB58-494C-929E-0C4D3F5FD01D",
+      "isFavorite": false,
+      "label": ["I Surrender Records"],
+      "latitude": 40.732295,
+      "longitude": -74.001963,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/galore\/1069454426?uo=4",
+      "selectedAt": "2026-11-12T21:51:23Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/SyAbYiPiZD2idvjp3YBi4LJEuINomFEsmgSL8Euu9dE\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTI0NzI1\/NzUtMTI4NjAyMDI3\/My5qcGVn.jpeg",
+      "title": "Galore",
+      "tracks": [
+        {
+          "duration": "3:45",
+          "id": "D2B35FA1-AA8C-4581-BC97-278E8232B5FC",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music69\/v4\/07\/47\/01\/07470150-063b-d3a1-d6ef-9141d6b277ea\/mzaf_5124319674841470566.plus.aac.p.m4a",
+          "title": "True Believer"
+        },
+        {
+          "duration": "4:24",
+          "id": "77AF1D63-6341-48CF-8CD2-DAACE42F8280",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/2c\/6d\/6d\/2c6d6d33-2452-a523-9c80-0332333dd080\/mzaf_5374857529665375681.plus.aac.p.m4a",
+          "title": "You Please Me"
+        },
+        {
+          "duration": "3:30",
+          "id": "31779649-AC09-4BF6-8549-D7554D9281C9",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/73\/78\/ef\/7378ef87-763f-8321-893b-17caa6f88358\/mzaf_6214393711483681523.plus.aac.p.m4a",
+          "title": "Competition"
+        },
+        {
+          "duration": "2:53",
+          "id": "95365A07-BA62-4F47-B7FE-B731FA8AE009",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/55\/94\/41\/55944101-ef9b-2534-15fc-a01361dde1d0\/mzaf_4734460680540934288.plus.aac.p.m4a",
+          "title": "Jesus Doesn't Love Me"
+        },
+        {
+          "duration": "3:47",
+          "id": "6F6AFEB3-1475-41E9-B833-257A81CC587E",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview125\/v4\/74\/6e\/c1\/746ec125-37d4-c253-7444-373df3b8d351\/mzaf_16671864767938310454.plus.aac.p.m4a",
+          "title": "Gold Rush"
+        },
+        {
+          "duration": "3:02",
+          "id": "A8B59525-7557-455D-A13B-FB8307BDB73C",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/f9\/c2\/4d\/f9c24d38-418d-fbca-5367-2c1a488c11c6\/mzaf_3784475352884822102.plus.aac.p.m4a",
+          "title": "Take It Like a Man"
+        },
+        {
+          "duration": "2:58",
+          "id": "70E32A2B-32BB-419C-A3DC-701B47AAC25B",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/a9\/d0\/b8\/a9d0b821-b9bf-00d1-82f6-612f3b06172f\/mzaf_3861029765793833424.plus.aac.p.m4a",
+          "title": "Another Day"
+        },
+        {
+          "duration": "3:14",
+          "id": "6B4C3BB9-BCBA-411C-97CA-6E59A63EA293",
+          "position": "1-12",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview115\/v4\/2f\/7b\/ab\/2f7babe1-89a9-cb6d-e6bf-2be429653f54\/mzaf_7197409510585383705.plus.aac.p.m4a",
+          "title": "The Boys"
+        },
+        {
+          "duration": "2:49",
+          "id": "D2AA93AD-D7BF-4CA8-A023-26A534721508",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/89\/d8\/df\/89d8df58-22c9-7eea-64a2-7d34478f3d23\/mzaf_2230745443643270933.plus.aac.p.m4a",
+          "title": "Marvellous"
+        },
+        {
+          "duration": "3:12",
+          "id": "62CCFC16-0309-4235-A9DB-88CF6CD163A7",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/78\/d3\/23\/78d323a8-adfc-6151-2535-8c7c285c3bbd\/mzaf_268141027585622156.plus.aac.p.m4a",
+          "title": "Get Lucky"
+        },
+        {
+          "duration": "3:32",
+          "id": "1BDABB49-BE37-4D3F-BFBB-CB2832493106",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview125\/v4\/26\/f7\/74\/26f774e5-d5d7-9a3e-d177-4c7ecfaae127\/mzaf_11017927808082077277.plus.aac.p.m4a",
+          "title": "I Get Around"
+        },
+        {
+          "duration": "3:41",
+          "id": "2496CD42-C175-4EA4-BB7A-9A81EC6C13BD",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/Music49\/v4\/0e\/32\/48\/0e324865-5b43-3069-1ebb-0950c8883640\/mzaf_8118479251932264887.plus.aac.p.m4a",
+          "title": "Black Limousine"
+        }
+      ],
+      "year": 2008
+    },
+    {
+      "artist": "Muse",
+      "barcode": [
+        "093624873327",
+        "0 9362-48733-2 7",
+        "2-48733 (#3)",
+        "ASCAP",
+        "ifpi L909",
+        "Z24419 1 48733-2 01 M3S8",
+        "IFPI 2U6A",
+        "Z24419 1 48733-2 01 M1S2",
+        "IFPI2U35 ",
+        "Z24419 1 48733-2 01 M1S2",
+        "IFPI 2U4J",
+        "Z24419 1 48733-2 01 M1S3",
+        "IFPI 2U6C",
+        "Z24419 1 48733-2 01 M1S2",
+        "IFPI 2U7M",
+        "Z24419 1 48733-2 01 M3S4",
+        "IFPI 2U3Z",
+        "Z24419 1 48733-2 01 M1S10",
+        "IFPI 2U7C",
+        "Z24419 1 48733-2 01 M3S6",
+        "IFPI 2U3S",
+        "Z24419 1 48733-2 01 M1S5",
+        "IFPI 2U4G",
+        "Z24419 M1S9 1 48733-2 01",
+        "IFPI 2U7P",
+        "Z24419 M3S6 1 48733-2 01",
+        "IFPI 2U6D",
+        "Z24419 M3S6 1 48733-2 01",
+        "IFPI 2U8H",
+        "Z24419 1 48733-2 01 M3S2",
+        "IFPI 2U7P"
+      ],
+      "countryCode": "US",
+      "countryName": "United States",
+      "coverImageUrl": "https:\/\/i.discogs.com\/H8LTGXidjsMbh4BOwXjojoE-kNg2-YA0Cr1DHYjdKoc\/rs:fit\/g:sm\/q:90\/h:450\/w:450\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTY0NzY0\/OTEtMTQ0MTc1MjU5\/Ny02NDQwLmpwZWc.jpeg",
+      "discogsId": 6476491,
+      "discogsUrl": "\/release\/6476491-Muse-Absolution",
+      "format": ["CD", "Album"],
+      "genre": ["Rock"],
+      "id": "BB2970DC-9AE9-46C7-81A1-380A4F1B0388",
+      "isFavorite": false,
+      "label": [
+        "Warner Bros. Records",
+        "Taste Media Limited",
+        "Taste Media Limited",
+        "Warner Bros. Records Inc.",
+        "Cello Studios",
+        "Taste Music Ltd.",
+        "Grouse Lodge Studios",
+        "Air Lyndhurst Studios",
+        "Cello Studios",
+        "Livingston Studios",
+        "Sawmills Studio",
+        "Masterdisk",
+        "Masterdisk",
+        "Grouse Lodge Studios",
+        "Air Lyndhurst Studios",
+        "Cello Studios",
+        "Livingston Studios",
+        "Sawmills Studio",
+        "WEA Manufacturing",
+        "Cinram, Olyphant, PA",
+        "Cinram, Olyphant, PA"
+      ],
+      "latitude": 40.732295,
+      "longitude": -74.001963,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/absolution\/1716096819?uo=4",
+      "selectedAt": "2026-11-12T21:52:00Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/_7Ze_ypvQXKEFxb2RLowQOyhxFiHq5NENfsD3rGkbP8\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTY0NzY0\/OTEtMTQ0MTc1MjU5\/Ny02NDQwLmpwZWc.jpeg",
+      "title": "Absolution",
+      "tracks": [
+        {
+          "duration": "0:38",
+          "id": "A99B412B-21A3-4F9B-8989-3959AB0C5A45",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/27\/25\/21\/272521c4-296d-22e1-42d3-c9dd87c729f6\/mzaf_12764825325233374424.plus.aac.p.m4a",
+          "title": "Interlude"
+        },
+        {
+          "duration": "4:55",
+          "id": "3772B674-3214-4222-A01E-4FD4369E679D",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/a7\/b5\/41\/a7b541b7-1346-f587-d856-a1577ed1d158\/mzaf_11757033192007191287.plus.aac.p.m4a",
+          "title": "Sing for Absolution"
+        },
+        {
+          "duration": "4:12",
+          "id": "315210DA-58B9-4313-928F-DD9CA9929E7D",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/32\/f8\/af\/32f8af13-6f36-329a-1a0f-d461b11d8a64\/mzaf_18300702641520703893.plus.aac.p.m4a",
+          "title": "Apocalypse Please"
+        },
+        {
+          "duration": "3:28",
+          "id": "B2CBBC64-B768-4C21-A6C0-94E02B1B2C69",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/80\/29\/7a\/80297a3e-7deb-f848-657c-b442d57f3ceb\/mzaf_14384699331498293976.plus.aac.p.m4a",
+          "title": "The Small Print"
+        },
+        {
+          "duration": "3:48",
+          "id": "BB3E1236-2CC8-41AE-B099-555D287B2CC4",
+          "position": "1-13",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/9f\/c6\/c6\/9fc6c64d-e4dc-3d54-b685-47e4ace99b2f\/mzaf_8374147060502831308.plus.aac.p.m4a",
+          "title": "Endlessly"
+        },
+        {
+          "duration": "3:47",
+          "id": "5C8498CF-0D93-44EE-931D-A83D72B39979",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/01\/2b\/cd\/012bcd29-e307-6001-b04c-adb2d812b15f\/mzaf_11957251313499178138.plus.aac.p.m4a",
+          "title": "Hysteria"
+        },
+        {
+          "duration": "4:56",
+          "id": "3218EC7F-EF84-46A0-BF39-9C210B5F8036",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/d3\/92\/d5\/d392d56e-9842-74ab-32c9-42dd765a7123\/mzaf_4832298525087124170.plus.aac.p.m4a",
+          "title": "Stockholm Syndrome"
+        },
+        {
+          "duration": "0:22",
+          "id": "D50CEAD0-0971-42ED-A07D-909605261335",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/3d\/68\/b0\/3d68b019-3184-53ca-6cf1-08403bef5f32\/mzaf_10735612303555093598.plus.aac.p.m4a",
+          "title": "Intro"
+        },
+        {
+          "duration": "4:22",
+          "id": "E9167DDB-FB71-4563-8987-DF52E4A9E478",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/d5\/ac\/b4\/d5acb4bf-53c7-03e2-d1ce-77b7f82e62bc\/mzaf_13975637317615955298.plus.aac.p.m4a",
+          "title": "Blackout"
+        },
+        {
+          "duration": "5:02",
+          "id": "20E6E44A-5CD0-49A1-ABF3-5F82FBF3D9EF",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/c5\/ef\/06\/c5ef0617-94db-28e6-a8e6-01f0086c2659\/mzaf_14825679726023389649.plus.aac.p.m4a",
+          "title": "Butterflies & Hurricanes"
+        },
+        {
+          "duration": "3:08",
+          "id": "FE68B117-86E7-4799-B801-27FAF19B6533",
+          "position": "1-14",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/ec\/c1\/b1\/ecc1b1af-fe76-30ad-8e29-41443a6018b4\/mzaf_8128115918999005829.plus.aac.p.m4a",
+          "title": "Thoughts of a Dying Atheist"
+        },
+        {
+          "duration": "5:00",
+          "id": "497DA544-271D-4CF6-8D50-ED87B89B29DA",
+          "position": "1-12",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/83\/16\/9c\/83169cd1-8dbf-ab8c-59da-918c930c7019\/mzaf_16484315981537982014.plus.aac.p.m4a",
+          "title": "Fury"
+        },
+        {
+          "duration": "3:56",
+          "id": "670A8EB2-9C22-4BDA-97A8-C2616DB8AEFC",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/6d\/97\/80\/6d9780b4-c55b-1a44-efbd-f5b474db05f8\/mzaf_11184790201860208089.plus.aac.p.m4a",
+          "title": "Time is Running Out"
+        },
+        {
+          "duration": "4:39",
+          "id": "1033F47E-3FBF-4989-9AE7-71A1E454C11A",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/07\/99\/af\/0799af91-8caf-ec7d-744e-b5adc5d5af71\/mzaf_9462777587762980166.plus.aac.p.m4a",
+          "title": "Falling Away with You"
+        }
+      ],
+      "year": 2004
+    },
+    {
+      "artist": "Phoenix",
+      "barcode": [
+        "0 190295 628031",
+        "0190295628031",
+        "0724359863511 A BE56907-01 A2 CUT BY BNJ",
+        "0724359863511 B BE56907-01 B2",
+        "GEMA BIEM"
+      ],
+      "countryCode": "FR",
+      "countryName": "France",
+      "coverImageUrl": "https:\/\/i.discogs.com\/XzW7naFU2_gPslHqE3woaUEKn2sD1teKnOZjruir1Cs\/rs:fit\/g:sm\/q:90\/h:600\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEyODA0\/NjgxLTE1NjQ0OTg4\/NDMtNTI4Mi5qcGVn.jpeg",
+      "discogsId": 12804681,
+      "discogsUrl": "\/release\/12804681-Phoenix-Alphabetical",
+      "format": ["Vinyl", "LP", "Album", "Limited Edition", "Reissue"],
+      "genre": ["Rock", "Electronic"],
+      "id": "CB6906B1-9759-4F23-A68E-9AF8F9B80FED",
+      "isFavorite": false,
+      "label": ["Source", "Parlophone", "Optimal Media GmbH"],
+      "latitude": 40.732295,
+      "longitude": -74.001963,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/alphabetical\/697637090?uo=4",
+      "selectedAt": "2026-11-12T21:52:35Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/DeEbl0uXN12QaIi2HyvwNdoI-ObqXx0ohguuGRic3Dg\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEyODA0\/NjgxLTE1NjQ0OTg4\/NDMtNTI4Mi5qcGVn.jpeg",
+      "title": "Alphabetical",
+      "tracks": [
+        {
+          "duration": "3:50",
+          "id": "73D07F8B-E837-481A-9B8F-467B3EAAA60D",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/2f\/10\/41\/2f104109-0651-c6cc-64c9-9e64e9a62481\/mzaf_8720959147330370394.plus.aac.p.m4a",
+          "title": "Run Run Run"
+        },
+        {
+          "duration": "1:12",
+          "id": "25269CCF-969D-48DA-BF51-10D6FBD85AE2",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/5b\/3b\/12\/5b3b1246-0848-d316-a8c3-bb0926ceb0cc\/mzaf_9404090387936696430.plus.aac.p.m4a",
+          "title": "Congratulations"
+        },
+        {
+          "duration": "3:27",
+          "id": "3F4936F8-1BB1-482E-9774-1A413B23B96F",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/e5\/61\/f7\/e561f7d8-39e8-0338-ed51-34180ae9e6c0\/mzaf_6846771289241187779.plus.aac.p.m4a",
+          "title": "Holdin' On Together"
+        },
+        {
+          "duration": "3:33",
+          "id": "81113C2E-AB97-4CCA-A11D-32B1ADEAD300",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/61\/2a\/fc\/612afc51-6e3e-f31f-bd23-7ad343e36409\/mzaf_16712395383072681626.plus.aac.p.m4a",
+          "title": "(You Can't Blame It On) Anybody"
+        },
+        {
+          "duration": "3:00",
+          "id": "1C5CF5CB-A6E6-4209-8D0F-CBAEF6F44923",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/fb\/42\/29\/fb42296a-f259-0ed6-c5bf-47d55873cb1f\/mzaf_2687642261372869489.plus.aac.p.m4a",
+          "title": "Everything Is Everything"
+        },
+        {
+          "duration": "2:33",
+          "id": "7481AB30-C7EF-4930-8259-6262D8D897DE",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/f9\/7a\/e1\/f97ae110-4edc-3efd-c450-4bf1045abd1d\/mzaf_9735242220940232629.plus.aac.p.m4a",
+          "title": "I'm an Actor"
+        },
+        {
+          "duration": "3:57",
+          "id": "CF40BA96-5820-46D5-8B55-5F96479F3187",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/76\/11\/0b\/76110b45-0ad5-82b5-4ebe-443cce42207a\/mzaf_3034561327005525365.plus.aac.p.m4a",
+          "title": "If It's Not With You"
+        },
+        {
+          "duration": "3:24",
+          "id": "94050658-BE9D-4551-A5BD-12FA51174F19",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/e7\/28\/e5\/e728e535-82f7-54a2-404e-17ee508e8ea3\/mzaf_15973455487764065479.plus.aac.p.m4a",
+          "title": "Alphabetical"
+        },
+        {
+          "duration": "4:24",
+          "id": "8AD01377-D4B9-4776-A6AB-A3BDF55D6A39",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/ed\/5a\/c5\/ed5ac5f3-c767-95e2-f860-a73228205fe2\/mzaf_7763872451116283651.plus.aac.p.m4a",
+          "title": "Love For Granted"
+        },
+        {
+          "duration": "4:02",
+          "id": "7C3E63F3-F097-4495-88F6-0FED902AA919",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/00\/f6\/e5\/00f6e58f-851d-efc7-0012-0761bc244da3\/mzaf_4289953375222903363.plus.aac.p.m4a",
+          "title": "Victim of the Crime"
+        }
+      ],
+      "year": 2018
+    },
+    {
+      "artist": "Muse",
+      "barcode": [
+        "8 25646 35095 7",
+        "825646350957",
+        "[Warner 'W' logo] 56616210\/0825646350957 21",
+        "IFPI LP 73",
+        "IFPI 078Z"
+      ],
+      "countryName": "Europe",
+      "coverImageUrl": "https:\/\/i.discogs.com\/eQrNzEQwNXFwEXyfSxaVN1FzZAErYBOyWIjpLaux3-w\/rs:fit\/g:sm\/q:90\/h:594\/w:599\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEzOTYy\/NDczLTE1NjUwMDgz\/MzAtNDA3NC5qcGVn.jpeg",
+      "discogsId": 13962473,
+      "discogsUrl": "\/release\/13962473-Muse-Black-Holes-Revelations",
+      "format": ["CD", "Album", "Reissue"],
+      "genre": ["Rock"],
+      "id": "97D5187D-CC77-40D0-9A1D-A067E0246B81",
+      "isFavorite": false,
+      "label": [
+        "Warner Bros. Records",
+        "Warner Bros. Records",
+        "Helium 3",
+        "A & E Records Ltd.",
+        "A & E Records Ltd.",
+        "Warner\/Chappell",
+        "Studio Miraval",
+        "Avatar Studios",
+        "Electric Lady Studios",
+        "Officine Meccaniche",
+        "The Town House",
+        "The Town House",
+        "Avatar Studios",
+        "Sony Music Studios, New York City",
+        "Sony Music Studios, New York City",
+        "Masterdisk",
+        "Arvato"
+      ],
+      "latitude": 40.732295,
+      "longitude": -74.001963,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/black-holes-and-revelations\/992221994?uo=4",
+      "selectedAt": "2026-11-12T21:53:28Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/febOlavvFrIu8cOBG8qVD6S17L9578FcmYkVbCE1W8Y\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEzOTYy\/NDczLTE1NjUwMDgz\/MzAtNDA3NC5qcGVn.jpeg",
+      "title": "Black Holes & Revelations",
+      "tracks": [
+        {
+          "duration": "6:08",
+          "id": "786172C8-928E-40E9-9B9D-41B7814C20DB",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/e7\/8c\/45\/e78c45b7-55a3-5a7e-b784-3fd16a8d799b\/mzaf_12671993076903648703.plus.aac.p.m4a",
+          "title": "Knights of Cydonia"
+        },
+        {
+          "duration": "4:48",
+          "id": "92C62A05-1928-45C5-A8F3-020F6F3B6DAF",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/16\/7e\/64\/167e6426-40b3-2854-0ca6-dd603a808f46\/mzaf_4055047683881868555.plus.aac.p.m4a",
+          "title": "City of Delusion"
+        },
+        {
+          "duration": "3:28",
+          "id": "862D1A60-82AE-49A5-BC40-9DB340998E98",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/76\/4a\/63\/764a63c0-9533-97ce-51a5-31a23b57f2eb\/mzaf_3187296926844362175.plus.aac.p.m4a",
+          "title": "Supermassive Black Hole"
+        },
+        {
+          "duration": "3:59",
+          "id": "2726D769-B2BF-4C17-923C-EAA86B41A320",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/00\/2c\/2a\/002c2a41-d59f-92a6-740a-35641b4e1e48\/mzaf_9814325723002930170.plus.aac.p.m4a",
+          "title": "Starlight"
+        },
+        {
+          "duration": "3:30",
+          "id": "38997241-F0F2-4361-8FE8-1F0F9DEF06C3",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/31\/7d\/37\/317d37f6-ab14-906d-7ab2-33d70c728969\/mzaf_7785596758699313256.plus.aac.p.m4a",
+          "title": "Assassin"
+        },
+        {
+          "duration": "4:35",
+          "id": "557E5254-554B-4241-9AF6-A64A3FD1B362",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/b1\/37\/d2\/b137d288-04c0-bdaf-9c93-e895a3931394\/mzaf_8273800498014466621.plus.aac.p.m4a",
+          "title": "Take a Bow"
+        },
+        {
+          "duration": "4:18",
+          "id": "A02CEBCD-D3FC-4E48-BFE0-B37EA8F40AAE",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/7f\/65\/7c\/7f657ce2-40a8-47a6-2766-aa5c58a6c5a4\/mzaf_2183782090857038909.plus.aac.p.m4a",
+          "title": "Map of the Problematique"
+        },
+        {
+          "duration": "3:43",
+          "id": "6DB98951-08EA-4373-97A6-4F2527BD24EB",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/6c\/da\/d2\/6cdad293-b15f-84f5-9ff6-8774dc09fb22\/mzaf_12403638153890792096.plus.aac.p.m4a",
+          "title": "Hoodoo"
+        },
+        {
+          "duration": "3:52",
+          "id": "F6D8F524-DD50-4D46-803F-9D3E33C4A425",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/48\/8d\/99\/488d99a3-a845-b6bc-93a1-fc96edf5fdff\/mzaf_7555534053363206169.plus.aac.p.m4a",
+          "title": "Exo-Politics"
+        },
+        {
+          "duration": "2:03",
+          "id": "B7E3BFB1-155F-46AB-88C2-97BE44CCC5FB",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/51\/6e\/0e\/516e0e3e-40b0-cda3-19bb-67fde81d5c0f\/mzaf_7597863256740551.plus.aac.p.m4a",
+          "title": "Soldier's Poem"
+        },
+        {
+          "duration": "4:59",
+          "id": "A275CD1E-EF4F-44BA-9B18-B5F111EA176D",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/b6\/20\/e4\/b620e41e-3c61-e7f9-9311-5dd16c7e70f9\/mzaf_611551576139472150.plus.aac.p.m4a",
+          "title": "Invincible"
+        }
+      ]
+    },
+    {
+      "artist": "Gorillaz",
+      "barcode": [
+        "0 190295 643423",
+        "190295643423",
+        "LC30419",
+        "GEMA\/MCPS",
+        "ASCAP",
+        "BMI",
+        "PRS",
+        "BI24408-01A1 -^ 0190295643423",
+        "BI24408-01B1 BI JD 0190295643423 -^",
+        "BI24408-01A1 1TX 0190295643423",
+        "BI24408-01B1 BI JD 1T+ 0190295643423"
+      ],
+      "countryName": "UK, Europe & US",
+      "coverImageUrl": "https:\/\/i.discogs.com\/35oHRru2KQM3cv7wodjiKz1Z_7eTA0_9M57wvy_UkBs\/rs:fit\/g:sm\/q:90\/h:605\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEyMTg2\/MTYxLTE1MzAyNTAz\/MjAtNTM1MC5qcGVn.jpeg",
+      "discogsId": 12186161,
+      "discogsUrl": "\/release\/12186161-Gorillaz-The-Now-Now",
+      "format": ["Vinyl", "LP", "Album"],
+      "genre": ["Rock", "Electronic", "Hip Hop", "Funk \/ Soul"],
+      "id": "4475186D-3508-420A-9B34-94DCA6CD7B90",
+      "isFavorite": false,
+      "label": [
+        "Parlophone",
+        "Parlophone Records Ltd.",
+        "Warner Music Group",
+        "Gorillaz Partnership",
+        "Parlophone Records Ltd.",
+        "Copyright Control",
+        "Datlilgirlmusic",
+        "EMI Blackwood Music Inc.",
+        "My Own Chit Publishing",
+        "Songs Of Kobalt Music Publishing",
+        "Triangle Music",
+        "Warner Chappell Music Ltd.",
+        "Warner\/Chappell Music Ltd.",
+        "Studio 13",
+        "Studio 13",
+        "Brick Road Studios",
+        "The Compound, Los Angeles",
+        "Metropolis Studios",
+        "Mondrian Hotel, West Hollywood",
+        "The Raphael Hotel, Kansas City",
+        "Knob Hill Inn, Ketchum, Idaho",
+        "Marriott Hotel, Zurich",
+        "Delano South Beach, Miami",
+        "Optimal Media GmbH"
+      ],
+      "latitude": 40.732295,
+      "longitude": -74.001963,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/the-now-now\/1387814084?uo=4",
+      "selectedAt": "2026-11-12T21:53:52Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/Hd-UxKvjYGdR_gHoiL2JCaTU0Ct0ByXdqMET4BknF7c\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEyMTg2\/MTYxLTE1MzAyNTAz\/MjAtNTM1MC5qcGVn.jpeg",
+      "title": "The Now Now",
+      "tracks": [
+        {
+          "duration": "4:13",
+          "id": "4437CADE-AD9C-436C-A97B-A589FA5FC0AC",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/7b\/20\/4d\/7b204d1d-be59-bb66-4cdc-7ac33601f8c8\/mzaf_16841872139798053962.plus.aac.p.m4a",
+          "title": "Lake Zurich"
+        },
+        {
+          "duration": "2:21",
+          "id": "31814109-DEA6-49DB-B45F-8E86C9279878",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/d4\/42\/12\/d442127e-060a-dcdb-1fcf-b05f37a16a38\/mzaf_15080607090384904334.plus.aac.p.m4a",
+          "title": "One Percent"
+        },
+        {
+          "duration": "3:00",
+          "id": "BB732218-1B8D-4ABE-AF60-AD8D63C720E7",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/f0\/85\/ab\/f085ab07-cf62-a8a2-1940-bc5509c05427\/mzaf_14890163477403941620.plus.aac.p.m4a",
+          "title": "Sorcererz"
+        },
+        {
+          "duration": "3:42",
+          "id": "AEFA8B48-F492-4454-A82A-61A8B35FCFBF",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/91\/19\/c9\/9119c97d-fe28-af6e-0f59-04d5135cff3a\/mzaf_16348018622084899037.plus.aac.p.m4a",
+          "title": "Idaho"
+        },
+        {
+          "duration": "3:59",
+          "id": "9BCC321C-DA28-4B34-8FE5-0037CBB69EC8",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/71\/a7\/68\/71a768f6-3e37-9818-2f8d-4e34b296e669\/mzaf_13231551473361366993.plus.aac.p.m4a",
+          "title": "Magic City"
+        },
+        {
+          "duration": "4:53",
+          "id": "57AEE656-4F21-4540-90AD-DB997AA1570D",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/1c\/16\/57\/1c165747-8376-cb8f-121c-f6fac2b9bbb4\/mzaf_12594067838834502637.plus.aac.p.m4a",
+          "title": "Hollywood (feat. Snoop Dogg & Jamie Principle)"
+        },
+        {
+          "duration": "2:42",
+          "id": "94650E1A-58E5-4FC6-9A21-EBC3554EFF67",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/ba\/b1\/6c\/bab16c32-defb-45d7-3a09-d641239d88de\/mzaf_3754494095911199211.plus.aac.p.m4a",
+          "title": "Tranz"
+        },
+        {
+          "duration": "3:53",
+          "id": "47B337B9-E4AC-42B0-AECB-9D4FCA4053D0",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/0e\/9f\/d6\/0e9fd656-863b-0862-4058-1b52180c73cf\/mzaf_10679412914590896752.plus.aac.p.m4a",
+          "title": "Fire Flies"
+        },
+        {
+          "duration": "4:34",
+          "id": "629AAD52-B493-47F5-AAE3-19155DF6C42A",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/07\/75\/ec\/0775ec54-66a2-9344-1770-af5018a73ea3\/mzaf_8848615707313605933.plus.aac.p.m4a",
+          "title": "Souk Eye"
+        },
+        {
+          "duration": "3:17",
+          "id": "9EBF3303-2E5C-47F0-8F75-D996B3985FB0",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/0b\/c9\/1d\/0bc91dbb-8d2b-5f2a-c956-512a76954539\/mzaf_8267813063660289747.plus.aac.p.m4a",
+          "title": "Humility (feat. George Benson)"
+        },
+        {
+          "duration": "4:08",
+          "id": "CB583404-DF7D-4A5B-A5A4-599EEC08F918",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/15\/28\/56\/152856ab-7f0b-b8bf-b464-4dfeeedd86bb\/mzaf_6435070197940803415.plus.aac.p.m4a",
+          "title": "Kansas"
+        }
+      ],
+      "year": 2018
+    },
+    {
+      "artist": "Natalia Lafourcade",
+      "barcode": [
+        "1 90758 31491 4",
+        "19075831491A  MASTERDISK SH  BI18142-01 A1",
+        "19075831491B  MASTERDISK SH  BI18142-01 B1",
+        "19075831491A  MASTERDISK SH  BI18142-01 X1",
+        "19075831491B  MASTERDISK SH  BI18142-01 B1"
+      ],
+      "countryCode": "MX",
+      "countryName": "Mexico",
+      "coverImageUrl": "https:\/\/i.discogs.com\/d8znM02DHDKfOREd15TCix0C6-puWIt3eOsbE2F3yCs\/rs:fit\/g:sm\/q:90\/h:600\/w:600\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEyMDMz\/MjkwLTE1MjY5NDI1\/MjQtNDU5Mi5qcGVn.jpeg",
+      "discogsId": 12033290,
+      "discogsUrl": "\/release\/12033290-Natalia-Lafourcade-Musas-Un-Homenaje-al-Folclore-Latinoamericano-en-Manos-de-Los-Macorinos-Vol-2",
+      "format": ["Vinyl", "LP", "Album"],
+      "genre": ["Latin", "Folk, World, & Country"],
+      "id": "BF965DB0-A27E-4014-9676-B7DBFAFB7FEB",
+      "isFavorite": false,
+      "label": [
+        "Sony Music",
+        "Sony Music Entertainment México, S.A. De C.V.",
+        "Sony Music Entertainment México, S.A. De C.V.",
+        "Sony Music Entertainment (Germany) GmbH",
+        "Sony Music Entertainment México, S.A. De C.V.",
+        "El Desierto",
+        "Milano 48",
+        "Sony Studios, Mexico",
+        "Rubensplace Studio",
+        "Seahorse Sound Studios",
+        "Masterdisk",
+        "Optimal Media GmbH",
+        "Masterdisk",
+        "Universal Music Publishing Group",
+        "EMMI",
+        "Universal Music Publishing MGB",
+        "Apdayc",
+        "PHAM"
+      ],
+      "latitude": 40.732295,
+      "longitude": -74.001963,
+      "musicUrl": "https:\/\/music.apple.com\/us\/album\/musas-un-homenaje-al-folclore-latinoamericano-en\/1336174660?uo=4",
+      "selectedAt": "2026-11-12T21:54:06Z",
+      "thumbnailUrl": "https:\/\/i.discogs.com\/2Rb-LQtkAKsXxF6ZlcCrSygL673Ow-X114F14in7EWY\/rs:fit\/g:sm\/q:40\/h:150\/w:150\/czM6Ly9kaXNjb2dz\/LWRhdGFiYXNlLWlt\/YWdlcy9SLTEyMDMz\/MjkwLTE1MjY5NDI1\/MjQtNDU5Mi5qcGVn.jpeg",
+      "title": "Musas (Un Homenaje al Folclore Latinoamericano en Manos de Los Macorinos), Vol. 2",
+      "tracks": [
+        {
+          "duration": "4:03",
+          "id": "6C71F6FA-4096-4C94-9F2F-01B0B3D91C90",
+          "position": "1-10",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/e8\/fc\/9a\/e8fc9acb-4d0f-0b69-b370-8c576bfe751c\/mzaf_5020002403390656021.plus.aac.p.m4a",
+          "title": "Desdeñosa (En Mano de Los Macorinos) [feat. Los Macorinos, Omara Portuondo & Eugenia León]"
+        },
+        {
+          "duration": "5:48",
+          "id": "693FE6C7-DABC-458C-B71D-ABFCF1B0C3D9",
+          "position": "1-7",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/2f\/d7\/29\/2fd729d3-f1c9-d5f9-7904-265eb9b57b00\/mzaf_8820090288927734547.plus.aac.p.m4a",
+          "title": "Derecho de Nacimiento (feat. Los Macorinos)"
+        },
+        {
+          "duration": "6:55",
+          "id": "89473136-D7C6-49EF-B67E-C64255DFE5F9",
+          "position": "1-9",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/1c\/00\/02\/1c00022e-c810-797a-b28c-3f62fe41d210\/mzaf_17916960757052389412.plus.aac.p.m4a",
+          "title": "La Llorona (feat. Los Macorinos)"
+        },
+        {
+          "duration": "3:47",
+          "id": "E3BDC392-72A8-49A7-B849-70E10AD926AE",
+          "position": "1-12",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/f9\/4e\/0a\/f94e0a9b-c6c8-3baf-3060-6645c61904c2\/mzaf_3540454420476468681.plus.aac.p.m4a",
+          "title": "Humanidad (feat. Los Macorinos)"
+        },
+        {
+          "duration": "3:25",
+          "id": "CEC2471E-57F2-444C-BE3C-AB119E9B9F5E",
+          "position": "1-3",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/a1\/4a\/9d\/a14a9d19-71e2-687e-2c2c-3539a52e35de\/mzaf_163518798972032193.plus.aac.p.m4a",
+          "title": "Hoy Mi Día Uno (feat. Los Macorinos)"
+        },
+        {
+          "duration": "4:23",
+          "id": "7C312CBD-2E3E-42BB-B8BD-7ECA749EB5C2",
+          "position": "1-1",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/9c\/27\/ba\/9c27ba69-1922-5b7f-ad64-eeef184c4645\/mzaf_732089273394279965.plus.aac.p.m4a",
+          "title": "Danza de Gardenias (feat. Los Macorinos)"
+        },
+        {
+          "duration": "5:24",
+          "id": "5D08C928-DC58-40D6-84C1-605AE36E1B51",
+          "position": "1-8",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/8f\/68\/7c\/8f687cc4-4f3a-e256-124d-34c1cba1a241\/mzaf_11180411090770955429.plus.aac.p.m4a",
+          "title": "Eclipse (feat. Los Macorinos)"
+        },
+        {
+          "duration": "2:57",
+          "id": "9FB8A018-C394-4B9F-9AA7-447278D2CCA4",
+          "position": "1-4",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview211\/v4\/c0\/c3\/91\/c0c391fb-f098-3c5a-ec6e-70e8e8913ab2\/mzaf_1934420574287559432.plus.aac.p.m4a",
+          "title": "Tus Ojitos (Vals de la Guardia Vieja) [feat. Los Macorinos]"
+        },
+        {
+          "duration": "3:27",
+          "id": "64EB4942-0743-4E01-A605-9C0D59F30C59",
+          "position": "1-11",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/45\/db\/70\/45db701e-5d9a-ec8f-08af-af44b34397cf\/mzaf_9673912054823752376.plus.aac.p.m4a",
+          "title": "Te Sigo (feat. Los Macorinos)"
+        },
+        {
+          "duration": "4:43",
+          "id": "7AE804E9-4793-43BC-94F6-9A77F0E64327",
+          "position": "1-5",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/ea\/35\/0b\/ea350bc1-6c29-eb17-7744-e39c865d49eb\/mzaf_17793829698678066773.plus.aac.p.m4a",
+          "title": "Duerme Negrito (feat. Los Macorinos)"
+        },
+        {
+          "duration": "4:19",
+          "id": "677FDEC4-33AB-44DF-917B-B66027F0B8EC",
+          "position": "1-2",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/f3\/73\/fb\/f373fb8f-819e-a239-3404-0abc53478a99\/mzaf_17523953077212738894.plus.aac.p.m4a",
+          "title": "Alma Mía (feat. Los Macorinos)"
+        },
+        {
+          "duration": "3:18",
+          "id": "724EA09B-D17E-4E8A-A9FF-5DE810EF0FB7",
+          "position": "1-6",
+          "previewUrl": "https:\/\/audio-ssl.itunes.apple.com\/itunes-assets\/AudioPreview221\/v4\/e3\/99\/b6\/e399b675-6752-0571-c204-4333bf17e6e9\/mzaf_6941275986491675147.plus.aac.p.m4a",
+          "title": "Luz de Luna (feat. Los Macorinos)"
+        }
+      ],
+      "year": 2018
+    }
+  ],
+  "version": 1
+}

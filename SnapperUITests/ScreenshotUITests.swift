@@ -19,7 +19,11 @@ final class ScreenshotUITests: XCTestCase {
     snapshot("01-search", timeWaitingForIdle: 0)
 
     app.buttons["History"].tap()
-    let latestAlbum = app.staticTexts["The Womack Sisters"].firstMatch
+    let latestAlbum =
+      app.staticTexts[
+        "Musas (Un Homenaje al Folclore Latinoamericano en Manos de Los Macorinos), Vol. 2"
+      ]
+      .firstMatch
     XCTAssertTrue(latestAlbum.waitForExistence(timeout: 20))
     snapshot("02-history", timeWaitingForIdle: 0)
 

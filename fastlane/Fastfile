@@ -12,7 +12,7 @@ platform :ios do
       File.read(
         File.join(
           root,
-          "Snapper/Resources/albums.json"
+          "PreviewContent/albums.json"
         )
       )
     ).fetch("albums")
@@ -22,7 +22,7 @@ platform :ios do
     missing = latest.filter_map do |album|
       artwork = File.join(
         root,
-        "Snapper/Resources/Assets.xcassets/Covers",
+        "PreviewContent/Assets.xcassets/Covers",
         "Album-#{album.fetch('discogsId')}.imageset/cover.jpg"
       )
       album.fetch("discogsId") unless File.file?(artwork)

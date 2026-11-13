@@ -140,9 +140,9 @@ extension URLSession {
 
 #if DEBUG
 #Preview {
-  let url = "https://picsum.photos/600/400"
+  let url = URL(string: "https://picsum.photos/600/400")
 
-  let assetUrl = "assets:///Album-11544847"
+  let assetUrl = URL(string: "assets:///Album-12033290")
 
   let size: CGFloat = 200
 
@@ -158,13 +158,13 @@ extension URLSession {
     }
 
     LabeledContent("Success") {
-      CachedImage(url: URL(string: url))
+      CachedImage(url: url)
         .frame(width: size, height: size)
         .clipped()
     }
 
     LabeledContent("Asset Catalog") {
-      CachedImage(url: URL(string: assetUrl))
+      CachedImage(url: assetUrl)
         .frame(width: size, height: size)
         .clipped()
     }

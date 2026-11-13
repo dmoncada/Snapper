@@ -49,6 +49,23 @@
         { "path": "<SDK>/System/Library/Frameworks/SwiftUI.framework", "target-membership": [ "SnapperWidget/frameworks" ] },
       ],
     }, {
+      "kind": "folder",
+      "path": "PreviewContent",
+      "membership-exceptions": [
+        {
+          "target": "Snapper",
+          "inclusions": [
+            "Assets.xcassets",
+            "albums.json",
+          ],
+        }, {
+          "target": "SnapperWidget",
+          "inclusions": [
+            "albums.json",
+          ],
+        },
+      ],
+    }, {
       "kind": "group",
       "name": "Products",
       "children": [
@@ -86,7 +103,6 @@
             "Resources/Fonts/libre-caslon-text/LibreCaslonText-Bold.ttf",
             "Resources/Fonts/libre-caslon-text/LibreCaslonText-Italic.ttf",
             "Resources/Fonts/libre-caslon-text/LibreCaslonText-Regular.ttf",
-            "Resources/albums.json",
             "Services/Api/Dto/AlbumDto.swift",
             "Services/Api/Dto/TrackDto.swift",
             "Storage/JsonFile.swift",
@@ -156,6 +172,7 @@
         "CODE_SIGN_ENTITLEMENTS": "Snapper/Snapper.entitlements",
         "CODE_SIGN_STYLE": "Automatic",
         "CURRENT_PROJECT_VERSION": "1",
+        "DEVELOPMENT_ASSET_PATHS": "$(SRCROOT)/PreviewContent",
         "ENABLE_APP_SANDBOX": "YES",
         "ENABLE_PREVIEWS": "YES",
         "ENABLE_USER_SELECTED_FILES": "readonly",
@@ -278,6 +295,7 @@
         "CODE_SIGN_ENTITLEMENTS": "SnapperWidget/SnapperWidget.entitlements",
         "CODE_SIGN_STYLE": "Automatic",
         "CURRENT_PROJECT_VERSION": "1",
+        "DEVELOPMENT_ASSET_PATHS": "$(SRCROOT)/PreviewContent",
         "GENERATE_INFOPLIST_FILE": "YES",
         "INFOPLIST_FILE": "SnapperWidget/Info.plist",
         "INFOPLIST_KEY_CFBundleDisplayName": "MusicSnapWidget",
