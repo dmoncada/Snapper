@@ -43,6 +43,14 @@ final class AlbumHistoryViewModel {
       + genres.sorted().map(AlbumHistoryFilter.genre)
   }
 
+  subscript(isSelected filter: AlbumHistoryFilter) -> Bool {
+    get { selectedFilters.contains(filter) }
+    set {
+      if newValue == selectedFilters.contains(filter) { return }
+      toggleFilter(filter)
+    }
+  }
+
   func toggleFilter(_ filter: AlbumHistoryFilter) {
     if filter == .all {
       selectedFilters = [.all]

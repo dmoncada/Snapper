@@ -154,15 +154,12 @@ private struct AlbumHistoryFilterBar: View {
           Toggle(
             filter.title,
             systemImage: "checkmark",
-            isOn: Binding(
-              get: { vm.selectedFilters.contains(filter) },
-              set: { _ in vm.toggleFilter(filter) },
-            ),
+            isOn: $vm[isSelected: filter],
           )
           .toggleStyle(
             .titleAndIconBadge(
               labelStyle: .expand,
-              appearance: vm.selectedFilters.contains(filter)
+              appearance: vm[isSelected: filter]
                 ? .highlighted
                 : .default,
             )

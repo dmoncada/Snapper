@@ -177,16 +177,6 @@ private struct LocationSection: View {
   }
 }
 
-@Observable
-final class StoreSelection {
-  var selectedStoreId: RecordStoreCandidate.ID?
-
-  subscript(isSelected storeId: RecordStoreCandidate.ID) -> Bool {
-    get { selectedStoreId == storeId }
-    set { selectedStoreId = newValue ? storeId : nil }
-  }
-}
-
 private struct MapView: View {
   let location: CLLocation
   let accuracyRadius: Double?

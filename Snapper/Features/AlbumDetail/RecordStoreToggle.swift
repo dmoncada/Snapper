@@ -1,5 +1,15 @@
 import SwiftUI
 
+@Observable
+final class StoreSelection {
+  var selectedStoreId: RecordStoreCandidate.ID?
+
+  subscript(isSelected storeId: RecordStoreCandidate.ID) -> Bool {
+    get { selectedStoreId == storeId }
+    set { selectedStoreId = newValue ? storeId : nil }
+  }
+}
+
 struct RecordStoreToggle: View {
   @Environment(\.locale) private var locale
 
