@@ -10,6 +10,7 @@ protocol AppDependencies {
   var previewPlayer: any PreviewPlaying { get }
   var imageRecognizer: any ImageRecognizing { get }
   var locationProvider: any LocationProviding { get }
+  var recordStoreLocator: any RecordStoreLocating { get }
   var dateTimeProvider: any DateTimeProviding { get }
 }
 
@@ -20,6 +21,7 @@ struct LiveDependencies: AppDependencies {
   let previewPlayer: any PreviewPlaying
   let imageRecognizer: any ImageRecognizing
   let locationProvider: any LocationProviding
+  let recordStoreLocator: any RecordStoreLocating
   let dateTimeProvider: any DateTimeProviding
 
   init() {
@@ -39,6 +41,7 @@ struct LiveDependencies: AppDependencies {
     previewPlayer = .live
     imageRecognizer = .live
     locationProvider = .live
+    recordStoreLocator = .live
     dateTimeProvider = .live
   }
 
@@ -82,6 +85,7 @@ struct TestDependencies: AppDependencies {
   let previewPlayer: any PreviewPlaying
   let imageRecognizer: any ImageRecognizing
   let locationProvider: any LocationProviding
+  let recordStoreLocator: any RecordStoreLocating
   let dateTimeProvider: any DateTimeProviding
 
   init() {
@@ -98,6 +102,7 @@ struct TestDependencies: AppDependencies {
     previewPlayer = .null
     imageRecognizer = .null
     locationProvider = .null
+    recordStoreLocator = .null
 
     dateTimeProvider = .stub(modelContainer)
   }

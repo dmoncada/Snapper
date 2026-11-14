@@ -58,6 +58,8 @@ struct RecordStoreToggle: View {
 import SwiftData
 
 private struct RecordStoreTogglePreview: View {
+  @Environment(\.recordStoreLocator) private var locator
+
   @Query(sort: \Album.selectedAt, order: .reverse) private var albums: [Album]
 
   @State private var stores: [RecordStoreCandidate] = []
@@ -97,7 +99,7 @@ private struct RecordStoreTogglePreview: View {
       guard
         let album = albums.last,
         let location = album.location,
-        let stores = try? await RecordStoreLocator.findNearby(
+        let stores = try? await locator.locate(
           near: location,
           within: .meters(500),
           limit: 3,
@@ -111,6 +113,7 @@ private struct RecordStoreTogglePreview: View {
 
 #Preview(traits: .withSearchContext) {
   RecordStoreTogglePreview()
+    .environment(\.recordStoreLocator, .live)
 }
 
 #endif

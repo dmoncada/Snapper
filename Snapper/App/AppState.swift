@@ -10,6 +10,7 @@ final class AppState {
   let previewPlayer: any PreviewPlaying
   let imageRecognizer: any ImageRecognizing
   let locationProvider: any LocationProviding
+  let recordStoreLocator: any RecordStoreLocating
   let dateTimeProvider: any DateTimeProviding
 
   let searchViewModel: AlbumSearchViewModel
@@ -32,6 +33,7 @@ final class AppState {
     previewPlayer = dependencies.previewPlayer
     imageRecognizer = dependencies.imageRecognizer
     locationProvider = dependencies.locationProvider
+    recordStoreLocator = dependencies.recordStoreLocator
     dateTimeProvider = dependencies.dateTimeProvider
 
     let logger1 = Logger(label: "\(Constants.appId).\(Features.search)")

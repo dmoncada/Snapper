@@ -178,6 +178,8 @@ private struct LocationSection: View {
 }
 
 private struct MapView: View {
+  @Environment(\.recordStoreLocator) private var locator
+
   let location: CLLocation
   let accuracyRadius: Double?
 
@@ -218,7 +220,14 @@ private struct MapView: View {
         )
       }
 
-      if candidateStores.isEmpty == false {
+      if candidateStores.isEmpty {
+        HStack(spacing: Spacing.sm) {
+          Text("Locating record stores nearby...")
+            .font(.gillSans(.caption))
+          ProgressView()
+            .controlSize(.small)
+        }
+      } else {
         HStack(spacing: Spacing.sm) {
           Text("Nearby:")
             .font(.gillSans(.caption))
@@ -243,7 +252,7 @@ private struct MapView: View {
       recenter()
     }
     .task {
-      if let stores = try? await RecordStoreLocator.findNearby(
+      if let stores = try? await locator.locate(
         near: location,
         within: .kilometers(5),
         limit: 3,
@@ -368,30 +377,39 @@ private struct AlbumTrackRow: View {
 #if DEBUG
 import SwiftData
 
-#Preview(traits: .withSearchContext) {
-  @Previewable @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
+private struct TestAlbumDetailView: View {
+  @Environment(\.recordStoreLocator) private var locator
 
-  if let album = albums.first {
-    AlbumDetailView(album: album)
-      .task {
-        guard
-          let location = album.location,
-          let stores = try? await RecordStoreLocator.findNearby(
-            near: location,
-            within: .meters(500),
-            limit: 3,
-          )
-        else { return }
+  @Query(sort: \Album.selectedAt, order: .reverse) private var albums: [Album]
 
-        for store in stores {
-          print(store.name)
-          print(store.distance(from: location))
-          print(store.address ?? "")
-          print()
+  var body: some View {
+    if let album = albums.first {
+      AlbumDetailView(album: album)
+        .task {
+          guard
+            let location = album.location,
+            let stores = try? await locator.locate(
+              near: location,
+              within: .meters(500),
+              limit: 3,
+            )
+          else { return }
+
+          for store in stores {
+            print(store.name)
+            print(store.distance(from: location))
+            print(store.address ?? "")
+            print()
+          }
         }
-      }
-  } else {
-    ProgressView()
+    } else {
+      ProgressView()
+    }
   }
+}
+
+#Preview(traits: .withSearchContext) {
+  TestAlbumDetailView()
+    .environment(\.recordStoreLocator, .live)
 }
 #endif

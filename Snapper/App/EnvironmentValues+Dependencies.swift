@@ -5,5 +5,6 @@ extension EnvironmentValues {
   @Entry var previewPlayer: any PreviewPlaying = .null
   @Entry var imageRecognizer: any ImageRecognizing = .null
   @Entry var locationProvider: any LocationProviding = .null
+  @Entry var recordStoreLocator: any RecordStoreLocating = .null
   @Entry var dateTimeProvider: any DateTimeProviding = .live
 }

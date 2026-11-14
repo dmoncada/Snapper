@@ -42,18 +42,23 @@ struct RecordStoreCandidate: Sendable, Identifiable {
   }
 }
 
-enum RecordStoreLocator {
+struct MapKitRecordStoreLocator: RecordStoreLocating {
   private static let searchQueries = [
     "record stores",
     "vinyl record shops",
     "used music and record stores",
   ]
 
-  static func findNearby(
+  init(logger: Logger = .current) {
+    self.logger = logger
+  }
+
+  private let logger: Logger
+
+  func locate(
     near location: CLLocation,
-    within radius: Measurement<UnitLength> = .kilometers(5),
-    limit: Int = 3,
-    logger: Logger = .current,
+    within radius: Measurement<UnitLength>,
+    limit: Int,
   ) async throws -> [RecordStoreCandidate] {
     try Task.checkCancellation()
 
@@ -77,7 +82,7 @@ enum RecordStoreLocator {
       metadata: [
         "radius_meters": "\(radiusInMeters)",
         "limit": "\(limit)",
-        "query_count": "\(searchQueries.count)",
+        "query_count": "\(Self.searchQueries.count)",
       ],
     )
 
@@ -86,12 +91,12 @@ enum RecordStoreLocator {
       of: [RecordStoreCandidate].self,
       returning: [[RecordStoreCandidate]].self,
     ) { group in
-      for query in searchQueries {
+      for query in Self.searchQueries {
         group.addTask {
           try Task.checkCancellation()
 
           do {
-            let candidates = try await search(
+            let candidates = try await Self.search(
               query: query,
               region: region,
               center: location,
@@ -218,4 +223,8 @@ enum RecordStoreLocator {
     ]
     .joined(separator: "|")
   }
+}
+
+extension RecordStoreLocating where Self == MapKitRecordStoreLocator {
+  static var live: Self { Self() }
 }
