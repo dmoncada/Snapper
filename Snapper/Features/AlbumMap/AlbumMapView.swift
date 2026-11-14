@@ -192,7 +192,11 @@ private struct AlbumClusterSheet: View {
         }
       }
       .navigationBarTitleDisplayMode(.inline)
-      .presentationDetents([.medium, .large])
+      .presentationDetents([
+        pin.albums.count <= 3
+          ? .medium
+          : .large
+      ])
       .withCloseButton()
     }
   }

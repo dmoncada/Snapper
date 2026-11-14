@@ -170,22 +170,19 @@ private struct TestSelectableGrid: View {
       }
       .withFullBackground()
       .task {
-        let offsets: [(value: Int, unit: Calendar.Component)] = [
-          (1, .minute),
-          (1, .hour),
-          (1, .day),
-          (1, .weekOfYear),
-          (1, .month),
-          (1, .year),
+        let offsets: [DateOffset] = [
+          .minutes(1),
+          .hours(1),
+          .days(1),
+          .weeks(1),
+          .months(1),
+          .years(1),
         ]
 
         guard albums.count >= offsets.count else { return }
 
         for (album, offset) in albums.paired(with: offsets) {
-          album.selectedAt = album.selectedAt.subtracting(
-            offset.value,
-            unit: offset.unit,
-          )
+          album.selectedAt = album.selectedAt.subtracting(offset)
         }
       }
     }

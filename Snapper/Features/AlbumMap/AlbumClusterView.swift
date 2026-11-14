@@ -102,21 +102,18 @@ private struct TestAlbumClusterView: View {
         }
       }
       .task {
-        let offsets: [(value: Int, unit: Calendar.Component)] = [
-          (1, .hour),
-          (1, .day),
-          (2, .day),
-          (1, .weekOfYear),
-          (1, .month),
+        let offsets: [DateOffset] = [
+          .hours(1),
+          .days(1),
+          .days(2),
+          .weeks(1),
+          .months(1),
         ]
 
         guard albums.count >= offsets.count else { return }
 
         for (album, offset) in albums.paired(with: offsets, stride: 2) {
-          album.selectedAt = album.selectedAt.subtracting(
-            offset.value,
-            unit: offset.unit,
-          )
+          album.selectedAt = album.selectedAt.subtracting(offset)
         }
       }
   }

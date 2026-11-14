@@ -60,8 +60,6 @@ struct MapKitRecordStoreLocator: RecordStoreLocating {
     within radius: Measurement<UnitLength>,
     limit: Int,
   ) async throws -> [RecordStoreCandidate] {
-    try Task.checkCancellation()
-
     guard limit > 0 else { return [] }
 
     let radiusInMeters = radius.converted(to: .meters).value

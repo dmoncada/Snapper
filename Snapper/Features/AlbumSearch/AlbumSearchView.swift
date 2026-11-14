@@ -2,10 +2,14 @@ import SwiftData
 import SwiftUI
 
 struct HomeView: View {
+  @AppStorage(.storageKeys.colorScheme)
+  private var preference: ColorSchemePreference = .system
+
   @AppStorage(.storageKeys.openFirstResult)
   private var openFirstResult = true
 
   @Environment(\.locale) private var locale
+  @Environment(\.colorScheme) private var systemScheme
 
   @Environment(AlbumSearchViewModel.self) private var vm
 
@@ -82,23 +86,24 @@ struct HomeView: View {
           }
         }
       }
+      .task(id: searchText) {
+        await vm.search(by: .term(searchText), locale: locale)
+      }
+      .sheet(isPresented: $isSettingsPresented) {
+        SettingsSheet()
+          .preferredColorScheme(preference.colorScheme ?? systemScheme)
+          .presentationDetents([
+            .fraction(3 / 4)
+          ])
+      }
+      .sheet(item: $selectedAlbum) { album in
+        AlbumCreation(album: album)
+          .presentationDetents([
+            .large
+          ])
+      }
       .withFullBackground()
       .dismissKeyboardOnTap()
-    }
-    .task(id: searchText) {
-      await vm.search(by: .term(searchText), locale: locale)
-    }
-    .sheet(isPresented: $isSettingsPresented) {
-      SettingsSheet()
-        .presentationDetents([
-          .medium
-        ])
-    }
-    .sheet(item: $selectedAlbum) { album in
-      AlbumCreation(album: album)
-        .presentationDetents([
-          .large
-        ])
     }
   }
 
