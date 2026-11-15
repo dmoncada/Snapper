@@ -1,11 +1,12 @@
+#if DEBUG
+import Logging
 import SwiftData
 import SwiftUI
 
 enum SearchContextKind {
-  // case live
   case slow
   case fail
-  case stub(Int = 10)
+  case stub(count: Int = 10)
 }
 
 struct SearchContextModifier: PreviewModifier {
@@ -14,31 +15,22 @@ struct SearchContextModifier: PreviewModifier {
   }
 
   let kind: SearchContextKind
-  let load: Bool
 
-  init(kind: SearchContextKind, load: Bool = true) {
-    self.kind = kind
-    self.load = load
-  }
-
-  private func makeClient(_ container: ModelContainer) -> (ApiClient, Int) {
+  private func makeClient(_ container: ModelContainer) -> ApiClient {
     switch kind {
-    // case .live: (.live, 10)
-    case .fail: (.fail, 10)
-    case .slow: (.slow, 10)
-    case .stub(let count): (.stub(container), count)
+    case .fail: .fail
+    case .slow: .slow
+    case .stub(let count): .stub(container, count: count)
     }
   }
 
   func body(content: Content, context: ModelContainer) -> some View {
-    let (client, count) = makeClient(context)
+    let client = makeClient(context)
 
     SearchPreview(
       content: content,
       context: context,
       apiClient: client,
-      count: count,
-      load: load,
     )
   }
 }
@@ -46,8 +38,6 @@ struct SearchContextModifier: PreviewModifier {
 private struct SearchPreview: View {
   let content: PreviewModifierContent
   let context: ModelContainer
-  let count: Int
-  let load: Bool
 
   @State private var searchViewModel: AlbumSearchViewModel
   @State private var detailViewModel: AlbumDetailViewModel
@@ -57,17 +47,22 @@ private struct SearchPreview: View {
     content: PreviewModifierContent,
     context: ModelContainer,
     apiClient: ApiClient,
-    count: Int = 10,
-    load: Bool = true,
   ) {
     self.content = content
     self.context = context
-    self.count = count
-    self.load = load
 
-    _searchViewModel = State(initialValue: .init(apiClient: apiClient))
-    _detailViewModel = State(initialValue: .init(apiClient: apiClient))
-    _locationCoordinator = State(initialValue: .init(locator: .stub(.newYork)))
+    let logger1 = PreviewLoggerFactory.makeLogger("search")
+    let logger2 = PreviewLoggerFactory.makeLogger("detail")
+
+    _searchViewModel = State(
+      initialValue: .init(logger: logger1, apiClient: apiClient, defaultDuration: .zero)
+    )
+    _detailViewModel = State(
+      initialValue: .init(logger: logger2, apiClient: apiClient)
+    )
+    _locationCoordinator = State(
+      initialValue: .init(locator: .stub(.newYork))
+    )
   }
 
   var body: some View {
@@ -77,23 +72,15 @@ private struct SearchPreview: View {
       .environment(detailViewModel)
       .environment(locationCoordinator)
       .environment(\.previewPlayer, .live)
-      .environment(\.dateTimeProvider, .stub)
-      .task {
-        guard load else { return }
-        await searchViewModel.search(
-          by: .term("stub"),
-          debounce: .zero,
-          limit: count,
-        )
-      }
   }
 }
 
 extension PreviewTrait where T == Preview.ViewTraits {
   @MainActor static var withSearchContext: Self =
-    .modifier(SearchContextModifier(kind: .stub(10), load: false))
+    .modifier(SearchContextModifier(kind: .stub(count: 10)))
 
-  @MainActor static func withSearchContext(kind: SearchContextKind, load: Bool = true) -> Self {
-    .modifier(SearchContextModifier(kind: kind, load: load))
+  @MainActor static func withSearchContext(kind: SearchContextKind) -> Self {
+    .modifier(SearchContextModifier(kind: kind))
   }
 }
+#endif

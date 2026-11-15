@@ -25,16 +25,16 @@ struct HomeView: View {
       VStack(alignment: .leading, spacing: 0) {
         VStack(spacing: Spacing.sm) {
           HStack(spacing: Spacing.sm) {
-            PhotoPickerButton("Pick", onData: onData) { _ in }
+            PhotoPickerButton(.searchControlsButtonPick, onData: onData) { _ in }
 
-            Button("Snap", systemImage: "camera") {
+            Button(.searchControlsButtonSnap, systemImage: "camera") {
               isCameraPresented = true
             }
             .buttonStyle(.theme)
           }
 
           TextField(text: $searchText) {
-            Text("Or search by artist, album")
+            Text(.searchControlsTextfieldPlaceholder)
               .foregroundStyle(.themePlaceholder)
           }
           .autocorrectionDisabled(true)
@@ -78,9 +78,9 @@ struct HomeView: View {
         }
       }
       .toolbar {
-        ToolbarTitle("Home")
+        ToolbarTitle(.searchTitle)
         ToolbarItem(placement: .topBarTrailing) {
-          Button("Settings", systemImage: "gearshape") {
+          Button(.settingsTitle, systemImage: "gearshape") {
             isSettingsPresented = true
             dismissKeyboard()
           }
@@ -128,19 +128,19 @@ private struct AlbumCandidateSection: View {
     VStack {
       switch vm.state {
       case .ready:
-        Text("Ready to search")
+        Text(.searchStateReady)
 
       case .searching:
-        ProgressView("Searching term...")
+        ProgressView(.searchStateSearching)
 
       case .detecting:
-        ProgressView("Detecting barcode...")
+        ProgressView(.searchStateDetecting)
 
       case .cancelled:
-        Text("Search cancelled")
+        Text(.searchStateCancelled)
 
       case .failure(let error):
-        ContentUnavailableView(error.localizedDescription, systemImage: "xmark.circle")
+        AlbumSearchErrorView(error: error)
 
       case .success(let albums) where albums.isEmpty:
         ContentUnavailableView.search
@@ -172,20 +172,38 @@ private struct AlbumCandidateSection: View {
   }
 }
 
+private struct AlbumSearchErrorView: View {
+  let error: AlbumSearchError
+
+  var body: some View {
+    ContentUnavailableView {
+      Label(.searchErrorLabel, systemImage: "xmark.circle")
+    } description: {
+      Text(error.resource)
+    }
+  }
+}
+
 #if DEBUG
+extension HomeView {
+  fileprivate init(searching searchText: String) {
+    _searchText = State(initialValue: searchText)
+  }
+}
+
 #Preview("Default", traits: .withSearchContext) {
   HomeView()
 }
 #Preview("Loading", traits: .withSearchContext(kind: .slow)) {
-  HomeView()
+  HomeView(searching: "slow")
 }
 #Preview("Failure", traits: .withSearchContext(kind: .fail)) {
-  HomeView()
+  HomeView(searching: "fail")
 }
-#Preview("No items", traits: .withSearchContext(kind: .stub(0))) {
-  HomeView()
+#Preview("No items", traits: .withSearchContext(kind: .stub(count: 0))) {
+  HomeView(searching: "stub(0)")
 }
-#Preview("With items", traits: .withSearchContext(kind: .stub(3))) {
-  HomeView()
+#Preview("With items", traits: .withSearchContext(kind: .stub(count: 3))) {
+  HomeView(searching: "stub(3)")
 }
 #endif

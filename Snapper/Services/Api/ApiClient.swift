@@ -84,16 +84,17 @@ struct FailApiClient: ApiClient {
 }
 
 struct StubApiClient: ApiClient {
-  init(_ container: ModelContainer? = nil) {
-    self.container = container ?? (try? SampleDataStore.makeContainer())
+  init(_ container: ModelContainer, count: Int = 10) {
+    self.container = container
+    self.count = max(0, count)
   }
 
-  private let container: ModelContainer?
+  private let container: ModelContainer
+  private let count: Int
 
   private var albums: [Album] {
-    guard let container else { return [] }
-    let sortBy = SortDescriptor<Album>(\.selectedAt, order: .reverse)
-    let fetch = FetchDescriptor<Album>(sortBy: [sortBy])
+    let sortBy = SortDescriptor(\Album.selectedAt, order: .reverse)
+    let fetch = FetchDescriptor(sortBy: [sortBy])
     let albums = try? container.mainContext.fetch(fetch)
     return albums ?? []
   }
@@ -105,24 +106,7 @@ struct StubApiClient: ApiClient {
     barcode: String?,
     limit: Int,
   ) async throws -> [AlbumDto] {
-    guard limit > 0 else { return [] }
-
-    let matches = albums.filter { album in
-      if let term, term.isEmpty == false {
-        let matchesTitle = album.title.localizedStandardContains(term)
-        let matchesArtist = album.artist.localizedStandardContains(term)
-        return matchesTitle || matchesArtist
-      }
-      if let barcode, barcode.isEmpty == false {
-        return album.barcode.contains(barcode)
-      }
-      return true
-    }
-
-    return
-      matches
-      .prefix(limit)
-      .map(AlbumDto.fromModel)
+    albums.prefix(min(limit, count)).map(AlbumDto.fromModel)
   }
 
   func resolveTracks(
@@ -152,6 +136,7 @@ extension ApiClient where Self == FailApiClient {
 }
 
 extension ApiClient where Self == StubApiClient {
-  static var stub: Self { Self() }
-  static func stub(_ container: ModelContainer) -> Self { Self(container) }
+  static func stub(_ container: ModelContainer, count: Int = 10) -> Self {
+    Self(container, count: count)
+  }
 }

@@ -1,3 +1,4 @@
+#if DEBUG
 import SwiftData
 import SwiftUI
 
@@ -27,3 +28,4 @@ extension PreviewTrait where T == Preview.ViewTraits {
   @MainActor static var withoutData: Self = .modifier(NoData())
   @MainActor static var withSampleData: Self = .modifier(SampleData())
 }
+#endif

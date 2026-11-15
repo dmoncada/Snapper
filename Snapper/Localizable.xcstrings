@@ -1,0 +1,327 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "%lld albums" : {
+
+    },
+    "•" : {
+
+    },
+    "About" : {
+
+    },
+    "Albums need a captured location to appear on the map." : {
+
+    },
+    "Albums with captured locations will appear here." : {
+
+    },
+    "Camera error: %@" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Clear" : {
+
+    },
+    "Controls the app's theme preference." : {
+
+    },
+    "Could not add album" : {
+
+    },
+    "Could not look up this barcode: %@" : {
+
+    },
+    "Country" : {
+
+    },
+    "Criteria" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Delete Album?" : {
+
+    },
+    "Delete Albums?" : {
+
+    },
+    "Delete all %lld selected album(s) from your history?" : {
+
+    },
+    "Delete from History" : {
+
+    },
+    "Do you want to delete \"%@\" from your history?" : {
+
+    },
+    "Error" : {
+
+    },
+    "Favorite" : {
+
+    },
+    "Grant permission to access the device location in Settings, to allow capturing the approximate location when adding an album." : {
+
+    },
+    "History" : {
+
+    },
+    "Home" : {
+
+    },
+    "Label" : {
+
+    },
+    "Latest" : {
+
+    },
+    "Loading cancelled." : {
+
+    },
+    "Locating record stores nearby..." : {
+
+    },
+    "Location" : {
+
+    },
+    "Looking up album..." : {
+
+    },
+    "Made for the ❤️ of 🎵 in 🇲🇽" : {
+
+    },
+    "Music will show up here when you start identifying songs with MusicSnap" : {
+
+    },
+    "Nearby:" : {
+
+    },
+    "No album locations" : {
+
+    },
+    "No albums found for this barcode." : {
+
+    },
+    "No albums yet" : {
+
+    },
+    "Notice" : {
+
+    },
+    "Ok" : {
+
+    },
+    "OK" : {
+
+    },
+    "Open first barcode result" : {
+
+    },
+    "Order" : {
+
+    },
+    "Point at a barcode or snap a photo" : {
+
+    },
+    "Re-center" : {
+
+    },
+    "Ready to load." : {
+
+    },
+    "Recognized" : {
+
+    },
+    "Released" : {
+
+    },
+    "Retry" : {
+
+    },
+    "Scan Again" : {
+
+    },
+    "Search for artists or albums" : {
+
+    },
+    "search.controls.button.pick" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pick"
+          }
+        }
+      }
+    },
+    "search.controls.button.snap" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snap"
+          }
+        }
+      }
+    },
+    "search.controls.textfield.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Or search by artist, album"
+          }
+        }
+      }
+    },
+    "search.error.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        }
+      }
+    },
+    "search.state.cancelled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search cancelled"
+          }
+        }
+      }
+    },
+    "search.state.detecting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detecting barcode…"
+          }
+        }
+      }
+    },
+    "search.state.failed.detection" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to detect barcode"
+          }
+        }
+      }
+    },
+    "search.state.failed.generic" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error occurred"
+          }
+        }
+      }
+    },
+    "search.state.ready" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ready to snap!"
+          }
+        }
+      }
+    },
+    "search.state.searching" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Searching term…"
+          }
+        }
+      }
+    },
+    "search.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "Select" : {
+
+    },
+    "Settings" : {
+
+    },
+    "settings.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "Show album details directly after scanning a barcode. You can review other results before adding." : {
+
+    },
+    "Show All" : {
+
+    },
+    "Spatial" : {
+
+    },
+    "The album could not be saved: %@" : {
+
+    },
+    "Theme" : {
+
+    },
+    "Today" : {
+
+    },
+    "Tracks" : {
+
+    },
+    "Tracks provided courtesy of iTunes." : {
+
+    },
+    "Unable to load tracks: %@" : {
+
+    },
+    "Unable to load tracks." : {
+
+    },
+    "Undo Favorite" : {
+
+    }
+  },
+  "version" : "1.3"
+}

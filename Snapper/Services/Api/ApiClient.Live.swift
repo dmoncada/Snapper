@@ -6,7 +6,7 @@ nonisolated struct AlamofireApiClient: ApiClient {
   private let session: Session
   private let decoder: JSONDecoder
 
-  init(baseUrl: URL = .baseUrl) {
+  init(baseUrl: URL = .apiBaseUrl) {
     self.baseUrl = baseUrl
 
     self.decoder = Self.makeDecoder()
@@ -130,8 +130,8 @@ nonisolated struct AlamofireApiClient: ApiClient {
     let configuration = URLSessionConfiguration.default
 
     configuration.urlCache = URLCache(
-      memoryCapacity: 20 * 1_024 * 1_024,
-      diskCapacity: 100 * 1_024 * 1_024,
+      memoryCapacity: 20 * StorageUnit.mb,
+      diskCapacity: 100 * StorageUnit.mb,
     )
 
     configuration.requestCachePolicy = .useProtocolCachePolicy

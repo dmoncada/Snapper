@@ -15,7 +15,7 @@ final class AlbumSearchViewModel {
     case detecting
     case cancelled
     case success([Album])
-    case failure(SearchError)
+    case failure(AlbumSearchError)
   }
 
   private(set) var state: State = .ready
@@ -23,20 +23,23 @@ final class AlbumSearchViewModel {
   private let logger: Logger
   private let apiClient: any ApiClient
   private let recognizer: any ImageRecognizing
+  private let defaultDuration: Duration
 
   init(
     logger: Logger = .current,
     apiClient: any ApiClient = .null,
     recognizer: any ImageRecognizing = .null,
+    defaultDuration: Duration = .seconds(1),
   ) {
     self.logger = logger
     self.apiClient = apiClient
     self.recognizer = recognizer
+    self.defaultDuration = defaultDuration
   }
 
   func search(
     by kind: SearchKind,
-    debounce duration: Duration = .seconds(1),
+    debounce duration: Duration? = nil,
     limit: Int = 10,
     locale: Locale = .current,
   ) async {
@@ -56,7 +59,7 @@ final class AlbumSearchViewModel {
     state = .searching
 
     do {
-      try await Task.sleep(for: duration)
+      try await Task.sleep(for: duration ?? defaultDuration)
       try Task.checkCancellation()
 
       var candidates = try await apiClient.searchAlbums(term: term, barcode: barcode, limit: limit)
@@ -72,8 +75,9 @@ final class AlbumSearchViewModel {
 
       state = .success(results)
     } catch is CancellationError {
-      // state = .cancelled
+      // No-op.
     } catch {
+      logger.error("Search error: \(error.localizedDescription)")
       state = .failure(.generic)
     }
   }
@@ -96,8 +100,9 @@ final class AlbumSearchViewModel {
 
       return await search(by: .barcode(barcode), debounce: .zero, limit: limit, locale: locale)
     } catch is CancellationError {
-      // state = .cancelled
+      // No-op.
     } catch {
+      logger.error("Detection error: \(error.localizedDescription)")
       state = .failure(.generic)
     }
   }
@@ -106,20 +111,20 @@ final class AlbumSearchViewModel {
 extension Array where Element == AlbumDto {
   func preferredCountryFirst(_ countryCode: String) -> [AlbumDto] {
     let code = countryCode.uppercased()
-    let local = self.filter { $0.countryInfo?.alpha2.uppercased() == code }
-    let other = self.filter { $0.countryInfo?.alpha2.uppercased() != code }
+    let local = filter { $0.countryInfo?.alpha2.uppercased() == code }
+    let other = filter { $0.countryInfo?.alpha2.uppercased() != code }
     return local + other
   }
 }
 
-enum SearchError: Error {
+enum AlbumSearchError: Error {
   case generic
   case detection
 
-  var message: LocalizedStringResource {
+  var resource: LocalizedStringResource {
     switch self {
-    case .generic: "search.error.generic"
-    case .detection: "search.error.detection"
+    case .generic: .searchStateFailedGeneric
+    case .detection: .searchStateFailedDetection
     }
   }
 }

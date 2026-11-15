@@ -2,12 +2,12 @@ import PhotosUI
 import SwiftUI
 
 struct PhotoPickerButton: View {
-  let label: String
+  let label: LocalizedStringResource
   let onData: (Data) -> Void
   let onError: (String) -> Void
 
   init(
-    _ label: String,
+    _ label: LocalizedStringResource,
     onData: @escaping (Data) -> Void,
     onError: @escaping (String) -> Void,
   ) {

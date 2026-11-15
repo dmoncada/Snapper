@@ -1,7 +1,7 @@
 import Foundation
 
 extension URL {
-  nonisolated static var baseUrl: Self {
+  nonisolated static var apiBaseUrl: Self {
     guard
       let value = Bundle.main.object(forInfoDictionaryKey: "SNAPPER_API_BASE_URL") as? String,
       let url = URL(string: value)
