@@ -6,10 +6,12 @@
       "scale" : "1x"
     },
     {
+      "filename" : "MusicSnap@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "MusicSnap@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

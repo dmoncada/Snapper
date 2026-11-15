@@ -1,16 +1,6 @@
 import SwiftUI
 
 enum CustomFont: String, CaseIterable, Identifiable {
-  case basteleurBold = "Basteleur-Bold"
-  case basteleurMoonlight = "Basteleur-Moonlight"
-
-  case libreCaslonTextRegular = "LibreCaslonText-Regular"
-  case libreCaslonTextItalic = "LibreCaslonText-Italic"
-  case libreCaslonTextBold = "LibreCaslonText-Bold"
-
-  case interRegular = "Inter-Regular"
-  case interItalic = "Inter-Italic"
-
   case zillaSlabRegular = "ZillaSlab-Regular"
   case zillaSlabItalic = "ZillaSlab-Italic"
   case zillaSlabBold = "ZillaSlab-Bold"
@@ -93,32 +83,8 @@ extension Font {
 }
 
 extension Font {
-  static func basteleurBold(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.basteleurBold, textStyle)
-  }
-
-  static func basteleurMoonlight(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.basteleurMoonlight, textStyle)
-  }
-
-  static func libreCaslonTextRegular(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.libreCaslonTextRegular, textStyle)
-  }
-
-  static func libreCaslonTextItalic(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.libreCaslonTextItalic, textStyle)
-  }
-
-  static func libreCaslonTextBold(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.libreCaslonTextBold, textStyle)
-  }
-
   static func gillSans(_ textStyle: Font.TextStyle) -> Font {
     .custom("Gill Sans", textStyle)
-  }
-
-  static func inter(_ textStyle: Font.TextStyle) -> Font {
-    .custom(.interRegular, textStyle)
   }
 
   static func zillaSlab(_ textStyle: Font.TextStyle) -> Font {
@@ -195,13 +161,6 @@ private struct FontSpecimenView: View {
   List(Font.Weight.allCases, id: \.self) { weight in
     Text("\(font) \(weight.name)")
       .font(.custom(font, .title).weight(weight))
-  }
-}
-
-#Preview("Inter Typeface") {
-  List(Font.Weight.allCases, id: \.self) { weight in
-    Text("Inter \(weight.name)")
-      .font(.inter(.title).weight(weight))
   }
 }
 #endif

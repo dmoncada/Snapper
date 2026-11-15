@@ -50,10 +50,8 @@ struct HistoryView: View {
             if vm.searchText.isEmpty {
               ContentUnavailableView {
                 Text("No albums yet")
-                  .font(.libreCaslonTextBold(.headline))
               } description: {
                 Text("Music will show up here when you start identifying songs with MusicSnap")
-                  .font(.libreCaslonTextRegular(.subheadline))
               }
             } else {
               ContentUnavailableView.search(text: vm.searchText)

@@ -34,9 +34,15 @@ struct SnapperWidgetEntryView: View {
     .clipped()
     .containerBackground(.fill.tertiary, for: .widget)
     .overlay(alignment: .topTrailing) {
-      Text("MusicSnap")
-        .font(.basteleurBold(.caption))
-        .foregroundStyle(.white)
+      Image(.musicSnapMini)
+        .resizable()
+        .scaledToFit()
+        .frame(height: 16)
+        .foregroundStyle(
+          entry.albums.isEmpty
+            ? Color.primary
+            : Color.white
+        )
         .padding(.trailing, 12)
         .padding(.top, 8)
     }

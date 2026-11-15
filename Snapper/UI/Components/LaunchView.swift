@@ -6,6 +6,7 @@ struct LaunchView: View {
       .resizable()
       .scaledToFit()
       .padding(Padding.xxxl)
+      .foregroundStyle(.themePrimary)
       .withFullBackground()
   }
 }

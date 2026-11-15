@@ -8,4 +8,8 @@ struct PreviewAlbumRecord: Decodable {
   let thumbnailUrl: URL?
   let coverImageUrl: URL?
 }
+
+struct PreviewAlbumRecordList: Decodable {
+  let albums: [PreviewAlbumRecord]
+}
 #endif

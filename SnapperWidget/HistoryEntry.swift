@@ -28,7 +28,7 @@ extension HistoryEntry {
       let data = try Data(contentsOf: sampleUrl)
       let records = Array(
         try JSONDecoder()
-          .decode([PreviewAlbumRecord].self, from: data)
+          .decode(PreviewAlbumRecordList.self, from: data).albums
           .sorted { $0.selectedAt > $1.selectedAt }
           .prefix(albumCount)
       )

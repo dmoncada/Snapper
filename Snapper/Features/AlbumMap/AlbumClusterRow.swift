@@ -37,7 +37,7 @@ struct AlbumClusterRow: View {
               Text(album.selectedAt, format: .dateTime.hour().minute())
             }
           }
-          .font(.inter(.caption))
+          .font(.gillSans(.caption))
           .foregroundStyle(.themeSecondary)
 
           if album.isFavorite {
