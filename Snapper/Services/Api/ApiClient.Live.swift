@@ -117,6 +117,18 @@ nonisolated struct AlamofireApiClient: ApiClient {
       .value
   }
 
+  func fetchAlbumSummary(
+    discogsId: Int
+  ) async throws -> AlbumSummaryResponseDto {
+    try await session.request(
+      baseUrl.appending(path: "albums/\(discogsId)/wiki"),
+      headers: [.accept("application/json")],
+    )
+    .validate(statusCode: 200 ..< 300)
+    .serializingDecodable(AlbumSummaryResponseDto.self, decoder: decoder)
+    .value
+  }
+
   private static func makeDecoder() -> JSONDecoder {
     let decoder = JSONDecoder()
     decoder.keyDecodingStrategy = .convertFromSnakeCase

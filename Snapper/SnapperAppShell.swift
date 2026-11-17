@@ -33,19 +33,18 @@ struct SnapperAppShell: View {
     .withAlertDestination($router.alertItem)
     .preferredColorScheme(preference.colorScheme)
     .environment(router)
-    .task {
-      locationCoordinator.resumePending(in: context)
-    }
-    .onChange(of: phase) { _, next in
-      if next == .active {
+    .onChange(of: phase, initial: true) { _, next in
+      switch next {
+      case .active:
         locationCoordinator.resumePending(in: context)
+
+      case .inactive:
+        break
+      case .background:
+        break
+      @unknown default:
+        break
       }
     }
   }
 }
-
-#if DEBUG
-#Preview(traits: .withSampleData) {
-  SnapperAppShell()
-}
-#endif

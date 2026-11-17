@@ -20,7 +20,7 @@ struct ThemeSection<Content: View>: View {
           VStack(spacing: 0) {
             ForEach(rows.indices, id: \.self) { index in
               rows[index]
-                .padding(.vertical, Spacing.sm)
+                .padding(.vertical, Padding.lg)
 
               if index < rows.count - 1 {
                 Divider()
@@ -37,7 +37,7 @@ struct ThemeSection<Content: View>: View {
         }
       }
     }
-    .labeledContentStyle(.withThemeFont)
+    // .labeledContentStyle(.withThemeFont)
     .foregroundStyle(
       .themePrimary,
       .themeSecondary,

@@ -14,6 +14,10 @@ protocol ApiClient {
     discogsId: Int,
     barcode: String?,
   ) async throws -> TracklistResponseDto
+
+  func fetchAlbumSummary(
+    discogsId: Int
+  ) async throws -> AlbumSummaryResponseDto
 }
 
 struct NullApiClient: ApiClient {
@@ -31,6 +35,12 @@ struct NullApiClient: ApiClient {
     discogsId: Int,
     barcode: String?,
   ) async throws -> TracklistResponseDto {
+    .empty
+  }
+
+  func fetchAlbumSummary(
+    discogsId: Int
+  ) async throws -> AlbumSummaryResponseDto {
     .empty
   }
 }
@@ -57,14 +67,23 @@ struct SlowApiClient: ApiClient {
     return .empty
   }
 
+  func fetchAlbumSummary(
+    discogsId: Int
+  ) async throws -> AlbumSummaryResponseDto {
+    await sleepIndefinitely()
+    return .empty
+  }
+
   private func sleepIndefinitely() async {
     try? await Task.sleep(for: .seconds(9999))
   }
 }
 
 struct FailApiClient: ApiClient {
+  var error: Error { URLError(.notConnectedToInternet) }
+
   func health() async throws {
-    throw URLError(.notConnectedToInternet)
+    throw error
   }
 
   func searchAlbums(
@@ -72,14 +91,20 @@ struct FailApiClient: ApiClient {
     barcode: String?,
     limit: Int,
   ) async throws -> [AlbumDto] {
-    throw URLError(.notConnectedToInternet)
+    throw error
   }
 
   func resolveTracks(
     discogsId: Int,
     barcode: String?,
   ) async throws -> TracklistResponseDto {
-    throw URLError(.notConnectedToInternet)
+    throw error
+  }
+
+  func fetchAlbumSummary(
+    discogsId: Int
+  ) async throws -> AlbumSummaryResponseDto {
+    throw error
   }
 }
 
@@ -120,6 +145,12 @@ struct StubApiClient: ApiClient {
       albumUrl: nil,
       tracks: tracks,
     )
+  }
+
+  func fetchAlbumSummary(
+    discogsId: Int
+  ) async throws -> AlbumSummaryResponseDto {
+    .empty
   }
 }
 

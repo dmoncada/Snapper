@@ -5,6 +5,8 @@ import WidgetKit
 struct AlbumCreation: View {
   @Environment(\.dismiss) private var dismiss
   @Environment(\.modelContext) private var context
+
+  @Environment(\.apiClient) private var apiClient
   @Environment(AlbumLocationCaptureCoordinator.self) private var locationCapture
 
   let album: Album
@@ -47,6 +49,23 @@ struct AlbumCreation: View {
       WidgetCenter.shared.reloadTimelines(ofKind: "SnapperWidget")
 
       locationCapture.resumePending(in: context)
+
+      Task {
+        do {
+          let response = try await apiClient.fetchAlbumSummary(discogsId: album.discogsId)
+
+          if let info = response.artist {
+            album.artistInfo.set(info)
+          }
+          if let info = response.album {
+            album.albumInfo.set(info)
+          }
+
+          try context.save()
+        } catch {
+          // Wikipedia is optional; the saved album remains available.
+        }
+      }
 
       onSave?()
       dismiss()

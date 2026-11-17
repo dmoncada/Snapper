@@ -38,6 +38,14 @@ final class Album: Identifiable {
 
   var isFavorite: Bool = false
 
+  var wikipediaArtistUrl: URL?
+  var wikipediaArtistTitle: String?
+  var wikipediaArtistExtract: String?
+
+  var wikipediaAlbumUrl: URL?
+  var wikipediaAlbumTitle: String?
+  var wikipediaAlbumExtract: String?
+
   @Relationship(
     deleteRule: .cascade,
     inverse: \Track.album,

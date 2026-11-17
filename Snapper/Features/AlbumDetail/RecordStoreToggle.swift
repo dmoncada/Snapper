@@ -28,7 +28,7 @@ struct RecordStoreToggle: View {
       Label {
         HStack(spacing: Spacing.xs) {
           Text(candidate.name)
-          Text("•")
+          Text("∙")
           Text(
             distance.formatted(
               .measurement(width: .narrow, usage: .road)
@@ -67,9 +67,9 @@ private struct RecordStoreTogglePreview: View {
 
   var body: some View {
     Group {
-      if let album = albums.last,
-        let location = album.location,
-        stores.isEmpty == false
+      if stores.isEmpty == false,
+        let album = albums.last,
+        let location = album.location
       {
         WithColorSchemes(axis: .horizontal) {
           VStack {
@@ -115,5 +115,4 @@ private struct RecordStoreTogglePreview: View {
   RecordStoreTogglePreview()
     .environment(\.recordStoreLocator, .live)
 }
-
 #endif

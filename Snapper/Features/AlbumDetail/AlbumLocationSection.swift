@@ -1,0 +1,130 @@
+import MapKit
+import SwiftUI
+
+struct AlbumLocationSection: View {
+  let location: CLLocation
+
+  @State private var position: MapCameraPosition = .automatic
+  @State private var isExpanded = true
+
+  var body: some View {
+    VStack(alignment: .leading, spacing: Spacing.sm) {
+      DisclosureGroup(isExpanded: $isExpanded) {
+        Map(position: $position, interactionModes: [.pan, .zoom]) {
+          Marker("Album", coordinate: location.coordinate)
+            .tint(.accent)
+        }
+        .frame(height: 200)
+        .overlay(alignment: .bottomTrailing) {
+          VStack {
+            Button("Re-center", systemImage: "location.fill") {
+              withAnimation(.easeInOut(duration: 0.5)) {
+                recenter()
+              }
+            }
+            .padding(Padding.md)
+            .labelStyle(.iconOnly)
+            .foregroundStyle(.themePrimaryActive)
+            .glassEffect(.clear.tint(.themeSurface1))
+          }
+          .padding(Padding.lg)
+        }
+      } label: {
+        Text("Location")
+          .font(.zillaSlab(.headline).bold())
+      }
+      .disclosureGroupStyle(.theme(.surface1))
+
+      NearbyRecordStoresView(location: location)
+    }
+    .onChange(of: isExpanded, initial: true) { _, newValue in
+      if newValue {
+        recenter()
+      }
+    }
+  }
+
+  private func recenter() {
+    position = location.position
+  }
+}
+
+private struct NearbyRecordStoresView: View {
+  private enum State {
+    case ready
+    case loading
+    case success([RecordStoreCandidate])
+    case failure(Error)
+  }
+
+  @Environment(\.recordStoreLocator) private var locator
+
+  let location: CLLocation
+
+  @State private var state: State = .ready
+  @State private var selection = StoreSelection()
+
+  var body: some View {
+    Group {
+      switch state {
+      case .ready, .loading:
+        ProgressView("Locating record stores nearby...")
+          .progressViewStyle(.inline(.trailing))
+          .font(.gillSans(.caption))
+          .controlSize(.small)
+
+      case .failure(_):
+        Label("Unable to load record stores", systemImage: "xmark.circle")
+          .labelStyle(.trailingIcon)
+          .controlSize(.small)
+
+      case .success(let stores) where stores.isEmpty:
+        Text("Unable to load record stores")
+
+      case .success(let stores):
+        HStack(spacing: Spacing.sm) {
+          Text("Nearby:")
+            .font(.gillSans(.caption))
+
+          ScrollView(.horizontal) {
+            HStack(spacing: Spacing.xs) {
+              ForEach(stores) { store in
+                RecordStoreToggle(
+                  location: location,
+                  candidate: store,
+                  selection: selection,
+                )
+              }
+            }
+            .padding(1)
+          }
+          .scrollIndicators(.hidden)
+        }
+      }
+    }
+    .task {
+      state = .loading
+      do {
+        let stores = try await locator.locate(
+          near: location,
+          within: .kilometers(5),
+          limit: 3,
+        )
+        state = .success(stores)
+      } catch {
+        state = .failure(error)
+      }
+    }
+  }
+}
+
+#if DEBUG
+#Preview {
+  let logger = PreviewLoggerFactory.makeLogger("playground")
+  let location: LocationStub = .newYork
+
+  AlbumLocationSection(location: location.location)
+    .environment(\.recordStoreLocator, .live(logger))
+    .padding()
+}
+#endif

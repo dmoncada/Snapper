@@ -1,8 +1,10 @@
 import SwiftUI
 
 struct ThemeLabeledContentStyle: LabeledContentStyle {
+  let alignment: VerticalAlignment
+
   func makeBody(configuration: Configuration) -> some View {
-    HStack {
+    HStack(alignment: alignment) {
       configuration.label
         .font(Typography.labelBody)
         .foregroundStyle(.primary)
@@ -17,5 +19,11 @@ struct ThemeLabeledContentStyle: LabeledContentStyle {
 }
 
 extension LabeledContentStyle where Self == ThemeLabeledContentStyle {
-  static var withThemeFont: Self { Self() }
+  static var withThemeFont: Self {
+    Self(alignment: .center)
+  }
+
+  static func withThemeFont(_ alignment: VerticalAlignment = .center) -> Self {
+    Self(alignment: alignment)
+  }
 }

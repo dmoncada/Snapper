@@ -1,6 +1,3 @@
-from statistics import mode
-
-from pydantic import ValidationError
 from redis_fastapi import CacheBackend
 
 from app.core.cache import DAY, HOUR, catalog_cache_key

@@ -12,6 +12,10 @@ extension Measurement where UnitType == UnitLength {
     Self(value: value, unit: .kilometers)
   }
 
+  static func feet(_ value: Double) -> Self {
+    Self(value: value, unit: .feet)
+  }
+
   static func miles(_ value: Double) -> Self {
     Self(value: value, unit: .miles)
   }
@@ -192,7 +196,7 @@ struct MapKitRecordStoreLocator: RecordStoreLocating {
 
       let id =
         item.identifier?.rawValue
-        ?? fallbackId(name: item.name, location: item.location)
+        ?? makeId(name: item.name, location: item.location)
 
       return RecordStoreCandidate(
         id: id,
@@ -206,7 +210,7 @@ struct MapKitRecordStoreLocator: RecordStoreLocating {
     }
   }
 
-  private static func fallbackId(
+  private static func makeId(
     name: String?,
     location: CLLocation,
   ) -> String {
@@ -225,4 +229,24 @@ struct MapKitRecordStoreLocator: RecordStoreLocating {
 
 extension RecordStoreLocating where Self == MapKitRecordStoreLocator {
   static var live: Self { Self() }
+
+  static func live(_ logger: Logger = .current) -> Self {
+    Self(logger: logger)
+  }
 }
+
+#if DEBUG
+import Playgrounds
+
+#Playground("Search albums API") {
+  let logger = PreviewLoggerFactory.makeLogger("playground")
+  let locator: RecordStoreLocating = .live(logger)
+  let location: LocationStub = .newYork
+
+  _ = try await locator.locate(
+    near: location.location,
+    within: .kilometers(5),
+    limit: 10,
+  )
+}
+#endif

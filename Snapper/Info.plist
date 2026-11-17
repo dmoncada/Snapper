@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ANTHROPIC_API_KEY</key>
-	<string>$(ANTHROPIC_API_KEY)</string>
 	<key>ATSApplicationFontsPath</key>
 	<string>.</string>
 	<key>CFBundleDisplayName</key>
@@ -32,13 +30,6 @@
 	<string>$(SNAPPER_API_BASE_URL)</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Basteleur-Bold.ttf</string>
-		<string>Basteleur-Moonlight.ttf</string>
-		<string>LibreCaslonText-Bold.ttf</string>
-		<string>LibreCaslonText-Italic.ttf</string>
-		<string>LibreCaslonText-Regular.ttf</string>
-		<string>Inter-Regular-Variable.ttf</string>
-		<string>Inter-Italic-Variable.ttf</string>
 		<string>ZillaSlab-Regular.ttf</string>
 		<string>ZillaSlab-Italic.ttf</string>
 		<string>ZillaSlab-Bold.ttf</string>

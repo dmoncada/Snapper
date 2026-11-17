@@ -1,4 +1,3 @@
-import MapKit
 import SwiftData
 import SwiftUI
 
@@ -24,6 +23,19 @@ struct AlbumDetailView: View {
 
         VStack(alignment: .leading, spacing: Spacing.lg) {
           AlbumHeaderSection(album: album, showMetadata: showMetadata)
+
+          if showMetadata, album.artistInfo.hasInfo {
+            AlbumWikipediaSection(album.artistInfo.get())
+          }
+
+          if showMetadata, album.albumInfo.hasInfo {
+            AlbumWikipediaSection(album.albumInfo.get())
+          }
+
+          if showMetadata, let location = album.location {
+            AlbumLocationSection(location: location)
+          }
+
           AlbumDetailSection(album: album, showMetadata: showMetadata)
           AlbumTrackSection(vm: vm, musicUrl: album.musicUrl)
         }
@@ -40,6 +52,7 @@ struct AlbumDetailView: View {
       }
     }
     .ignoresSafeArea(.all, edges: .top)
+    .scrollIndicators(.hidden)
     .withFullBackground()
   }
 }
@@ -74,14 +87,15 @@ private struct AlbumHeaderSection: View {
 
     VStack(spacing: Spacing.md) {
       HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
-        LabeledContent {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
           Text(album.title)
             .font(Typography.albumDetail.title)
-        } label: {
+            .foregroundStyle(.themePrimary)
+
           Text(album.artist)
             .font(Typography.albumDetail.artist)
+            .foregroundStyle(.accent)
         }
-        .labeledContentStyle(.albumHeader)
 
         Spacer()
 
@@ -135,17 +149,24 @@ private struct AlbumDetailSection: View {
         }
 
         if showMetadata {
-          LabeledContent("Recognized", value: album.selectedAt.abbreviated)
-          LocationSection(location: album.location, locationStatus: album.locationStatus)
+          LabeledContent {
+            VStack(alignment: .trailing, spacing: Spacing.xs) {
+              Text(album.selectedAt, format: .relative(presentation: .named))
+              Text(album.selectedAt, format: Date.FormatStyle.abbreviated)
+            }
+          } label: {
+            Text("Recognized")
+          }
         }
       }
+      .labeledContentStyle(.withThemeFont(.firstTextBaseline))
     }
   }
 }
 
-extension Date {
-  fileprivate var abbreviated: String {
-    formatted(date: .abbreviated, time: .shortened)
+extension Date.FormatStyle {
+  fileprivate static var abbreviated: Self {
+    Self(date: .abbreviated, time: .shortened)
   }
 }
 
@@ -164,7 +185,7 @@ private struct LocationSection: View {
     case .captured:
       if let location = location {
         DisclosureGroup("Location") {
-          MapView(location: location)
+          AlbumLocationSection(location: location)
         }
         .disclosureGroupStyle(.plain)
       } else {
@@ -173,108 +194,6 @@ private struct LocationSection: View {
 
     case .denied, .unavailable:
       LabeledContent("Location", value: "No Location")
-    }
-  }
-}
-
-private struct MapView: View {
-  @Environment(\.recordStoreLocator) private var locator
-
-  let location: CLLocation
-  let accuracyRadius: Double?
-
-  init(location: CLLocation, accuracyRadius: Double? = nil) {
-    self.location = location
-    self.accuracyRadius = accuracyRadius
-  }
-
-  @State private var position: MapCameraPosition = .automatic
-  @State private var candidateStores: [RecordStoreCandidate] = []
-  @State private var storeSelection = StoreSelection()
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: Spacing.sm) {
-      Map(position: $position) {
-        if let accuracyRadius, accuracyRadius > 0 {
-          MapCircle(center: location.coordinate, radius: accuracyRadius)
-            .foregroundStyle(.themeBlue.opacity(0.25))
-            .stroke(.themeBlue.opacity(0.5), lineWidth: 1)
-        }
-
-        Marker("Location", coordinate: location.coordinate)
-      }
-      .frame(height: 200)
-      .clipShape(.rect(cornerRadius: Radius.md))
-      .overlay(alignment: .bottomTrailing) {
-        Button("Re-center", systemImage: "location.fill") {
-          withAnimation(.easeInOut(duration: 0.5)) {
-            recenter()
-          }
-        }
-        .padding(Padding.md)
-        .labelStyle(.iconOnly)
-        .glassEffect(.regular.tint(.themeBlue.opacity(0.25)))
-        .offset(
-          x: -Padding.lg,
-          y: -Padding.lg,
-        )
-      }
-
-      if candidateStores.isEmpty {
-        HStack(spacing: Spacing.sm) {
-          Text("Locating record stores nearby...")
-            .font(.gillSans(.caption))
-          ProgressView()
-            .controlSize(.small)
-        }
-      } else {
-        HStack(spacing: Spacing.sm) {
-          Text("Nearby:")
-            .font(.gillSans(.caption))
-
-          ScrollView(.horizontal) {
-            HStack(spacing: Spacing.xs) {
-              ForEach(candidateStores) { store in
-                RecordStoreToggle(
-                  location: location,
-                  candidate: store,
-                  selection: storeSelection,
-                )
-              }
-            }
-            .padding(1)
-          }
-          .scrollIndicators(.hidden)
-        }
-      }
-    }
-    .onAppear {
-      recenter()
-    }
-    .task {
-      if let stores = try? await locator.locate(
-        near: location,
-        within: .kilometers(5),
-        limit: 3,
-      ) {
-        candidateStores = stores
-      }
-    }
-  }
-
-  private func recenter() {
-    if let accuracyRadius, accuracyRadius > 0 {
-      let visibleDistance = max(15_000, accuracyRadius * 3)
-
-      position = .region(
-        MKCoordinateRegion(
-          center: location.coordinate,
-          latitudinalMeters: visibleDistance,
-          longitudinalMeters: visibleDistance,
-        )
-      )
-    } else {
-      position = location.position
     }
   }
 }
@@ -314,6 +233,7 @@ private struct AlbumTrackSection: View {
             AlbumTrackSectionFooter(musicUrl: musicUrl)
           }
         }
+        .labeledContentStyle(.withThemeFont)
       }
     }
   }
@@ -335,6 +255,7 @@ private struct AlbumTrackSectionFooter: View {
             .scaledToFit()
             .frame(height: 32)
         }
+        .stopPlayerOnUrl()
       }
     }
   }

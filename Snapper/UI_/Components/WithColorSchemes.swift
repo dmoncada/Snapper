@@ -14,19 +14,25 @@ struct WithColorSchemes<Content: View>: View {
   }
 
   var body: some View {
-    VStack {
-      if axis == .vertical {
-        VStack(spacing: 0) {
-          colorSchemePreview(.light)
-          colorSchemePreview(.dark)
-        }
-      } else {
-        HStack(spacing: 0) {
-          colorSchemePreview(.light)
-          colorSchemePreview(.dark)
+    ScrollView(axis) {
+      VStack {
+        if axis == .vertical {
+          VStack(spacing: 0) {
+            colorSchemePreview(.light)
+            colorSchemePreview(.dark)
+          }
+        } else {
+          HStack(spacing: 0) {
+            colorSchemePreview(.light)
+            colorSchemePreview(.dark)
+          }
         }
       }
     }
+    .scrollBounceBehavior(
+      .basedOnSize,
+      axes: axis,
+    )
   }
 
   private func colorSchemePreview(_ scheme: ColorScheme) -> some View {

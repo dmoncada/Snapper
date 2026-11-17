@@ -11,7 +11,7 @@ enum PreviewLoggerFactory {
 
 struct PreviewConsoleHandler: LogHandler {
   let label: String
-  var logLevel: Logger.Level = .info
+  var logLevel: Logger.Level = .trace
   var metadata: Logger.Metadata = [:]
 
   subscript(metadataKey key: String) -> Logger.Metadata.Value? {
