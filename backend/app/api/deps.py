@@ -9,6 +9,7 @@ from app.providers.discogs.client_cached import CachedDiscogsClient
 from app.providers.itunes.catalog import ItunesCatalog
 from app.providers.itunes.client import ItunesClient
 from app.providers.itunes.client_cached import CachedItunesClient
+from app.providers.wikipedia.client import WikipediaClient
 
 
 def get_discogs_client(request: Request, cache: CacheBackendDep) -> DiscogsCatalog:
@@ -21,5 +22,10 @@ def get_itunes_client(request: Request, cache: CacheBackendDep) -> ItunesCatalog
     return CachedItunesClient(client, cache)
 
 
+def get_wikipedia_client(request: Request) -> WikipediaClient:
+    return request.app.state.wikipedia
+
+
 DiscogsClientDep = Annotated[DiscogsCatalog, Depends(get_discogs_client)]
 ItunesClientDep = Annotated[ItunesCatalog, Depends(get_itunes_client)]
+WikipediaClientDep = Annotated[WikipediaClient, Depends(get_wikipedia_client)]

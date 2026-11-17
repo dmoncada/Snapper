@@ -3,12 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Path, Query
 from redis_fastapi import CacheBackendDep
 
-from app.api.deps import DiscogsClientDep, ItunesClientDep
+from app.api.deps import DiscogsClientDep, ItunesClientDep, WikipediaClientDep
 from app.api.handlers.albums import get_album, search_candidates
 from app.api.handlers.tracks import resolve_tracks
+from app.api.handlers.wiki import get_album_wiki
 from app.api.models import (
     AlbumCandidate,
     AlbumSearchRequest,
+    AlbumWikiResponse,
     NonEmptyStr,
     TracklistResponse,
 )
@@ -51,3 +53,13 @@ async def get_tracks(
     barcode: Annotated[NonEmptyStr | None, Query()] = None,
 ) -> TracklistResponse:
     return await resolve_tracks(id, barcode, discogs, itunes, cache)
+
+
+@router.get("/{id}/wiki")
+async def get_wiki(
+    id: Annotated[int, Path(gt=0)],
+    discogs: DiscogsClientDep,
+    wikipedia: WikipediaClientDep,
+    cache: CacheBackendDep,
+) -> AlbumWikiResponse:
+    return await get_album_wiki(id, discogs, wikipedia, cache)

@@ -10,6 +10,7 @@ from app.api.routes import router
 from app.core.config import settings
 from app.providers.discogs.client import DiscogsClient, create_discogs_http_client
 from app.providers.itunes.client import ItunesClient, create_itunes_http_client
+from app.providers.wikipedia.client import WikipediaClient, create_wikipedia_http_client
 
 
 @asynccontextmanager
@@ -18,9 +19,11 @@ async def lifespan(app: FastAPI):
     async with (
         create_discogs_http_client(token) as discogs_http,
         create_itunes_http_client() as itunes_http,
+        create_wikipedia_http_client() as wikipedia_http,
     ):
         app.state.discogs = DiscogsClient(discogs_http)
         app.state.itunes = ItunesClient(itunes_http)
+        app.state.wikipedia = WikipediaClient(wikipedia_http)
         yield
 
 

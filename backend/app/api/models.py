@@ -53,3 +53,15 @@ class TracklistTrack(BaseModel):
 class TracklistResponse(BaseModel):
     album_url: str | None = None
     tracks: list[TracklistTrack] = Field(default_factory=list)
+
+
+class WikipediaExtract(BaseModel):
+    title: str
+    extract: str
+    extract_markdown: str
+    url: str
+
+
+class AlbumWikiResponse(BaseModel):
+    album: WikipediaExtract | None = None
+    artist: WikipediaExtract | None = None
