@@ -24,15 +24,9 @@ struct AlbumClusterRow: View {
           .lineLimit(1)
 
         HStack(spacing: Spacing.xs) {
-          TimelineView(.periodic(from: album.selectedAt, by: 60)) { timeline in
-            if Calendar.current.isDate(album.selectedAt, inSameDayAs: timeline.date) {
-              Text(
-                album.selectedAt,
-                format: Date.RelativeFormatStyle(
-                  allowedFields: [.hour, .minute, .second],
-                  unitsStyle: .narrow,
-                ),
-              )
+          TimelineView(.everyMinute) { _ in
+            if Calendar.current.isDate(album.selectedAt, inSameDayAs: .now) {
+              Text(album.selectedAt, format: .relative(presentation: .named))
             } else {
               Text(album.selectedAt, format: .dateTime.hour().minute())
             }

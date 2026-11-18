@@ -151,7 +151,9 @@ private struct AlbumDetailSection: View {
         if showMetadata {
           LabeledContent {
             VStack(alignment: .trailing, spacing: Spacing.xs) {
-              Text(album.selectedAt, format: .relative(presentation: .named))
+              TimelineView(.everyMinute) { _ in
+                Text(album.selectedAt, format: .relative(presentation: .numeric))
+              }
               Text(album.selectedAt, format: Date.FormatStyle.abbreviated)
             }
           } label: {
@@ -167,34 +169,6 @@ private struct AlbumDetailSection: View {
 extension Date.FormatStyle {
   fileprivate static var abbreviated: Self {
     Self(date: .abbreviated, time: .shortened)
-  }
-}
-
-private struct LocationSection: View {
-  let location: CLLocation?
-  let locationStatus: AlbumLocationStatus
-
-  var body: some View {
-    switch locationStatus {
-    case .pending:
-      LabeledContent("Location") {
-        ProgressView()
-          .controlSize(.small)
-      }
-
-    case .captured:
-      if let location = location {
-        DisclosureGroup("Location") {
-          AlbumLocationSection(location: location)
-        }
-        .disclosureGroupStyle(.plain)
-      } else {
-        LabeledContent("Location", value: "No Location")
-      }
-
-    case .denied, .unavailable:
-      LabeledContent("Location", value: "No Location")
-    }
   }
 }
 
@@ -297,40 +271,80 @@ private struct AlbumTrackRow: View {
 
 #if DEBUG
 import SwiftData
+import SwiftUI
 
 private struct TestAlbumDetailView: View {
-  @Environment(\.recordStoreLocator) private var locator
+  @Environment(\.apiClient) private var apiClient
 
-  @Query(sort: \Album.selectedAt, order: .reverse) private var albums: [Album]
+  @Query(sort: \Album.selectedAt, order: .reverse)
+  private var albums: [Album]
+
+  @State private var selectedIndex = 0
+
+  private var selectedAlbum: Album? {
+    if albums.isEmpty { return nil }
+    return albums[selectedIndex % albums.count]
+  }
 
   var body: some View {
-    if let album = albums.first {
-      AlbumDetailView(album: album)
-        .task {
-          guard
-            let location = album.location,
-            let stores = try? await locator.locate(
-              near: location,
-              within: .meters(500),
-              limit: 3,
-            )
-          else { return }
-
-          for store in stores {
-            print(store.name)
-            print(store.distance(from: location))
-            print(store.address ?? "")
-            print()
+    Group {
+      if let album = selectedAlbum {
+        AlbumDetailView(album: album)
+          .id(album.persistentModelID)
+          .task(id: album.persistentModelID) {
+            await fetchInfo(for: album)
           }
-        }
-    } else {
-      ProgressView()
+      } else {
+        ProgressView()
+      }
+    }
+    .toolbar {
+      ToolbarItem(placement: .topBarLeading) {
+        Button("Prev", systemImage: "chevron.left", action: selectPrev)
+          .disabled(albums.count < 2)
+      }
+
+      ToolbarItem(placement: .principal) {
+        Text("Album \(selectedIndex + 1) of \(albums.count)")
+      }
+
+      ToolbarItem(placement: .topBarTrailing) {
+        Button("Next", systemImage: "chevron.right", action: selectNext)
+          .disabled(albums.count < 2)
+      }
+    }
+  }
+
+  private func selectPrev() {
+    if albums.isEmpty { return }
+    selectedIndex = (selectedIndex - 1 + albums.count) % albums.count
+  }
+
+  private func selectNext() {
+    if albums.isEmpty { return }
+    selectedIndex = (selectedIndex + 1) % albums.count
+  }
+
+  private func fetchInfo(for album: Album) async {
+    guard
+      album.artistInfo.hasInfo == false,
+      let response = try? await apiClient.fetchAlbumSummary(discogsId: album.discogsId)
+    else { return }
+
+    if let artistInfo = response.artist {
+      album.artistInfo.set(artistInfo)
+    }
+    if let albumInfo = response.album {
+      album.albumInfo.set(albumInfo)
     }
   }
 }
 
 #Preview(traits: .withSearchContext) {
-  TestAlbumDetailView()
-    .environment(\.recordStoreLocator, .live)
+  NavigationStack {
+    TestAlbumDetailView()
+      .environment(\.apiClient, .live)
+      .environment(\.recordStoreLocator, .live)
+  }
 }
 #endif

@@ -5,10 +5,11 @@ struct AlbumLocationSection: View {
   let location: CLLocation
 
   @State private var position: MapCameraPosition = .automatic
+  @State private var approximateLocation: LocalizedStringResource?
   @State private var isExpanded = true
 
   var body: some View {
-    VStack(alignment: .leading, spacing: Spacing.sm) {
+    VStack(alignment: .leading, spacing: Spacing.xs) {
       DisclosureGroup(isExpanded: $isExpanded) {
         Map(position: $position, interactionModes: [.pan, .zoom]) {
           Marker("Album", coordinate: location.coordinate)
@@ -18,7 +19,7 @@ struct AlbumLocationSection: View {
         .overlay(alignment: .bottomTrailing) {
           VStack {
             Button("Re-center", systemImage: "location.fill") {
-              withAnimation(.easeInOut(duration: 0.5)) {
+              withAnimation(.easeInOut(duration: 0.375)) {
                 recenter()
               }
             }
@@ -30,8 +31,15 @@ struct AlbumLocationSection: View {
           .padding(Padding.lg)
         }
       } label: {
-        Text("Location")
-          .font(.zillaSlab(.headline).bold())
+        VStack(alignment: .leading, spacing: 0) {
+          Text("Location")
+            .font(.zillaSlab(.headline).bold())
+
+          if let approximateLocation {
+            Text(approximateLocation)
+              .font(.gillSans(.caption))
+          }
+        }
       }
       .disclosureGroupStyle(.theme(.surface1))
 
@@ -40,6 +48,11 @@ struct AlbumLocationSection: View {
     .onChange(of: isExpanded, initial: true) { _, newValue in
       if newValue {
         recenter()
+      }
+    }
+    .task {
+      if approximateLocation == nil {
+        approximateLocation = try? await ApproximateLocation.format(location)
       }
     }
   }
@@ -68,18 +81,13 @@ private struct NearbyRecordStoresView: View {
     Group {
       switch state {
       case .ready, .loading:
-        ProgressView("Locating record stores nearby...")
-          .progressViewStyle(.inline(.trailing))
-          .font(.gillSans(.caption))
-          .controlSize(.small)
+        loadingView
 
       case .failure(_):
-        Label("Unable to load record stores", systemImage: "xmark.circle")
-          .labelStyle(.trailingIcon)
-          .controlSize(.small)
+        retryView
 
       case .success(let stores) where stores.isEmpty:
-        Text("Unable to load record stores")
+        retryView
 
       case .success(let stores):
         HStack(spacing: Spacing.sm) {
@@ -102,24 +110,62 @@ private struct NearbyRecordStoresView: View {
         }
       }
     }
+    .frame(minHeight: 32)
     .task {
-      state = .loading
-      do {
-        let stores = try await locator.locate(
-          near: location,
-          within: .kilometers(5),
-          limit: 3,
-        )
-        state = .success(stores)
-      } catch {
-        state = .failure(error)
+      await locateStores()
+    }
+  }
+
+  private var loadingView: some View {
+    ProgressView("Locating record stores nearby")
+      .progressViewStyle(.inline(.trailing))
+      .font(.gillSans(.caption))
+      .controlSize(.small)
+  }
+
+  private var retryView: some View {
+    HStack(spacing: Spacing.sm) {
+      Text("Unable to locate record stores")
+        .font(.gillSans(.caption))
+
+      Button {
+        Task {
+          await locateStores()
+        }
+      } label: {
+        Text("Retry")
+          .badgeStyle(appearance: .highlighted)
+          .controlSize(.small)
       }
+      .buttonStyle(.plain)
+    }
+  }
+
+  private func locateStores() async {
+    state = .loading
+    do {
+      let stores = try await locator.locate(
+        near: location,
+        within: .kilometers(5),
+        limit: 3,
+      )
+      state = .success(stores)
+    } catch {
+      state = .failure(error)
     }
   }
 }
 
 #if DEBUG
-#Preview {
+#Preview("Fail") {
+  let location: LocationStub = .newYork
+
+  AlbumLocationSection(location: location.location)
+    .environment(\.recordStoreLocator, .fail(delay: .seconds(1)))
+    .padding()
+}
+
+#Preview("Live") {
   let logger = PreviewLoggerFactory.makeLogger("playground")
   let location: LocationStub = .newYork
 

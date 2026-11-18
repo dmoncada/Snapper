@@ -31,7 +31,7 @@ struct TitleAndIconBadgeToggleStyle: ToggleStyle {
         .font(Typography.badge.for(controlSize))
         .foregroundStyle(appearance.text)
         .background {
-          RoundedRectangle(cornerRadius: Radius.md)
+          RoundedRectangle(cornerRadius: Radius.badge)
             .fill(appearance.fill)
             .stroke(
               appearance.line,

@@ -9,7 +9,7 @@ struct BadgeModifier: ViewModifier {
       .font(Typography.badge.for(controlSize))
       .foregroundStyle(.primary)
       .background {
-        RoundedRectangle(cornerRadius: Radius.md)
+        RoundedRectangle(cornerRadius: Radius.badge)
           .fill(.secondary)
           .stroke(.tertiary, lineWidth: LineWidth.sm)
       }

@@ -3,9 +3,9 @@ import SwiftUI
 
 struct HistoryView: View {
   @Environment(AlbumHistoryViewModel.self) private var vm
-  @Environment(Router.self) private var router
 
   @State private var path = NavigationPath()
+  @State private var alert: AlertDestination?
 
   var body: some View {
     @Bindable var vm = vm
@@ -29,7 +29,7 @@ struct HistoryView: View {
             if vm.isSelecting == false {
               FavoriteButton(isFavorite: $album.isFavorite)
               DeleteButton {
-                router.alertItem = AlertDestination(
+                alert = AlertDestination(
                   title: "Delete Album?",
                   message: "Do you want to delete \"\(album.title)\" from your history?",
                   primary: .delete { vm.delete(album) },
@@ -63,14 +63,30 @@ struct HistoryView: View {
           prompt: "Search for artists or albums",
         )
         .toolbar {
-          AlbumHistoryToolbar(vm: vm)
-        }
-        .navigationDestination(for: Album.self) { destination in
-          AlbumDetailWithActions(album: destination) { _ in
-            vm.delete(destination)
-            path.removeLast()
+          AlbumHistoryToolbar(vm: vm) {
+            let count = vm.selectedIds.count
+            alert = AlertDestination(
+              title: "Delete Albums?",
+              message: "Delete all \(count) selected album(s) from your history?",
+              primary: .delete { vm.batchDelete(ids: vm.selectedIds) },
+              secondary: .cancel,
+            )
           }
         }
+        .navigationDestination(for: Album.self) { destination in
+          AlbumDetailWithActions(album: destination) {
+            alert = AlertDestination(
+              title: "Delete Album?",
+              message: "Do you want to delete \"\(destination.title)\" from your history?",
+              primary: .delete {
+                vm.delete(destination)
+                path.removeLast()
+              },
+              secondary: .cancel,
+            )
+          }
+        }
+        .withAlertDestination($alert)
         .withFullBackground()
       }
     }
@@ -78,9 +94,9 @@ struct HistoryView: View {
 }
 
 private struct AlbumHistoryToolbar: ToolbarContent {
-  @Environment(Router.self) private var router
-
   @Bindable var vm: AlbumHistoryViewModel
+
+  let deleteAction: () -> Void
 
   var body: some ToolbarContent {
     ToolbarTitle("History")
@@ -93,7 +109,7 @@ private struct AlbumHistoryToolbar: ToolbarContent {
         .accessibilityIdentifier("history-cancel-selection")
 
         Button(role: .destructive) {
-          confirmBatchDelete()
+          deleteAction()
         }
         .disabled(vm.selectedIds.isEmpty)
         .accessibilityIdentifier("history-delete-selection")
@@ -129,17 +145,6 @@ private struct AlbumHistoryToolbar: ToolbarContent {
       }
     }
   }
-
-  private func confirmBatchDelete() {
-    let count = vm.selectedIds.count
-
-    router.alertItem = AlertDestination(
-      title: "Delete Albums?",
-      message: "Delete all \(count) selected album(s) from your history?",
-      primary: .delete { vm.batchDelete(ids: vm.selectedIds) },
-      secondary: .cancel,
-    )
-  }
 }
 
 private struct AlbumHistoryFilterBar: View {
@@ -171,35 +176,41 @@ private struct AlbumHistoryFilterBar: View {
 }
 
 #if DEBUG
-#Preview("No data", traits: .withoutData) {
-  @Previewable @Environment(\.modelContext) var context
-
-  @Previewable @State var router = Router()
-
-  TabView {
-    Tab {
-      HistoryView()
-    }
-  }
-  .withAlertDestination($router.alertItem)
-  .environment(AlbumHistoryViewModel(context: context))
-  .environment(router)
+#Preview("No data", traits: .withHistoryContext(kind: .empty)) {
+  HistoryView()
+}
+#Preview("With data", traits: .withHistoryContext(kind: .default)) {
+  HistoryView()
 }
 
-#Preview("With data", traits: .withSearchContext) {
-  @Previewable @Environment(\.modelContext) var context
+#Preview("With dates reset", traits: .withHistoryContext(kind: .resetDates(to: .now))) {
+  @Previewable @Query(sort: \Album.title) var albums: [Album]
 
-  @Previewable @State var router = Router()
+  HistoryView()
+    .onAppear {
+      let offsets: [DateOffset] = [
+        .seconds(30),
+        .minutes(1),
+        .hours(1),
+        .days(1),
+        .weeks(1),
+        .months(1),
+        .years(1),
+      ]
 
+      guard albums.count >= offsets.count else { return }
+
+      for (album, offset) in albums.paired(with: offsets) {
+        album.selectedAt = album.selectedAt.subtracting(offset)
+      }
+    }
+}
+
+#Preview("In tab", traits: .withHistoryContext(kind: .default)) {
   TabView {
     Tab {
       HistoryView()
     }
   }
-  .withAlertDestination($router.alertItem)
-  .environment(AlbumHistoryViewModel(context: context))
-  // .environment(AlbumDetailViewModel(apiClient: .live))
-  // .environment(\.previewPlayer, .live)
-  .environment(router)
 }
 #endif

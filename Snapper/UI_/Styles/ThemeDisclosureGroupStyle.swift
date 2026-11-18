@@ -30,7 +30,7 @@ struct ThemeDisclosureGroupStyle: DisclosureGroupStyle {
   func makeBody(configuration: Configuration) -> some View {
     VStack(spacing: 0) {
       Button {
-        withAnimation(.snappy) {
+        withAnimation(.snappy(duration: 0.375)) {
           configuration.isExpanded.toggle()
         }
       } label: {

@@ -19,7 +19,6 @@ struct AlbumWikipediaSection: View {
   }
 
   @State private var articleExpanded = true
-  @State private var browserPresented = false
 
   private var attributedExtract: AttributedString {
     guard let attributed = try? AttributedString(markdown: extract) else {
@@ -37,7 +36,7 @@ struct AlbumWikipediaSection: View {
           .lineLimit(4)
           .padding(12)
       } label: {
-        VStack(alignment: .leading, spacing: Spacing.xs) {
+        VStack(alignment: .leading, spacing: 0) {
           Text(title)
             .font(.zillaSlab(.headline).bold())
 

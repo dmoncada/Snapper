@@ -30,6 +30,10 @@ nonisolated enum LineWidth {
   static let lg: CGFloat = 4
 }
 
+extension Radius {
+  static var badge: CGFloat { sm }
+}
+
 enum Typography {
   struct AlbumDetail {
     let title: Font = .zillaSlab(.title).bold()

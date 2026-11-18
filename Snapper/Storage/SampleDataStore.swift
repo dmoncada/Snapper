@@ -41,4 +41,8 @@ enum SampleDataStore {
 
     return container
   }
+
+  static func makeEmpty() throws -> ModelContainer {
+    try makeContainer(limit: 0)
+  }
 }

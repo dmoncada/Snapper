@@ -29,6 +29,14 @@ struct AlbumSelectableCard: View {
               lineWidth: LineWidth.sm,
             )
           }
+          .overlay {
+            Rectangle()
+              .fill(
+                isSelecting && isSelected
+                  ? .accent.opacity(0.125)
+                  : .clear
+              )
+          }
           .overlay(alignment: .topTrailing) {
             SelectionIndicator(
               isSelecting: isSelecting,
@@ -41,19 +49,20 @@ struct AlbumSelectableCard: View {
               .padding(Padding.sm)
           }
 
-        LabeledContent {
+        VStack(alignment: .leading) {
           Text(album.title)
             .font(Typography.albumRow.title)
-        } label: {
+            .foregroundStyle(.themePrimary)
+
           Text(album.artist)
             .font(Typography.albumRow.artist)
+            .foregroundStyle(.accent)
         }
-        .labeledContentStyle(.albumHeader)
         .lineLimit(1)
       }
       .padding(4)
     }
-    .containerShape(.rect(cornerRadius: 16))
+    .containerShape(.rect(cornerRadius: 8))
   }
 }
 
@@ -79,8 +88,6 @@ private struct AlbumCover: View {
 }
 
 private struct AlbumMetadata: View {
-  @Environment(\.dateTimeProvider) private var provider
-
   let album: Album
 
   var body: some View {
@@ -99,17 +106,10 @@ private struct AlbumMetadata: View {
           )
       }
 
-      TimelineView(.periodic(from: album.selectedAt, by: 60)) { timeline in
-        Text(
-          timeline.date.formatted(
-            Date.AnchoredRelativeFormatStyle(
-              anchor: album.selectedAt,
-              unitsStyle: .narrow,
-            )
-          )
-        )
-        .badgeStyle(appearance: .highlighted)
-        .controlSize(.mini)
+      TimelineView(.everyMinute) { _ in
+        Text(album.selectedAt, format: .relative(presentation: .numeric, unitsStyle: .narrow))
+          .badgeStyle(appearance: .highlighted)
+          .controlSize(.mini)
       }
     }
   }
@@ -141,7 +141,7 @@ private struct SelectionIndicator: View {
 import SwiftData
 
 private struct TestSelectableGrid: View {
-  @Query(sort: \Album.selectedAt, order: .reverse) var albums: [Album]
+  @Query(sort: \Album.title) var albums: [Album]
 
   @State private var selection = Set<Album.ID>()
 
@@ -168,7 +168,6 @@ private struct TestSelectableGrid: View {
           .disabled(selection.isEmpty)
         }
       }
-      .withFullBackground()
       .task {
         let offsets: [DateOffset] = [
           .minutes(1),
@@ -185,11 +184,12 @@ private struct TestSelectableGrid: View {
           album.selectedAt = album.selectedAt.subtracting(offset)
         }
       }
+      .withFullBackground()
     }
   }
 }
 
-#Preview(traits: .withSearchContext) {
+#Preview(traits: .withHistoryContext(kind: .resetDates(to: .now))) {
   TestSelectableGrid()
 }
 #endif

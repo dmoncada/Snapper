@@ -2,6 +2,10 @@ import MapKit
 import SwiftUI
 
 extension Album {
+  var hasLocation: Bool {
+    latitude != nil && longitude != nil
+  }
+
   var location: CLLocation? {
     if let latitude, let longitude {
       return CLLocation(
