@@ -13,15 +13,17 @@ struct AlbumClusterRow: View {
         .roundedOutline(lineStyle: .clear)
 
       VStack(alignment: .leading, spacing: Spacing.xs) {
-        Text(album.title)
-          .font(Typography.albumRow.title)
-          .foregroundStyle(.themePrimary)
-          .lineLimit(1)
+        VStack(alignment: .leading, spacing: 0) {
+          Text(album.title)
+            .font(Typography.albumRow.title)
+            .foregroundStyle(.themePrimary)
+            .lineLimit(1)
 
-        Text(album.artist)
-          .font(Typography.albumRow.artist)
-          .foregroundStyle(.accent)
-          .lineLimit(1)
+          Text(album.artist)
+            .font(Typography.albumRow.artist)
+            .foregroundStyle(.accent)
+            .lineLimit(1)
+        }
 
         HStack(spacing: Spacing.xs) {
           TimelineView(.everyMinute) { _ in
@@ -61,7 +63,7 @@ import SwiftData
     WithColorSchemes {
       AlbumClusterRow(album: album)
         .padding()
-        .task {
+        .onAppear {
           album.isFavorite = true
         }
     }

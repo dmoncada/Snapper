@@ -35,7 +35,9 @@ struct PressedScaleButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == PressedScaleButtonStyle {
-  static var pressedScale: Self { Self() }
+  static var pressedScale: Self {
+    Self()
+  }
 
   static func pressedScale(_ scale: CGFloat) -> Self {
     Self(scale: scale)
@@ -54,15 +56,10 @@ struct ThemeButonLabelStyle: LabelStyle {
     .frame(maxWidth: .infinity)
     .font(Typography.buttonBody)
     .imageScale(.small)
-    .background(
-      scheme == .dark
-        ? .themeSeafoam
-        : .themeGray
-    )
+    .foregroundStyle(.themePrimary)
+    .background(.themeSurface2)
+    .clipShape(.rect(cornerRadius: Radius.sm))
     .contentShape(.rect)
-    .roundedOutline(
-      lineStyle: .clear
-    )
   }
 }
 
@@ -75,7 +72,6 @@ struct ThemeButtonStyle: ButtonStyle {
 
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
-      // .textCase(.uppercase)
       .labelStyle(ThemeButonLabelStyle())
       .modifier(
         Pressable(

@@ -26,7 +26,8 @@ struct SearchTextFieldStyle: TextFieldStyle {
         .themePrimary,
         .themeSeparator,
       )
-      .roundedOutline(lineWidth: isFocused ? 2 : 1)
+      .background(.themeBackgroundSecondary)
+      .roundedOutline(lineWidth: isFocused ? 3 : 1)
   }
 }
 

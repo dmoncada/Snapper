@@ -193,7 +193,7 @@ private struct AlbumClusterSheet: View {
       }
       .navigationBarTitleDisplayMode(.inline)
       .presentationDetents([
-        pin.albums.count <= 3
+        pin.albums.count <= 4
           ? .medium
           : .large
       ])
@@ -236,7 +236,10 @@ extension View {
 }
 
 #if DEBUG
-#Preview("Cluster", traits: .withSearchContext) {
+#Preview(
+  "Cluster",
+  traits: .withHistoryContext(kind: .resetDates(to: .now.subtracting(.days(1)))),
+) {
   AlbumMapView()
 }
 #endif

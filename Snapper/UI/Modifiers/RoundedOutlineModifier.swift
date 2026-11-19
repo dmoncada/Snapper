@@ -17,7 +17,7 @@ struct RoundedOutlineModifier<LineStyle: ShapeStyle>: ViewModifier {
 
 extension View {
   func roundedOutline<LineStyle: ShapeStyle>(
-    radius: CGFloat = Radius.md,
+    radius: CGFloat = Radius.sm,
     lineWidth: CGFloat = LineWidth.md,
     lineStyle: LineStyle = .themeSeparator,
   ) -> some View {

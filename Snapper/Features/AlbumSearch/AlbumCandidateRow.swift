@@ -9,18 +9,19 @@ struct AlbumCandidateRow: View {
     HStack {
       AlbumThumbnail(url: album.thumbnailUrl)
 
-      LabeledContent {
+      VStack(alignment: .leading, spacing: 0) {
         Text(album.title)
           .font(Typography.albumRow.title)
-      } label: {
+          .foregroundStyle(.themePrimary)
+
         Text(album.artist)
           .font(Typography.albumRow.artist)
+          .foregroundStyle(.accent)
       }
       .frame(
         maxWidth: .infinity,
         alignment: .leading,
       )
-      .labeledContentStyle(.albumHeader)
       .lineLimit(1)
 
       Spacer()
@@ -63,7 +64,7 @@ private struct AlbumThumbnail: View {
     CachedImage(url: url)
       .scaledToFill()
       .frame(width: size, height: size)
-      .roundedOutline(radius: Radius.sm, lineWidth: 1)
+      .roundedOutline(lineWidth: LineWidth.sm)
   }
 }
 

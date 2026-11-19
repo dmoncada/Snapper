@@ -12,7 +12,7 @@ struct AlbumLocationSection: View {
     VStack(alignment: .leading, spacing: Spacing.xs) {
       DisclosureGroup(isExpanded: $isExpanded) {
         Map(position: $position, interactionModes: [.pan, .zoom]) {
-          Marker("Album", coordinate: location.coordinate)
+          Marker(.detailSectionsLocationMarker, coordinate: location.coordinate)
             .tint(.accent)
         }
         .frame(height: 200)
@@ -32,7 +32,7 @@ struct AlbumLocationSection: View {
         }
       } label: {
         VStack(alignment: .leading, spacing: 0) {
-          Text("Location")
+          Text(.detailSectionsLocationHeader)
             .font(.zillaSlab(.headline).bold())
 
           if let approximateLocation {
@@ -66,8 +66,8 @@ private struct NearbyRecordStoresView: View {
   private enum State {
     case ready
     case loading
-    case success([RecordStoreCandidate])
-    case failure(Error)
+    case loaded([RecordStoreCandidate])
+    case failed(Error)
   }
 
   @Environment(\.recordStoreLocator) private var locator
@@ -83,15 +83,15 @@ private struct NearbyRecordStoresView: View {
       case .ready, .loading:
         loadingView
 
-      case .failure(_):
+      case .failed(_):
         retryView
 
-      case .success(let stores) where stores.isEmpty:
+      case .loaded(let stores) where stores.isEmpty:
         retryView
 
-      case .success(let stores):
+      case .loaded(let stores):
         HStack(spacing: Spacing.sm) {
-          Text("Nearby:")
+          Text(.detailSectionsLocationNearby)
             .font(.gillSans(.caption))
 
           ScrollView(.horizontal) {
@@ -117,7 +117,7 @@ private struct NearbyRecordStoresView: View {
   }
 
   private var loadingView: some View {
-    ProgressView("Locating record stores nearby")
+    ProgressView(.detailSectionsLocationStateLoading)
       .progressViewStyle(.inline(.trailing))
       .font(.gillSans(.caption))
       .controlSize(.small)
@@ -125,7 +125,7 @@ private struct NearbyRecordStoresView: View {
 
   private var retryView: some View {
     HStack(spacing: Spacing.sm) {
-      Text("Unable to locate record stores")
+      Text(.detailSectionsLocationStateFailed)
         .font(.gillSans(.caption))
 
       Button {
@@ -133,7 +133,7 @@ private struct NearbyRecordStoresView: View {
           await locateStores()
         }
       } label: {
-        Text("Retry")
+        Text(.detailSectionsLocationRetry)
           .badgeStyle(appearance: .highlighted)
           .controlSize(.small)
       }
@@ -149,9 +149,9 @@ private struct NearbyRecordStoresView: View {
         within: .kilometers(5),
         limit: 3,
       )
-      state = .success(stores)
+      state = .loaded(stores)
     } catch {
-      state = .failure(error)
+      state = .failed(error)
     }
   }
 }

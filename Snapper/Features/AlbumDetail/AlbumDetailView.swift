@@ -130,22 +130,25 @@ private struct AlbumGenresSection: View {
 }
 
 private struct AlbumDetailSection: View {
+  @Environment(\.locale) private var locale
+
   let album: Album
   let showMetadata: Bool
 
   var body: some View {
     ThemeSection {
-      Section("About") {
+      Section(.detailSectionsAboutHeader) {
         if let label = album.label.first {
-          LabeledContent("Label", value: label)
+          LabeledContent(.detailLabelsLabel, value: label)
         }
 
         if let year = album.year?.description {
-          LabeledContent("Released", value: year)
+          LabeledContent(.detailLabelsReleased, value: year)
         }
 
-        if let country = album.countryName {
-          LabeledContent("Country", value: country)
+        if let countryCode = album.countryCode, let countryName = album.countryName {
+          let country = locale.localizedString(forRegionCode: countryCode)
+          LabeledContent(.detailLabelsCountry, value: country ?? countryName)
         }
 
         if showMetadata {
@@ -157,7 +160,7 @@ private struct AlbumDetailSection: View {
               Text(album.selectedAt, format: Date.FormatStyle.abbreviated)
             }
           } label: {
-            Text("Recognized")
+            Text(.detailLabelsRecognized)
           }
         }
       }
@@ -200,7 +203,7 @@ private struct AlbumTrackSection: View {
             AlbumTrackRow(track: track)
           }
         } header: {
-          Text("Tracks")
+          Text(.detailSectionsTracksHeader)
         } footer: {
           let anyPreview = tracks.contains { $0.previewUrl != nil }
           if anyPreview {
@@ -218,7 +221,7 @@ private struct AlbumTrackSectionFooter: View {
 
   var body: some View {
     VStack(alignment: .leading) {
-      Text("Tracks provided courtesy of iTunes.")
+      Text(.detailSectionsTracksFooter)
 
       if let musicUrl {
         Spacer()

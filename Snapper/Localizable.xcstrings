@@ -7,10 +7,7 @@
     "%lld albums" : {
 
     },
-    "•" : {
-
-    },
-    "About" : {
+    "∙" : {
 
     },
     "Albums need a captured location to appear on the map." : {
@@ -37,9 +34,6 @@
     "Could not look up this barcode: %@" : {
 
     },
-    "Country" : {
-
-    },
     "Criteria" : {
 
     },
@@ -57,6 +51,171 @@
     },
     "Delete from History" : {
 
+    },
+    "detail.labels.country" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Country"
+          }
+        }
+      }
+    },
+    "detail.labels.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Label"
+          }
+        }
+      }
+    },
+    "detail.labels.recognized" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recognized"
+          }
+        }
+      }
+    },
+    "detail.labels.released" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Released"
+          }
+        }
+      }
+    },
+    "detail.sections.about.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
+          }
+        }
+      }
+    },
+    "detail.sections.location.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
+          }
+        }
+      }
+    },
+    "detail.sections.location.marker" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        }
+      }
+    },
+    "detail.sections.location.nearby" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nearby"
+          }
+        }
+      }
+    },
+    "detail.sections.location.retry" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retry"
+          }
+        }
+      }
+    },
+    "detail.sections.location.state.failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to locate record stores"
+          }
+        }
+      }
+    },
+    "detail.sections.location.state.loading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locating record stores nearby"
+          }
+        }
+      }
+    },
+    "detail.sections.tracks.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tracks provided courtesy of iTunes."
+          }
+        }
+      }
+    },
+    "detail.sections.tracks.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tracks"
+          }
+        }
+      }
+    },
+    "detail.sections.wiki.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From English Wikipedia"
+          }
+        }
+      }
+    },
+    "detail.sections.wiki.link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full article on Wikipedia"
+          }
+        }
+      }
     },
     "Do you want to delete \"%@\" from your history?" : {
 
@@ -76,16 +235,10 @@
     "Home" : {
 
     },
-    "Label" : {
-
-    },
     "Latest" : {
 
     },
     "Loading cancelled." : {
-
-    },
-    "Locating record stores nearby..." : {
 
     },
     "Location" : {
@@ -100,7 +253,7 @@
     "Music will show up here when you start identifying songs with MusicSnap" : {
 
     },
-    "Nearby:" : {
+    "Near %@" : {
 
     },
     "No album locations" : {
@@ -134,12 +287,6 @@
 
     },
     "Ready to load." : {
-
-    },
-    "Recognized" : {
-
-    },
-    "Released" : {
 
     },
     "Retry" : {
@@ -305,12 +452,6 @@
 
     },
     "Today" : {
-
-    },
-    "Tracks" : {
-
-    },
-    "Tracks provided courtesy of iTunes." : {
 
     },
     "Unable to load tracks: %@" : {
