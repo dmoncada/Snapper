@@ -5,7 +5,7 @@ struct AlbumLocationSection: View {
   let location: CLLocation
 
   @State private var position: MapCameraPosition = .automatic
-  @State private var approximateLocation: LocalizedStringResource?
+  @State private var locationName: String?
   @State private var isExpanded = true
 
   var body: some View {
@@ -35,8 +35,8 @@ struct AlbumLocationSection: View {
           Text(.detailSectionsLocationHeader)
             .font(.zillaSlab(.headline).bold())
 
-          if let approximateLocation {
-            Text(approximateLocation)
+          if let locationName {
+            Text(.detailSectionsLocationCaption(locationName: locationName))
               .font(.gillSans(.caption))
           }
         }
@@ -51,8 +51,8 @@ struct AlbumLocationSection: View {
       }
     }
     .task {
-      if approximateLocation == nil {
-        approximateLocation = try? await ApproximateLocation.format(location)
+      if locationName == nil {
+        locationName = try? await ApproximateLocation.getName(location)
       }
     }
   }

@@ -20,6 +20,7 @@ final class AlbumHistoryViewModel {
 
   private let logger: Logger
   private let context: ModelContext
+  private var unknownGenres = Set<String>()
 
   init(
     logger: Logger = .current,
@@ -35,12 +36,27 @@ final class AlbumHistoryViewModel {
 
     let genres = Set(albums.flatMap(\.genre).map(\.name))
 
-    availableFilters =
+    for genre in genres where AlbumGenre(rawValue: genre) == nil {
+      if unknownGenres.insert(genre).inserted {
+        logger.warning("Unmapped album genre: \(genre)")
+      }
+    }
+
+    availableFilters = [.all, .favorites] + genres.map(AlbumHistoryFilter.genre)
+  }
+
+  func sortedAvailableFilters(locale: Locale = .current) -> [AlbumHistoryFilter] {
+    let genreFilters = availableFilters.filter { filter in
+      if case .genre = filter { return true }
+      return false
+    }
+
+    return
       [
         .all,
         .favorites,
       ]
-      + genres.sorted().map(AlbumHistoryFilter.genre)
+      + genreFilters.sorted(by: \.resource, locale: locale)
   }
 
   subscript(isSelected filter: AlbumHistoryFilter) -> Bool {

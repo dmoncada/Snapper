@@ -3,9 +3,9 @@ import Foundation
 import MapKit
 
 struct ApproximateLocation {
-  static func format(
+  static func getName(
     _ location: CLLocation
-  ) async throws -> LocalizedStringResource? {
+  ) async throws -> String? {
     guard let request = MKReverseGeocodingRequest(location: location) else {
       return nil
     }
@@ -17,11 +17,11 @@ struct ApproximateLocation {
     }
 
     if let place = item.addressRepresentations?.cityWithContext(.short) {
-      return "Near \(place)"
+      return place
     }
 
     if let place = item.address?.shortAddress {
-      return "Near \(place)"
+      return place
     }
 
     return nil

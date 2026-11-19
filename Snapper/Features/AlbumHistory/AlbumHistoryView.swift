@@ -148,14 +148,16 @@ private struct AlbumHistoryToolbar: ToolbarContent {
 }
 
 private struct AlbumHistoryFilterBar: View {
+  @Environment(\.locale) private var locale
+
   @Bindable var vm: AlbumHistoryViewModel
 
   var body: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(spacing: Spacing.sm) {
-        ForEach(vm.availableFilters) { filter in
+        ForEach(vm.sortedAvailableFilters(locale: locale)) { filter in
           Toggle(
-            filter.title,
+            filter.resource,
             systemImage: "checkmark",
             isOn: $vm[isSelected: filter],
           )

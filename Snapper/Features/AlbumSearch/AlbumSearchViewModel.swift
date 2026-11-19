@@ -69,6 +69,10 @@ final class AlbumSearchViewModel {
         candidates = candidates.preferredCountryFirst(countryCode)
       }
 
+      for genre in Set(candidates.flatMap(\.genre)) where AlbumGenre(rawValue: genre) == nil {
+        logger.warning("Unknown genre: \(genre)")
+      }
+
       let results = candidates.map { Album(dto: $0) }
 
       logger.info("Found: \(results.count) albums for: '\(term ?? barcode ?? "nil")'")

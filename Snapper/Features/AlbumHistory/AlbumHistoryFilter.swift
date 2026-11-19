@@ -7,11 +7,16 @@ enum AlbumHistoryFilter: Hashable, Identifiable {
 
   var id: Self { self }
 
-  var title: String {
+  var resource: LocalizedStringResource {
     switch self {
-    case .all: "All"
-    case .favorites: "Favorites"
-    case .genre(let genre): genre
+    case .all:
+      .historyFiltersAll
+
+    case .favorites:
+      .historyFiltersFavorites
+
+    case .genre(let genre):
+      AlbumGenre(rawValue: genre)?.resource ?? .genresUnknown
     }
   }
 }

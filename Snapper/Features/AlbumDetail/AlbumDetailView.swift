@@ -112,16 +112,18 @@ private struct AlbumHeaderSection: View {
 }
 
 private struct AlbumGenresSection: View {
+  @Environment(\.locale) private var locale
+
   init(genres: [Genre]) {
-    self.genres = genres.map(\.name).sorted()
+    self.genres = genres.compactMap { AlbumGenre(rawValue: $0.name) }
   }
 
-  private let genres: [String]
+  private let genres: [AlbumGenre]
 
   var body: some View {
     FlowLayout(alignment: .leading, spacing: Spacing.xs) {
-      ForEach(genres, id: \.self) { genre in
-        Text(genre)
+      ForEach(genres.sorted(by: \.resource, locale: locale)) { genre in
+        Text(genre.resource)
           .badgeStyle()
           .controlSize(.small)
       }
