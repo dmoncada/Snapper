@@ -32,13 +32,13 @@ struct AlbumCandidateRow: View {
             .badgeStyle()
         }
 
-        if let year = album.year {
-          Text(String(year))
+        if let year = album.year?.description {
+          Text(year)
             .badgeStyle()
         }
 
         if let format = album.mediaFormats.first {
-          Text(format.description)
+          Text(format.resource)
             .badgeStyle()
         }
       }
@@ -68,25 +68,9 @@ private struct AlbumThumbnail: View {
   }
 }
 
-enum MediaFormat: String, CaseIterable {
-  case vinyl
-  case cd
-  case cassette
-}
-
-extension MediaFormat: CustomStringConvertible {
-  var description: String {
-    switch self {
-    case .vinyl: "Vinyl"
-    case .cd: "CD"
-    case .cassette: "Cassette"
-    }
-  }
-}
-
 extension Album {
-  var mediaFormats: [MediaFormat] {
-    format.compactMap { MediaFormat(rawValue: $0.lowercased()) }
+  var mediaFormats: [AlbumFormat] {
+    format.compactMap { AlbumFormat(rawValue: $0.lowercased()) }
   }
 }
 
