@@ -4,9 +4,8 @@ struct SettingsSheet: View {
   var body: some View {
     NavigationStack {
       SettingsView()
-        .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
         .presentationDetents([.medium, .large])
+        .withToolbarTitle(.Settings.title, style: .principal)
         .withCloseButton()
     }
   }
@@ -41,16 +40,16 @@ private struct SettingsView: View {
       Section {
         NavigationLink {
           SchemeSelectionView(selection: $preference)
+            .withToolbarTitle(.Settings.themeTitle, style: .principal)
             .containerBackground(.clear, for: .navigation)
             .scrollContentBackground(.hidden)
-            .navigationTitle("Theme")
         } label: {
-          LabeledContent("Theme") {
-            Text(preference.displayName)
+          LabeledContent(.Settings.themeTitle) {
+            Text(preference.resource)
           }
         }
       } footer: {
-        Text("Controls the app's theme preference.")
+        Text(.Settings.themeFooter)
       }
 
       Section {
@@ -112,7 +111,7 @@ private struct SettingsView: View {
     SettingsSheet()
       .preferredColorScheme(preference.colorScheme ?? systemScheme)
   }
-  .buttonStyle(.borderedProminent)
   .preferredColorScheme(preference.colorScheme)
+  .buttonStyle(.borderedProminent)
 }
 #endif

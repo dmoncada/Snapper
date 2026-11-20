@@ -4,17 +4,57 @@
     "" : {
 
     },
-    "%lld albums" : {
-
-    },
-    "∙" : {
-
-    },
     "Albums need a captured location to appear on the map." : {
 
     },
     "Albums with captured locations will appear here." : {
 
+    },
+    "alerts.history.delete.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Do you want to delete the album from your history?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Delete all %1$(count)lld albums from your history?"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "alerts.history.delete.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Delete %1$(count)lld album?"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Delete %1$(count)lld albums?"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "Camera error: %@" : {
 
@@ -23,9 +63,6 @@
 
     },
     "Clear" : {
-
-    },
-    "Controls the app's theme preference." : {
 
     },
     "Could not add album" : {
@@ -40,18 +77,6 @@
     "Delete" : {
 
     },
-    "Delete Album?" : {
-
-    },
-    "Delete Albums?" : {
-
-    },
-    "Delete all %lld selected album(s) from your history?" : {
-
-    },
-    "Delete from History" : {
-
-    },
     "detail.labels.country" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -60,6 +85,18 @@
             "state" : "translated",
             "value" : "Country"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "País"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pays"
+          }
         }
       }
     },
@@ -67,6 +104,18 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Label"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sello discográfico"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Label"
@@ -82,6 +131,18 @@
             "state" : "translated",
             "value" : "Recognized"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identificado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Identifié"
+          }
         }
       }
     },
@@ -92,6 +153,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Released"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Publicado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sorti"
           }
         }
       }
@@ -104,6 +177,18 @@
             "state" : "translated",
             "value" : "About"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Información"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos"
+          }
         }
       }
     },
@@ -114,6 +199,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Near %1$(locationName)@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerca de %1$(locationName)@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Près de %1$(locationName)@"
           }
         }
       }
@@ -126,6 +223,18 @@
             "state" : "translated",
             "value" : "Location"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubicación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lieu"
+          }
         }
       }
     },
@@ -133,6 +242,18 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Álbum"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Album"
@@ -148,6 +269,18 @@
             "state" : "translated",
             "value" : "Nearby"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerca de aquí"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À proximité"
+          }
         }
       }
     },
@@ -158,6 +291,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Retry"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reintentar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayer"
           }
         }
       }
@@ -170,6 +315,18 @@
             "state" : "translated",
             "value" : "Unable to locate record stores"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron encontrar tiendas de discos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de trouver des disquaires"
+          }
         }
       }
     },
@@ -180,6 +337,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Locating record stores nearby"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscando tiendas de discos cercanas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche de disquaires à proximité"
           }
         }
       }
@@ -192,6 +361,18 @@
             "state" : "translated",
             "value" : "Tracks provided courtesy of iTunes."
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pistas por cortesía de iTunes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pistes fournies par iTunes."
+          }
         }
       }
     },
@@ -202,6 +383,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tracks"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pistas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pistes"
           }
         }
       }
@@ -214,6 +407,18 @@
             "state" : "translated",
             "value" : "From English Wikipedia"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De Wikipedia en inglés"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source : Wikipédia en anglais"
+          }
         }
       }
     },
@@ -225,17 +430,87 @@
             "state" : "translated",
             "value" : "Full article on Wikipedia"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artículo completo en Wikipedia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Article complet sur Wikipédia"
+          }
         }
       }
-    },
-    "Do you want to delete \"%@\" from your history?" : {
-
     },
     "Error" : {
 
     },
     "Favorite" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorito"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favori"
+          }
+        }
+      }
+    },
+    "filters.all" : {
+      "comment" : "History filter showing all albums.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous"
+          }
+        }
+      }
+    },
+    "filters.favorites" : {
+      "comment" : "History filter showing favorite albums.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favoritos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favoris"
+          }
+        }
+      }
     },
     "formats.cassette" : {
       "extractionState" : "manual",
@@ -307,7 +582,6 @@
       }
     },
     "genres.blues" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -331,7 +605,6 @@
       }
     },
     "genres.brassMilitary" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -355,7 +628,6 @@
       }
     },
     "genres.childrens" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -379,7 +651,6 @@
       }
     },
     "genres.classical" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -403,7 +674,6 @@
       }
     },
     "genres.electronic" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -427,7 +697,6 @@
       }
     },
     "genres.folkWorldCountry" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -451,7 +720,6 @@
       }
     },
     "genres.funkSoul" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -475,7 +743,6 @@
       }
     },
     "genres.hipHop" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -499,7 +766,6 @@
       }
     },
     "genres.jazz" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -523,7 +789,6 @@
       }
     },
     "genres.latin" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -541,13 +806,12 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ALatine"
+            "value" : "Latine"
           }
         }
       }
     },
     "genres.nonMusic" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -571,7 +835,6 @@
       }
     },
     "genres.pop" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -595,7 +858,6 @@
       }
     },
     "genres.reggae" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -619,7 +881,6 @@
       }
     },
     "genres.rock" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -643,7 +904,6 @@
       }
     },
     "genres.stageScreen" : {
-      "comment" : "Genre label displayed on album details and history filters.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -680,65 +940,24 @@
     "Grant permission to access the device location in Settings, to allow capturing the approximate location when adding an album." : {
 
     },
-    "History" : {
-
-    },
-    "history.filters.all" : {
-      "comment" : "History filter showing all albums.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Todos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tous"
-          }
-        }
-      }
-    },
-    "history.filters.favorites" : {
-      "comment" : "History filter showing favorite albums.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favorites"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favoritos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favoris"
-          }
-        }
-      }
-    },
-    "Home" : {
-
-    },
     "Latest" : {
 
     },
     "Loading cancelled." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carga cancelada."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chargement annulé."
+          }
+        }
+      }
     },
     "Location" : {
 
@@ -747,9 +966,6 @@
 
     },
     "Made for the ❤️ of 🎵 in 🇲🇽" : {
-
-    },
-    "Music will show up here when you start identifying songs with MusicSnap" : {
 
     },
     "No album locations" : {
@@ -780,52 +996,42 @@
 
     },
     "Re-center" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volver a centrar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recentrer"
+          }
+        }
+      }
     },
     "Ready to load." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Listo para cargar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prêt à charger."
+          }
+        }
+      }
     },
     "Retry" : {
 
     },
     "Scan Again" : {
 
-    },
-    "Search for artists or albums" : {
-
-    },
-    "search.controls.button.pick" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick"
-          }
-        }
-      }
-    },
-    "search.controls.button.snap" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Snap"
-          }
-        }
-      }
-    },
-    "search.controls.textfield.placeholder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Or search by artist, album"
-          }
-        }
-      }
     },
     "search.error.label" : {
       "extractionState" : "manual",
@@ -838,96 +1044,24 @@
         }
       }
     },
-    "search.state.cancelled" : {
+    "search.noResults.desc" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search cancelled"
+            "value" : "Check the spelling or try a new search."
           }
         }
       }
     },
-    "search.state.detecting" : {
+    "search.noResults.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Detecting barcode…"
-          }
-        }
-      }
-    },
-    "search.state.failed.detection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unable to detect barcode"
-          }
-        }
-      }
-    },
-    "search.state.failed.generic" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "An error occurred"
-          }
-        }
-      }
-    },
-    "search.state.ready" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ready to snap!"
-          }
-        }
-      }
-    },
-    "search.state.searching" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Searching term…"
-          }
-        }
-      }
-    },
-    "search.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Home"
-          }
-        }
-      }
-    },
-    "Select" : {
-
-    },
-    "Settings" : {
-
-    },
-    "settings.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings"
+            "value" : "No Results for “%1$(text)@”"
           }
         }
       }
@@ -938,26 +1072,186 @@
     "Show All" : {
 
     },
-    "Spatial" : {
-
+    "spatial.cluster.sheet.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$(count)lld albums"
+          }
+        }
+      }
     },
     "The album could not be saved: %@" : {
-
-    },
-    "Theme" : {
 
     },
     "Today" : {
 
     },
+    "tools.delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        }
+      }
+    },
+    "tools.delete.history" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete from history"
+          }
+        }
+      }
+    },
+    "tools.favorite.do" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorite"
+          }
+        }
+      }
+    },
+    "tools.favorite.undo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo Favorite"
+          }
+        }
+      }
+    },
+    "tools.select" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select"
+          }
+        }
+      }
+    },
+    "tools.sort.criteria.date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date found"
+          }
+        }
+      }
+    },
+    "tools.sort.criteria.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Artist Name"
+          }
+        }
+      }
+    },
+    "tools.sort.criteria.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Album Title"
+          }
+        }
+      }
+    },
+    "tools.sort.direction.asc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ascending"
+          }
+        }
+      }
+    },
+    "tools.sort.direction.desc" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descending"
+          }
+        }
+      }
+    },
+    "tools.sort.direction.new" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Newest First"
+          }
+        }
+      }
+    },
+    "tools.sort.direction.old" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oldest First"
+          }
+        }
+      }
+    },
     "Unable to load tracks: %@" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron cargar las pistas: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger les pistes : %@"
+          }
+        }
+      }
     },
     "Unable to load tracks." : {
-
-    },
-    "Undo Favorite" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudieron cargar las pistas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de charger les pistes."
+          }
+        }
+      }
     }
   },
   "version" : "1.3"

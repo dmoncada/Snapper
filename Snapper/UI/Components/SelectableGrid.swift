@@ -72,5 +72,6 @@ struct SelectableGrid<
       }
       .padding(.horizontal, Padding.xl)
     }
+    .scrollBounceBehavior(.basedOnSize, axes: .vertical)
   }
 }

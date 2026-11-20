@@ -8,11 +8,11 @@ enum SortCriterion: String, CaseIterable, Codable, Identifiable {
 
   var id: String { rawValue }
 
-  var displayName: String {
+  var resource: LocalizedStringResource {
     switch self {
-    case .dateFound: "Date Found"
-    case .albumTitle: "Album Title"
-    case .artistName: "Artist Name"
+    case .dateFound: .toolsSortCriteriaDate
+    case .albumTitle: .toolsSortCriteriaTitle
+    case .artistName: .toolsSortCriteriaName
     }
   }
 }
@@ -25,12 +25,12 @@ enum SortOrder: String, CaseIterable, Codable, Identifiable {
 
   var id: String { rawValue }
 
-  var displayName: String {
+  var resource: LocalizedStringResource {
     switch self {
-    case .newestFirst: "Newest First"
-    case .oldestFirst: "Oldest First"
-    case .ascending: "Ascending"
-    case .descending: "Descending"
+    case .newestFirst: .toolsSortDirectionNew
+    case .oldestFirst: .toolsSortDirectionOld
+    case .ascending: .toolsSortDirectionAsc
+    case .descending: .toolsSortDirectionDesc
     }
   }
 }

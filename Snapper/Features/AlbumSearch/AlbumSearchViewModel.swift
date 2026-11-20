@@ -127,8 +127,8 @@ enum AlbumSearchError: Error {
 
   var resource: LocalizedStringResource {
     switch self {
-    case .generic: .searchStateFailedGeneric
-    case .detection: .searchStateFailedDetection
+    case .generic: .Search.stateFailedGeneric
+    case .detection: .Search.stateFailedDetection
     }
   }
 }

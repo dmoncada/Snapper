@@ -28,6 +28,9 @@ private struct ContentView: View {
   @AppStorage(.storageKeys.firstLaunch)
   private var firstLaunch = true
 
+  @AppStorage(.storageKeys.colorScheme)
+  private var preference: ColorSchemePreference = .system
+
   @Environment(\.apiClient) private var client
 
   @State private var isLaunching = true
@@ -41,6 +44,7 @@ private struct ContentView: View {
     } second: {
       SnapperAppShell()
     }
+    .preferredColorScheme(preference.colorScheme)
     .task {
       defer { firstLaunch = false }
       let delay = firstLaunch ? 2.0 : 0.5

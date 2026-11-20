@@ -1,40 +1,83 @@
 import SwiftUI
 
 struct ToolbarTitle: ToolbarContent {
-  let title: LocalizedStringResource
+  enum Style {
+    case large
+    case principal
+  }
 
-  init(_ title: LocalizedStringResource) {
+  let title: LocalizedStringResource
+  var style: Style = .large
+
+  init(
+    _ title: LocalizedStringResource,
+    style: Style = .large,
+  ) {
     self.title = title
+    self.style = style
   }
 
   var body: some ToolbarContent {
-    ToolbarItem(placement: .automatic) {
-      Text(title)
-        .frame(
-          maxWidth: .infinity,
-          alignment: .leading,
-        )
-        .font(.zillaSlab(.largeTitle).bold())
-        .foregroundStyle(.primary)
+    switch style {
+    case .large:
+      ToolbarItem(placement: .automatic) {
+        Text(title)
+          .frame(maxWidth: .infinity, alignment: .leading)
+          .font(.zillaSlab(.largeTitle).bold())
+          .foregroundStyle(.themePrimary)
+      }
+      .sharedBackgroundVisibility(.hidden)
+
+    case .principal:
+      ToolbarItem(placement: .principal) {
+        Text(title)
+          .font(.zillaSlab(.headline).bold())
+          .foregroundStyle(.themePrimary)
+      }
+      .sharedBackgroundVisibility(.hidden)
     }
-    .sharedBackgroundVisibility(.hidden)
+  }
+}
+
+extension View {
+  func withToolbarTitle(
+    _ title: LocalizedStringResource,
+    style: ToolbarTitle.Style = .large,
+  ) -> some View {
+    toolbar {
+      ToolbarTitle(title, style: style)
+    }
+    .navigationBarTitleDisplayMode(
+      style == .principal
+        ? .inline
+        : .large
+    )
   }
 }
 
 #if DEBUG
-#Preview {
-  NavigationStack {
-    ScrollView {
-      Text("Hello, world!")
-    }
-    .toolbar {
-      ToolbarTitle("Hello")
-      ToolbarItem(placement: .topBarTrailing) {
-        Button(role: .cancel) {}
+private struct TestToolbarTitle: View {
+  let style: ToolbarTitle.Style
+
+  var body: some View {
+    NavigationStack {
+      ScrollView {
+        Text("Hello, world!")
+      }
+      .toolbar {
+        ToolbarTitle("Hello", style: style)
+        ToolbarItem(placement: .topBarTrailing) {
+          Button(role: .cancel) {}
+        }
       }
     }
-    .toolbarBackground(.thinMaterial, for: .navigationBar)
-    .toolbarBackgroundVisibility(.visible, for: .navigationBar)
   }
+}
+
+#Preview("Large") {
+  TestToolbarTitle(style: .large)
+}
+#Preview("Principal") {
+  TestToolbarTitle(style: .principal)
 }
 #endif

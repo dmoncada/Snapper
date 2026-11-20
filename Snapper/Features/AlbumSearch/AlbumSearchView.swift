@@ -25,16 +25,16 @@ struct HomeView: View {
       VStack(alignment: .leading, spacing: 0) {
         VStack(spacing: Spacing.sm) {
           HStack(spacing: Spacing.sm) {
-            PhotoPickerButton(.searchControlsButtonPick, onData: onData) { _ in }
+            PhotoPickerButton(.Search.buttonsPick, onData: onData) { _ in }
 
-            Button(.searchControlsButtonSnap, systemImage: "camera") {
+            Button(.Search.buttonsSnap, systemImage: "camera") {
               isCameraPresented = true
             }
             .buttonStyle(.theme)
           }
 
           TextField(text: $searchText) {
-            Text(.searchControlsTextfieldPlaceholder)
+            Text(.Search.textfieldPlaceholder)
               .foregroundStyle(.themePlaceholder)
           }
           .autocorrectionDisabled(true)
@@ -78,9 +78,9 @@ struct HomeView: View {
         }
       }
       .toolbar {
-        ToolbarTitle(.searchTitle)
+        ToolbarTitle(.Search.title)
         ToolbarItem(placement: .topBarTrailing) {
-          Button(.settingsTitle, systemImage: "gearshape") {
+          Button(.Settings.title, systemImage: "gearshape") {
             isSettingsPresented = true
             dismissKeyboard()
           }
@@ -128,16 +128,16 @@ private struct AlbumCandidateSection: View {
     VStack {
       switch vm.state {
       case .ready:
-        Text(.searchStateReady)
+        Text(.Search.stateReady)
 
       case .searching:
-        ProgressView(.searchStateSearching)
+        ProgressView(.Search.stateSearching)
 
       case .detecting:
-        ProgressView(.searchStateDetecting)
+        ProgressView(.Search.stateDetecting)
 
       case .cancelled:
-        Text(.searchStateCancelled)
+        Text(.Search.stateCancelled)
 
       case .failure(let error):
         AlbumSearchErrorView(error: error)

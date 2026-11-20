@@ -28,10 +28,10 @@ struct HistoryView: View {
           .contextMenu {
             if vm.isSelecting == false {
               FavoriteButton(isFavorite: $album.isFavorite)
-              DeleteButton {
+              DeleteButton(title: .toolsDeleteHistory) {
                 alert = AlertDestination(
-                  title: "Delete Album?",
-                  message: "Do you want to delete \"\(album.title)\" from your history?",
+                  title: .alertsHistoryDeleteTitle(count: 1),
+                  message: .alertsHistoryDeleteMessage(count: 1),
                   primary: .delete { vm.delete(album) },
                   secondary: .cancel,
                 )
@@ -48,26 +48,25 @@ struct HistoryView: View {
         .overlay {
           if filteredHistory.isEmpty {
             if vm.searchText.isEmpty {
-              ContentUnavailableView {
-                Text("No albums yet")
-              } description: {
-                Text("Music will show up here when you start identifying songs with MusicSnap")
-              }
+              ThemeContentUnavailableView.empty(
+                .History.stateEmptyTitle,
+                description: .History.stateEmptyDesc,
+              )
             } else {
-              ContentUnavailableView.search(text: vm.searchText)
+              ThemeContentUnavailableView.search(text: vm.searchText)
             }
           }
         }
         .searchable(
           text: $vm.searchText,
-          prompt: "Search for artists or albums",
+          prompt: .History.textfieldPlaceholder,
         )
         .toolbar {
           AlbumHistoryToolbar(vm: vm) {
             let count = vm.selectedIds.count
             alert = AlertDestination(
-              title: "Delete Albums?",
-              message: "Delete all \(count) selected album(s) from your history?",
+              title: .alertsHistoryDeleteTitle(count: count),
+              message: .alertsHistoryDeleteMessage(count: count),
               primary: .delete { vm.batchDelete(ids: vm.selectedIds) },
               secondary: .cancel,
             )
@@ -75,15 +74,8 @@ struct HistoryView: View {
         }
         .navigationDestination(for: Album.self) { destination in
           AlbumDetailWithActions(album: destination) {
-            alert = AlertDestination(
-              title: "Delete Album?",
-              message: "Do you want to delete \"\(destination.title)\" from your history?",
-              primary: .delete {
-                vm.delete(destination)
-                path.removeLast()
-              },
-              secondary: .cancel,
-            )
+            vm.delete(destination)
+            path.removeLast()
           }
         }
         .withAlertDestination($alert)
@@ -99,7 +91,7 @@ private struct AlbumHistoryToolbar: ToolbarContent {
   let deleteAction: () -> Void
 
   var body: some ToolbarContent {
-    ToolbarTitle("History")
+    ToolbarTitle(.History.title)
 
     if vm.isSelecting {
       ToolbarItemGroup {
@@ -116,7 +108,7 @@ private struct AlbumHistoryToolbar: ToolbarContent {
       }
     } else {
       ToolbarItem {
-        Button("Select") {
+        Button(.toolsSelect) {
           vm.isSelecting = true
         }
         .disabled(vm.filteredCount == 0)
@@ -128,14 +120,14 @@ private struct AlbumHistoryToolbar: ToolbarContent {
         Menu {
           Picker("Criteria", selection: $vm.sort.criterion) {
             ForEach(SortCriterion.allCases) { criterion in
-              Text(criterion.displayName)
+              Text(criterion.resource)
                 .tag(criterion)
             }
           }
 
           Picker("Order", selection: vm.currentOrder) {
             ForEach(vm.sort.criterion.orders) { order in
-              Text(order.displayName)
+              Text(order.resource)
                 .tag(order)
             }
           }
@@ -178,36 +170,56 @@ private struct AlbumHistoryFilterBar: View {
 }
 
 #if DEBUG
-#Preview("No data", traits: .withHistoryContext(kind: .empty)) {
+private struct WithNoResults: View {
+  @Environment(AlbumHistoryViewModel.self) private var vm
+
+  @Query(sort: \Album.selectedAt, order: .reverse) private var albums: [Album]
+
+  var body: some View {
+    HistoryView()
+      .onAppear {
+        vm.searchText = "#"
+      }
+  }
+}
+
+private struct WithDatesReset: View {
+  @Query(sort: \Album.title) private var albums: [Album]
+
+  var body: some View {
+    HistoryView()
+      .onAppear {
+        let offsets: [DateOffset] = [
+          .seconds(30),
+          .minutes(1),
+          .hours(1),
+          .days(1),
+          .weeks(1),
+          .months(1),
+          .years(1),
+        ]
+
+        guard albums.count >= offsets.count else { return }
+
+        for (album, offset) in albums.paired(with: offsets) {
+          album.selectedAt = album.selectedAt.subtracting(offset)
+        }
+      }
+  }
+}
+
+#Preview("Empty", traits: .withHistoryContext(kind: .empty)) {
   HistoryView()
+}
+#Preview("No results", traits: .withHistoryContext(kind: .default)) {
+  WithNoResults()
 }
 #Preview("With data", traits: .withHistoryContext(kind: .default)) {
   HistoryView()
 }
-
 #Preview("With dates reset", traits: .withHistoryContext(kind: .resetDates(to: .now))) {
-  @Previewable @Query(sort: \Album.title) var albums: [Album]
-
-  HistoryView()
-    .onAppear {
-      let offsets: [DateOffset] = [
-        .seconds(30),
-        .minutes(1),
-        .hours(1),
-        .days(1),
-        .weeks(1),
-        .months(1),
-        .years(1),
-      ]
-
-      guard albums.count >= offsets.count else { return }
-
-      for (album, offset) in albums.paired(with: offsets) {
-        album.selectedAt = album.selectedAt.subtracting(offset)
-      }
-    }
+  WithDatesReset()
 }
-
 #Preview("In tab", traits: .withHistoryContext(kind: .default)) {
   TabView {
     Tab {

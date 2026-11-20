@@ -8,32 +8,38 @@ struct FavoriteButton: View {
     Button {
       isFavorite.toggle()
     } label: {
-      HStack {
-        Image(
-          systemName:
-            isFavorite
-            ? "heart.slash"
-            : "heart"
-        )
+      let title: LocalizedStringResource =
+        isFavorite
+        ? .toolsFavoriteUndo
+        : .toolsFavoriteDo
 
-        Text(
+      Label(title, systemImage: "heart")
+        .symbolVariant(
           isFavorite
-            ? "Undo Favorite"
-            : "Favorite"
+            ? .slash
+            : .none
         )
-      }
     }
   }
 }
 
 struct DeleteButton: View {
+  let title: LocalizedStringResource
   let action: () -> Void
+
+  init(
+    title: LocalizedStringResource,
+    action: @escaping () -> Void,
+  ) {
+    self.title = title
+    self.action = action
+  }
 
   var body: some View {
     Button(role: .destructive) {
       action()
     } label: {
-      Label("Delete from History", systemImage: "trash")
+      Label(title, systemImage: "trash")
     }
   }
 }
@@ -41,27 +47,27 @@ struct DeleteButton: View {
 #if DEBUG
 import SwiftData
 
-#Preview(traits: .withSampleData) {
-  @Previewable @Query var albums: [Album]
+#Preview {
+  @Previewable @State var isFavorite = false
 
-  if let album = albums.first {
-    @Bindable var album = album
-
-    NavigationStack {
+  NavigationStack {
+    HStack {
       Text("Hello, world!")
-        .toolbar {
-          ToolbarItem(placement: .topBarTrailing) {
-            Menu {
-              FavoriteButton(isFavorite: $album.isFavorite)
-              DeleteButton {}
-            } label: {
-              Image(systemName: "ellipsis")
-            }
-          }
-        }
+      Image(systemName: "heart")
+        .symbolVariant(isFavorite ? .slash : .none)
     }
-  } else {
-    ProgressView()
+    .toolbar {
+      ToolbarItem(placement: .topBarTrailing) {
+        Menu {
+          FavoriteButton(isFavorite: $isFavorite)
+          DeleteButton(title: .toolsDelete) {
+            print("Deleted")
+          }
+        } label: {
+          Image(systemName: "ellipsis")
+        }
+      }
+    }
   }
 }
 #endif

@@ -9,8 +9,12 @@ enum ColorSchemePreference: String, CaseIterable, Identifiable {
     rawValue
   }
 
-  var displayName: String {
-    rawValue.capitalized
+  var resource: LocalizedStringResource {
+    switch self {
+    case .system: .Settings.themeSystem
+    case .light: .Settings.themeLight
+    case .dark: .Settings.themeDark
+    }
   }
 
   var colorScheme: ColorScheme? {

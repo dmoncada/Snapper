@@ -10,10 +10,10 @@ enum AlbumHistoryFilter: Hashable, Identifiable {
   var resource: LocalizedStringResource {
     switch self {
     case .all:
-      .historyFiltersAll
+      .filtersAll
 
     case .favorites:
-      .historyFiltersFavorites
+      .filtersFavorites
 
     case .genre(let genre):
       AlbumGenre(rawValue: genre)?.resource ?? .genresUnknown

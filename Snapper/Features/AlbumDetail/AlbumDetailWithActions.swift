@@ -4,6 +4,8 @@ struct AlbumDetailWithActions: View {
   let album: Album
   let deleteAction: () -> Void
 
+  @State private var alert: AlertDestination?
+
   var body: some View {
     @Bindable var album = album
 
@@ -12,14 +14,20 @@ struct AlbumDetailWithActions: View {
         ToolbarItem(placement: .topBarTrailing) {
           Menu {
             FavoriteButton(isFavorite: $album.isFavorite)
-            DeleteButton {
-              deleteAction()
+            DeleteButton(title: .toolsDeleteHistory) {
+              alert = AlertDestination(
+                title: .alertsHistoryDeleteTitle(count: 1),
+                message: .alertsHistoryDeleteMessage(count: 1),
+                primary: .delete { deleteAction() },
+                secondary: .cancel,
+              )
             }
           } label: {
             Image(systemName: "ellipsis")
           }
         }
       }
+      .withAlertDestination($alert)
   }
 }
 

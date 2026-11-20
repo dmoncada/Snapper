@@ -8,7 +8,7 @@ struct SchemeSelectionView: View {
       Button {
         selection = option
       } label: {
-        LabeledContent(option.displayName) {
+        LabeledContent(option.resource) {
           Image(systemName: "checkmark")
             .opacity(selection == option ? 1 : 0)
             .foregroundStyle(.accent)

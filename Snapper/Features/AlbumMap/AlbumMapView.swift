@@ -64,7 +64,7 @@ struct AlbumMapView: View {
           }
         }
         .toolbar {
-          ToolbarTitle("Spatial")
+          ToolbarTitle(.Spatial.title)
 
           ToolbarItemGroup(placement: .topBarTrailing) {
             let disabled = albums.allSatisfy { $0.mapCoordinate == nil }
@@ -176,6 +176,10 @@ private struct AlbumClusterSheet: View {
 
   @State private var selectedAlbum: Album?
 
+  private var resource: LocalizedStringResource {
+    .spatialClusterSheetTitle(count: pin.albums.count)
+  }
+
   var body: some View {
     NavigationStack {
       AlbumClusterView(albums: pin.albums) { album in
@@ -184,19 +188,12 @@ private struct AlbumClusterSheet: View {
       .sheet(item: $selectedAlbum) { album in
         AlbumDetailSheet(album: album)
       }
-      .toolbar {
-        ToolbarItem(placement: .principal) {
-          Text("\(pin.albums.count) albums")
-            .font(.zillaSlab(.headline).bold())
-            .foregroundStyle(.primary)
-        }
-      }
-      .navigationBarTitleDisplayMode(.inline)
       .presentationDetents([
         pin.albums.count <= 4
           ? .medium
           : .large
       ])
+      .withToolbarTitle(resource, style: .principal)
       .withCloseButton()
     }
   }

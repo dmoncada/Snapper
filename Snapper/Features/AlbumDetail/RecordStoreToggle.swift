@@ -28,7 +28,7 @@ struct RecordStoreToggle: View {
       Label {
         HStack(spacing: Spacing.xs) {
           Text(candidate.name)
-          Text("∙")
+          Text(verbatim: "∙")
           Text(
             distance.formatted(
               .measurement(width: .narrow, usage: .road)

@@ -2,37 +2,28 @@ import SwiftData
 import SwiftUI
 
 struct SnapperAppShell: View {
-  @AppStorage(.storageKeys.colorScheme)
-  private var preference: ColorSchemePreference = .system
-
   @Environment(\.scenePhase) private var phase
   @Environment(\.modelContext) private var context
 
   @Environment(AlbumLocationCaptureCoordinator.self) private var locationCoordinator
 
-  @State private var router = Router()
-
   var body: some View {
     TabView {
-      Tab("Home", systemImage: "house") {
+      Tab(.Search.title, systemImage: "house") {
         HomeView()
       }
-      Tab("History", systemImage: "clock") {
+      Tab(.History.title, systemImage: "clock") {
         HistoryView()
       }
-      Tab("Spatial", systemImage: "map") {
+      Tab(.Spatial.title, systemImage: "map") {
         AlbumMapView()
       }
-      #if DEBUG
+      #if DEBUG && false
       Tab("Export", systemImage: "square.and.arrow.up") {
         SampleDataExportView()
       }
       #endif
     }
-    .withSheetDestination($router.sheetItem)
-    .withAlertDestination($router.alertItem)
-    .preferredColorScheme(preference.colorScheme)
-    .environment(router)
     .onChange(of: phase, initial: true) { _, next in
       switch next {
       case .active:
