@@ -1,41 +1,52 @@
 require "json"
+require "time"
+require "uri"
+
+def check_fixture_artwork(fixture_path, covers_path)
+  missing = fixture_asset_names(fixture_path).reject do |name|
+    File.file?(File.join(covers_path, "#{name}.imageset", "cover.jpg"))
+  end
+  return if missing.empty?
+
+  UI.user_error!("Missing bundled artwork for #{File.basename(fixture_path)} in #{covers_path}: #{missing.join(', ')}")
+end
+
+def fixture_asset_names(fixture_path)
+  albums = JSON.parse(File.read(fixture_path)).fetch("albums")
+  latest = albums.sort_by { |album| Time.iso8601(album.fetch("selectedAt")) }.last(10)
+
+  latest.flat_map do |album|
+    %w[thumbnailUrl coverImageUrl].map { |key| fixture_asset_name(album, key) }
+  end.uniq
+end
+
+def fixture_asset_name(album, key)
+  url = album[key]
+  return File.basename(URI.parse(url).path) if url&.start_with?("assets:///")
+
+  "Album-#{album.fetch('discogsId')}"
+end
 
 default_platform(:ios)
 
 platform :ios do
-  desc "Capture Search, History, and Detail with the newest ten fixture albums"
+  desc "Capture Search, History, Detail, and Spatial as original, framed, and 512px framed PNGs"
   lane :screenshots do |options|
     root = File.expand_path("..", __dir__)
     output = File.expand_path(options[:output] || "fastlane/screenshots", root)
+    device = options[:device] || "iPhone 18 Pro"
 
-    albums = JSON.parse(
-      File.read(
-        File.join(
-          root,
-          "PreviewContent/albums.json"
-        )
-      )
-    ).fetch("albums")
-
-    latest = albums.sort_by { |album| album.fetch("selectedAt") }.last(10)
-
-    missing = latest.filter_map do |album|
-      artwork = File.join(
-        root,
-        "PreviewContent/Assets.xcassets/Covers",
-        "Album-#{album.fetch('discogsId')}.imageset/cover.jpg"
-      )
-      album.fetch("discogsId") unless File.file?(artwork)
-    end
-
-    UI.user_error!("Missing bundled artwork for Discogs IDs: #{missing.join(', ')}") unless missing.empty?
+    preview_content = File.join(root, "PreviewContent")
+    covers = File.join(preview_content, "Assets.xcassets", "Covers")
+    check_fixture_artwork(File.join(preview_content, "albums.json"), File.join(covers, "History"))
+    check_fixture_artwork(File.join(preview_content, "search.json"), File.join(covers, "Search"))
 
     capture_screenshots(
       project: "Snapper.xcodeproj",
       scheme: "Snapper",
       configuration: "Debug",
-      only_testing: ["SnapperUITests/ScreenshotUITests"],
-      devices: [options[:device] || "iPhone 18 Pro"],
+      only_testing: ["SnapperUITests/ScreenshotUITests/testScreenshots"],
+      devices: [device],
       languages: [options[:locale] || "en-US"],
       output_directory: output,
       derived_data_path: File.join(root, ".build/snapshot-derived"),
@@ -47,6 +58,19 @@ platform :ios do
       stop_after_first_error: true
     )
 
-    frame_screenshots(path: output) if options[:frame] == true
+    originals = Dir.glob(File.join(output, "*", "*.png")).sort
+    UI.user_error!("No original screenshots found in #{output}") if originals.empty?
+
+    frame_options = { path: output }
+    frame_options[:force_device_type] = "iphone-17-pro" if device == "iPhone 18 Pro"
+    frame_screenshots(**frame_options)
+
+    originals.each do |original|
+      base = original.delete_suffix(".png")
+      framed = "#{base}_framed.png"
+      UI.user_error!("Frameit did not produce #{framed}") unless File.file?(framed)
+
+      sh("/usr/bin/sips", "--resampleWidth", "512", framed, "--out", "#{base}_framed_512.png", log: false)
+    end
   end
 end

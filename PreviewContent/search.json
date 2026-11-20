@@ -1,0 +1,199 @@
+{
+  "version": 1,
+  "albums": [
+    {
+      "id": "AD6D73A1-EA64-5F35-956D-A8E62A90CD0B",
+      "discogsId": 12033290,
+      "title": "Musas (Un Homenaje al Folclore Latinoamericano en Manos de Los Macorinos), Vol. 2",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-12033290-Thumbnail",
+      "coverImageUrl": "assets:///Album-12033290-Thumbnail",
+      "countryName": "Mexico",
+      "countryCode": "MX",
+      "year": 2018,
+      "format": [
+        "Vinyl"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:10Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "73DB9959-D481-5645-9061-7CAF0D4103CE",
+      "discogsId": 10916482,
+      "title": "Musas (Un Homenaje Al Folclore Latinoamericano En Manos de Los Macorinos), Vol. 1",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-10916482-Thumbnail",
+      "coverImageUrl": "assets:///Album-10916482-Thumbnail",
+      "countryName": "Mexico",
+      "countryCode": "MX",
+      "year": 2017,
+      "format": [
+        "Vinyl"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:09Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "44EDE153-9826-5840-BD8C-172748634DA4",
+      "discogsId": 10635451,
+      "title": "Musas (Un Homenaje Al Folclore Latinoamericano En Manos de Los Macorinos), Vol. 1",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-10635451-Thumbnail",
+      "coverImageUrl": "assets:///Album-10635451-Thumbnail",
+      "countryName": "Mexico",
+      "countryCode": "MX",
+      "year": 2017,
+      "format": [
+        "CD"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:08Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "FE36423C-78A7-5812-AD76-3D95067924E6",
+      "discogsId": 35730523,
+      "title": "Musas (Un Homenaje Al Folclore Latinoamericano En Manos De Los Macorinos), Vol. 2",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-35730523-Thumbnail",
+      "coverImageUrl": "assets:///Album-35730523-Thumbnail",
+      "year": 2025,
+      "format": [
+        "Vinyl"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:07Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "F506A81D-2AEC-58AC-A3FE-C9428E37E5FF",
+      "discogsId": 11544847,
+      "title": "Musas (Un Homenaje al Folclore Latinoamericano en Manos de Los Macorinos), Vol. 2",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-11544847-Thumbnail",
+      "coverImageUrl": "assets:///Album-11544847-Thumbnail",
+      "countryName": "Mexico",
+      "countryCode": "MX",
+      "year": 2018,
+      "format": [
+        "CD"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:06Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "0191E9A0-FC6F-5B17-858D-66D75C624010",
+      "discogsId": 35730403,
+      "title": "Musas (Un Homenaje Al Folclore Latinoamericano En Manos De Los Macorinos), Vol. 1",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-35730403-Thumbnail",
+      "coverImageUrl": "assets:///Album-35730403-Thumbnail",
+      "year": 2025,
+      "format": [
+        "Vinyl"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:05Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "8087FFDA-F473-503C-8988-BF02B18E4C28",
+      "discogsId": 11539223,
+      "title": "Musas (Un Homenaje al Folclore Latinoamericano en Manos de Los Macorinos), Vol. 2",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-11539223-Thumbnail",
+      "coverImageUrl": "assets:///Album-11539223-Thumbnail",
+      "countryName": "Spain",
+      "countryCode": "ES",
+      "year": 2018,
+      "format": [
+        "CD"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:04Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "0AE8DA6F-6101-5382-B6CA-C9B1244A878F",
+      "discogsId": 10616340,
+      "title": "Musas (Un Homenaje Al Folclore Latinoamericano En Manos de Los Macorinos), Vol. 1",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-10616340-Thumbnail",
+      "coverImageUrl": "assets:///Album-10616340-Thumbnail",
+      "countryName": "United States",
+      "countryCode": "US",
+      "year": 2017,
+      "format": [
+        "CD"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:03Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "EE933900-83E2-54B2-9E21-9F15CD81E84F",
+      "discogsId": 13498455,
+      "title": "Musas (Un Homenaje Al Folclore Latinoamericano En Manos De Los Macorinos), Vol. 2",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-13498455-Thumbnail",
+      "coverImageUrl": "assets:///Album-13498455-Thumbnail",
+      "countryName": "Argentina",
+      "countryCode": "AR",
+      "year": 2018,
+      "format": [
+        "CD"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:02Z",
+      "isFavorite": false,
+      "tracks": []
+    },
+    {
+      "id": "1ED22AF4-B97B-5071-9B48-C994A39A6390",
+      "discogsId": 11065769,
+      "title": "Musas (Un Homenaje Al Folclore Latinoamericano En Manos de Los Macorinos), Vol. 1",
+      "artist": "Natalia Lafourcade",
+      "thumbnailUrl": "assets:///Album-11065769-Thumbnail",
+      "coverImageUrl": "assets:///Album-11065769-Thumbnail",
+      "year": 2017,
+      "format": [
+        "CD"
+      ],
+      "label": [],
+      "genre": [],
+      "barcode": [],
+      "selectedAt": "2001-01-01T00:00:01Z",
+      "isFavorite": false,
+      "tracks": []
+    }
+  ]
+}

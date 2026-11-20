@@ -3,7 +3,10 @@ import SwiftData
 
 @MainActor
 enum SampleDataStore {
-  static func makeContainer(limit: Int = 10) throws -> ModelContainer {
+  static func makeContainer(
+    named name: String = "albums",
+    limit: Int = 10,
+  ) throws -> ModelContainer {
     let configuration = ModelConfiguration(
       isStoredInMemoryOnly: true
     )
@@ -17,7 +20,7 @@ enum SampleDataStore {
       return container
     }
 
-    var file = try SampleDataLoader.importData()
+    var file = try SampleDataLoader.importData(named: name)
 
     file.albums = Array(
       file
@@ -29,9 +32,15 @@ enum SampleDataStore {
     for index in file.albums.indices {
       let discogsId = file.albums[index].discogsId
       let artworkUrl = URL(string: "assets:///Album-\(discogsId)")
+
       guard let artworkUrl else { throw URLError(.badURL) }
-      file.albums[index].thumbnailUrl = artworkUrl
-      file.albums[index].coverImageUrl = artworkUrl
+
+      if file.albums[index].thumbnailUrl?.scheme != "assets" {
+        file.albums[index].thumbnailUrl = artworkUrl
+      }
+      if file.albums[index].coverImageUrl?.scheme != "assets" {
+        file.albums[index].coverImageUrl = artworkUrl
+      }
     }
 
     try SampleDataLoader.insert(

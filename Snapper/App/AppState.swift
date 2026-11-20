@@ -36,13 +36,9 @@ final class AppState {
     recordStoreLocator = dependencies.recordStoreLocator
     dateTimeProvider = dependencies.dateTimeProvider
 
-    let logger1 = Logger(label: "\(Constants.appId).\(Features.search)")
-    let logger2 = Logger(label: "\(Constants.appId).\(Features.detail)")
-    let logger3 = Logger(label: "\(Constants.appId).\(Features.history)")
-
-    searchViewModel = .init(logger: logger1, apiClient: apiClient, recognizer: imageRecognizer)
-    detailViewModel = .init(logger: logger2, apiClient: apiClient)
-    historyViewModel = .init(logger: logger3, context: modelContainer.mainContext)
-    locationCoordinator = .init(locator: locationProvider)
+    searchViewModel = dependencies.searchViewModel
+    detailViewModel = dependencies.detailViewModel
+    historyViewModel = dependencies.historyViewModel
+    locationCoordinator = dependencies.locationCoordinator
   }
 }
