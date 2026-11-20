@@ -11,7 +11,6 @@ struct LiveDependencies: AppDependencies {
   let imageRecognizer: any ImageRecognizing
   let locationProvider: any LocationProviding
   let recordStoreLocator: any RecordStoreLocating
-  let dateTimeProvider: any DateTimeProviding
 
   let searchViewModel: AlbumSearchViewModel
   let detailViewModel: AlbumDetailViewModel
@@ -36,7 +35,6 @@ struct LiveDependencies: AppDependencies {
     imageRecognizer = .live
     locationProvider = .live
     recordStoreLocator = .live
-    dateTimeProvider = .live
 
     let logger1 = Logger(label: "\(Constants.appId).\(Features.search)")
     let logger2 = Logger(label: "\(Constants.appId).\(Features.detail)")

@@ -9,7 +9,6 @@ struct TestDependencies: AppDependencies {
   let imageRecognizer: any ImageRecognizing
   let locationProvider: any LocationProviding
   let recordStoreLocator: any RecordStoreLocating
-  let dateTimeProvider: any DateTimeProviding
 
   let searchViewModel: AlbumSearchViewModel
   let detailViewModel: AlbumDetailViewModel
@@ -40,8 +39,6 @@ struct TestDependencies: AppDependencies {
     imageRecognizer = .null
     locationProvider = .null
     recordStoreLocator = .live
-
-    dateTimeProvider = .stub(modelContainer)
 
     searchViewModel = .init(apiClient: searchClient, recognizer: imageRecognizer)
     detailViewModel = .init(apiClient: historyClient)

@@ -15,7 +15,6 @@ struct SnapperApp: App {
         .environment(\.imageRecognizer, dependencies.imageRecognizer)
         .environment(\.locationProvider, dependencies.locationProvider)
         .environment(\.recordStoreLocator, dependencies.recordStoreLocator)
-        .environment(\.dateTimeProvider, dependencies.dateTimeProvider)
 
         .environment(dependencies.searchViewModel)
         .environment(dependencies.detailViewModel)

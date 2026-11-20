@@ -8,7 +8,6 @@ protocol AppDependencies {
   var imageRecognizer: any ImageRecognizing { get }
   var locationProvider: any LocationProviding { get }
   var recordStoreLocator: any RecordStoreLocating { get }
-  var dateTimeProvider: any DateTimeProviding { get }
 
   var searchViewModel: AlbumSearchViewModel { get }
   var detailViewModel: AlbumDetailViewModel { get }

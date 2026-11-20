@@ -11,7 +11,6 @@ final class AppState {
   let imageRecognizer: any ImageRecognizing
   let locationProvider: any LocationProviding
   let recordStoreLocator: any RecordStoreLocating
-  let dateTimeProvider: any DateTimeProviding
 
   let searchViewModel: AlbumSearchViewModel
   let detailViewModel: AlbumDetailViewModel
@@ -34,7 +33,6 @@ final class AppState {
     imageRecognizer = dependencies.imageRecognizer
     locationProvider = dependencies.locationProvider
     recordStoreLocator = dependencies.recordStoreLocator
-    dateTimeProvider = dependencies.dateTimeProvider
 
     searchViewModel = dependencies.searchViewModel
     detailViewModel = dependencies.detailViewModel
