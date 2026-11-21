@@ -12,7 +12,7 @@ struct AlbumLocationSection: View {
     VStack(alignment: .leading, spacing: Spacing.xs) {
       DisclosureGroup(isExpanded: $isExpanded) {
         Map(position: $position, interactionModes: [.pan, .zoom]) {
-          Marker(.detailSectionsLocationMarker, coordinate: location.coordinate)
+          Marker(.Detail.sectionsLocationMarker, coordinate: location.coordinate)
             .tint(.accent)
         }
         .frame(height: 200)
@@ -32,11 +32,11 @@ struct AlbumLocationSection: View {
         }
       } label: {
         VStack(alignment: .leading, spacing: 0) {
-          Text(.detailSectionsLocationHeader)
+          Text(.Detail.sectionsLocationHeader)
             .font(.zillaSlab(.headline).bold())
 
           if let locationName {
-            Text(.detailSectionsLocationCaption(locationName: locationName))
+            Text(.Detail.sectionsLocationCaption(locationName: locationName))
               .font(.gillSans(.caption))
           }
         }
@@ -91,7 +91,7 @@ private struct NearbyRecordStoresView: View {
 
       case .loaded(let stores):
         HStack(spacing: Spacing.sm) {
-          Text(.detailSectionsLocationNearby)
+          Text(.Detail.sectionsLocationNearby)
             .font(.gillSans(.caption))
 
           ScrollView(.horizontal) {
@@ -117,7 +117,7 @@ private struct NearbyRecordStoresView: View {
   }
 
   private var loadingView: some View {
-    ProgressView(.detailSectionsLocationStateLoading)
+    ProgressView(.Detail.sectionsLocationStateLoading)
       .progressViewStyle(.inline(.trailing))
       .font(.gillSans(.caption))
       .controlSize(.small)
@@ -125,7 +125,7 @@ private struct NearbyRecordStoresView: View {
 
   private var retryView: some View {
     HStack(spacing: Spacing.sm) {
-      Text(.detailSectionsLocationStateFailed)
+      Text(.Detail.sectionsLocationStateFailed)
         .font(.gillSans(.caption))
 
       Button {
@@ -133,7 +133,7 @@ private struct NearbyRecordStoresView: View {
           await locateStores()
         }
       } label: {
-        Text(.detailSectionsLocationRetry)
+        Text(.Detail.sectionsLocationRetry)
           .badgeStyle(appearance: .highlighted)
           .controlSize(.small)
       }

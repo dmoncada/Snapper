@@ -193,7 +193,7 @@ private struct AlbumClusterSheet: View {
           ? .medium
           : .large
       ])
-      .withToolbarTitle(resource, style: .principal)
+      .withToolbarTitle(resource, style: .inline)
       .withCloseButton()
     }
   }

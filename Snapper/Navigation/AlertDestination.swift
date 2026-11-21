@@ -29,7 +29,7 @@ extension AlertDestination {
     Self(
       title: title,
       message: message,
-      primary: .init(title: "OK", action: action),
+      primary: .init(title: .toolsConfirm, action: action),
     )
   }
 }

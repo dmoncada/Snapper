@@ -11,7 +11,7 @@ struct FavoriteButton: View {
       let title: LocalizedStringResource =
         isFavorite
         ? .toolsFavoriteUndo
-        : .toolsFavoriteDo
+        : .toolsFavorite
 
       Label(title, systemImage: "heart")
         .symbolVariant(

@@ -54,13 +54,15 @@ extension AlbumDateGroup {
   func formattedDate(
     cutoff: Date = .now.subtracting(1, unit: .weekOfYear)
   ) -> String {
-    if Calendar.current.isDateInToday(date) {
-      return String(localized: "Today")
-    } else if cutoff < date {
-      return date.formatted(.relative(presentation: .named)).capitalizingFirstLetter()
+    let label: String
+
+    if cutoff < date {
+      label = date.formatted(Date.RelativeFormatStyle(allowedFields: [.day], presentation: .named))
     } else {
-      return date.formatted(date: .long, time: .omitted).capitalizingFirstLetter()
+      label = date.formatted(date: .long, time: .omitted)
     }
+
+    return label.capitalizingFirstLetter()
   }
 }
 
@@ -140,11 +142,13 @@ private struct TestAlbumClusterSheet: View {
   }
 }
 
-#Preview("Grouped", traits: .withSearchContext) {
+#Preview("Grouped by date", traits: .withHistoryContext) {
   TestAlbumClusterView()
 }
-
-#Preview("Sheet", traits: .withSearchContext) {
+#Preview("With dates reset", traits: .withHistoryContext(kind: .resetDates(to: .now))) {
+  TestAlbumClusterView()
+}
+#Preview("Sheet", traits: .withHistoryContext(kind: .resetDates(to: .now.subtracting(.days(1))))) {
   TestAlbumClusterSheet()
 }
 #endif

@@ -3,7 +3,7 @@ import SwiftUI
 struct ToolbarTitle: ToolbarContent {
   enum Style {
     case large
-    case principal
+    case inline
   }
 
   let title: LocalizedStringResource
@@ -28,7 +28,7 @@ struct ToolbarTitle: ToolbarContent {
       }
       .sharedBackgroundVisibility(.hidden)
 
-    case .principal:
+    case .inline:
       ToolbarItem(placement: .principal) {
         Text(title)
           .font(.zillaSlab(.headline).bold())
@@ -48,7 +48,7 @@ extension View {
       ToolbarTitle(title, style: style)
     }
     .navigationBarTitleDisplayMode(
-      style == .principal
+      style == .inline
         ? .inline
         : .large
     )
@@ -78,6 +78,6 @@ private struct TestToolbarTitle: View {
   TestToolbarTitle(style: .large)
 }
 #Preview("Principal") {
-  TestToolbarTitle(style: .principal)
+  TestToolbarTitle(style: .inline)
 }
 #endif

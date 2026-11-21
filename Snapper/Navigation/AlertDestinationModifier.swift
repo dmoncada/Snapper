@@ -44,10 +44,9 @@ extension View {
       alertItem = AlertDestination(
         title: "Album created",
         message: "The album was added to your history.",
-        primary: .init(title: "OK"),
+        primary: .confirm,
       )
     }
-    .buttonStyle(.borderedProminent)
 
     Button("Confirm") {
       alertItem = AlertDestination(
@@ -57,18 +56,17 @@ extension View {
         secondary: .cancel,
       )
     }
-    .buttonStyle(.borderedProminent)
 
     Button("Confirm delete") {
       alertItem = AlertDestination(
         title: "Delete album?",
         message: "The album will be removed from your history.",
-        primary: .init(title: "Delete", role: .destructive) { print("Delete") },
+        primary: .delete { print("Delete") },
         secondary: .cancel,
       )
     }
-    .buttonStyle(.borderedProminent)
   }
   .withAlertDestination($alertItem)
+  .buttonStyle(.borderedProminent)
 }
 #endif

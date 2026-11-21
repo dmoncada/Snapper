@@ -37,7 +37,6 @@ struct ThemeSection<Content: View>: View {
         }
       }
     }
-    // .labeledContentStyle(.withThemeFont)
     .foregroundStyle(
       .themePrimary,
       .themeSecondary,

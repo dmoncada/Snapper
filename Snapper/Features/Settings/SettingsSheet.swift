@@ -5,7 +5,7 @@ struct SettingsSheet: View {
     NavigationStack {
       SettingsView()
         .presentationDetents([.medium, .large])
-        .withToolbarTitle(.Settings.title, style: .principal)
+        .withToolbarTitle(.Settings.title, style: .inline)
         .withCloseButton()
     }
   }
@@ -40,7 +40,7 @@ private struct SettingsView: View {
       Section {
         NavigationLink {
           SchemeSelectionView(selection: $preference)
-            .withToolbarTitle(.Settings.themeTitle, style: .principal)
+            .withToolbarTitle(.Settings.themeTitle, style: .inline)
             .containerBackground(.clear, for: .navigation)
             .scrollContentBackground(.hidden)
         } label: {

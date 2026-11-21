@@ -41,7 +41,7 @@ struct AlbumDetailView: View {
         }
         .padding(Padding.xl)
       }
-      .containerRelativeFrame(.horizontal)
+      // .containerRelativeFrame(.horizontal)
     }
     .task {
       await vm.resolveTracks(for: album)
@@ -99,7 +99,7 @@ private struct AlbumHeaderSection: View {
 
         Spacer()
 
-        Toggle("Favorite", isOn: $album.isFavorite)
+        Toggle(.toolsFavorite, isOn: $album.isFavorite)
           .toggleStyle(.favoriteIcon)
           .foregroundStyle(.accent)
           .disabled(showMetadata == false)
@@ -139,18 +139,18 @@ private struct AlbumDetailSection: View {
 
   var body: some View {
     ThemeSection {
-      Section(.detailSectionsAboutHeader) {
+      Section(.Detail.sectionsAboutHeader) {
         if let label = album.label.first {
-          LabeledContent(.detailLabelsLabel, value: label)
+          LabeledContent(.Detail.labelsLabel, value: label)
         }
 
         if let year = album.year?.description {
-          LabeledContent(.detailLabelsReleased, value: year)
+          LabeledContent(.Detail.labelsReleased, value: year)
         }
 
         if let countryCode = album.countryCode, let countryName = album.countryName {
           let country = locale.localizedString(forRegionCode: countryCode)
-          LabeledContent(.detailLabelsCountry, value: country ?? countryName)
+          LabeledContent(.Detail.labelsCountry, value: country ?? countryName)
         }
 
         if showMetadata {
@@ -162,7 +162,7 @@ private struct AlbumDetailSection: View {
               Text(album.selectedAt, format: Date.FormatStyle.abbreviated)
             }
           } label: {
-            Text(.detailLabelsRecognized)
+            Text(.Detail.labelsRecognized)
           }
         }
       }
@@ -205,7 +205,7 @@ private struct AlbumTrackSection: View {
             AlbumTrackRow(track: track)
           }
         } header: {
-          Text(.detailSectionsTracksHeader)
+          Text(.Detail.sectionsTracksHeader)
         } footer: {
           let anyPreview = tracks.contains { $0.previewUrl != nil }
           if anyPreview {
@@ -223,7 +223,7 @@ private struct AlbumTrackSectionFooter: View {
 
   var body: some View {
     VStack(alignment: .leading) {
-      Text(.detailSectionsTracksFooter)
+      Text(.Detail.sectionsTracksFooter)
 
       if let musicUrl {
         Spacer()

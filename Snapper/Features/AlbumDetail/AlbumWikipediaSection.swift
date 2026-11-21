@@ -40,7 +40,7 @@ struct AlbumWikipediaSection: View {
           Text(title)
             .font(.zillaSlab(.headline).bold())
 
-          Text(.detailSectionsWikiCaption)
+          Text(.Detail.sectionsWikiCaption)
             .font(.gillSans(.caption))
         }
       }
@@ -48,7 +48,7 @@ struct AlbumWikipediaSection: View {
 
       if let url {
         Link(destination: url) {
-          Label(.detailSectionsWikiLink, systemImage: "arrow.up.right")
+          Label(.Detail.sectionsWikiLink, systemImage: "arrow.up.right")
             .font(.zillaSlab(.caption))
             .foregroundStyle(.themeSecondary)
             .labelStyle(.trailingIcon)
