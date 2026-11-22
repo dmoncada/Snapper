@@ -4,6 +4,8 @@ import SwiftUI
 struct AlbumHistoryView: View {
   @Environment(AlbumHistoryViewModel.self) private var vm
 
+  @Environment(\.navigation) private var navigation
+
   @Namespace private var namespace
 
   @State private var path = NavigationPath()
@@ -57,7 +59,11 @@ struct AlbumHistoryView: View {
               ThemeContentUnavailableView.empty(
                 .History.stateEmptyTitle,
                 description: .History.stateEmptyDesc,
-              )
+              ) {
+                if let navigation {
+                  EmptyStateButton(navigation: navigation)
+                }
+              }
             } else {
               ThemeContentUnavailableView.search(text: vm.searchText)
             }
@@ -81,7 +87,7 @@ struct AlbumHistoryView: View {
           )
         )
         .toolbar {
-          AlbumHistoryToolbar(vm: vm) {
+          albumHistoryToolbar {
             let count = vm.selectedIds.count
             alert = AlertDestination(
               title: .alertsHistoryDeleteTitle(count: count),
@@ -108,6 +114,96 @@ struct AlbumHistoryView: View {
       }
     }
   }
+
+  @ToolbarContentBuilder
+  private func albumHistoryToolbar(
+    deleteAction: @escaping () -> Void
+  ) -> some ToolbarContent {
+    // ToolbarTitle(.History.title)
+
+    if vm.isSelecting {
+      if vm.allSelected {
+        ToolbarItem(placement: .topBarLeading) {
+          Button(.toolsSelectAllUndo) {
+            withAnimation {
+              vm.deselectAll(vm.filteredIds)
+            }
+          }
+          // TODO: logic for disabling button.
+        }
+      } else {
+        ToolbarItem(placement: .topBarLeading) {
+          Button(.toolsSelectAll) {
+            withAnimation {
+              vm.selectAll(vm.filteredIds)
+            }
+          }
+          // TODO: logic for disabling button.
+        }
+      }
+
+      ToolbarItemGroup(placement: .topBarTrailing) {
+        Button(role: .cancel) {
+          withAnimation {
+            vm.clearSelection()
+          }
+        }
+        .accessibilityIdentifier("history-cancel-selection")
+
+        Button(role: .destructive) {
+          deleteAction()
+        }
+        .disabled(vm.selectedIds.isEmpty)
+        .accessibilityIdentifier("history-delete-selection")
+      }
+    } else {
+      ToolbarItem(placement: .topBarTrailing) {
+        Button(.toolsSelect) {
+          withAnimation {
+            vm.isSelecting = true
+          }
+        }
+        .disabled(vm.filteredCount == 0)
+      }
+
+      ToolbarSpacer(.fixed, placement: .topBarTrailing)
+
+      ToolbarItem(placement: .topBarTrailing) {
+        @Bindable var vm = vm
+
+        Menu {
+          Picker(.toolsSortCriteria, selection: $vm.sort.criterion) {
+            ForEach(SortCriterion.allCases) { criterion in
+              Text(criterion.resource)
+                .tag(criterion)
+            }
+          }
+
+          Picker(.toolsSortDirection, selection: vm.currentOrder) {
+            ForEach(vm.sort.criterion.orders) { order in
+              Text(order.resource)
+                .tag(order)
+            }
+          }
+        } label: {
+          Label(.toolsSort, systemImage: "arrow.up.arrow.down")
+        }
+      }
+    }
+  }
+}
+
+private struct EmptyStateButton: View {
+  var navigation: AppNavigation
+
+  var body: some View {
+    Button(.History.stateEmptyButtonLabel, systemImage: "magnifyingglass") {
+      navigation.screen = .search
+    }
+    .labelStyle(.badge(appearance: .highlighted))
+    .controlSize(.large)
+    .imageScale(.small)
+  }
 }
 
 private struct AlbumSearchSuggestions: View {
@@ -127,60 +223,6 @@ private struct AlbumSearchSuggestions: View {
     ForEach(titles, id: \.self) { title in
       Text(title)
         .searchCompletion(title)
-    }
-  }
-}
-
-private struct AlbumHistoryToolbar: ToolbarContent {
-  @Bindable var vm: AlbumHistoryViewModel
-
-  let deleteAction: () -> Void
-
-  var body: some ToolbarContent {
-    // ToolbarTitle(.History.title)
-
-    if vm.isSelecting {
-      ToolbarItemGroup {
-        Button(role: .cancel) {
-          vm.clearSelection()
-        }
-        .accessibilityIdentifier("history-cancel-selection")
-
-        Button(role: .destructive) {
-          deleteAction()
-        }
-        .disabled(vm.selectedIds.isEmpty)
-        .accessibilityIdentifier("history-delete-selection")
-      }
-    } else {
-      ToolbarItem {
-        Button(.toolsSelect) {
-          vm.isSelecting = true
-        }
-        .disabled(vm.filteredCount == 0)
-      }
-
-      ToolbarSpacer(.fixed)
-
-      ToolbarItem {
-        Menu {
-          Picker("Criteria", selection: $vm.sort.criterion) {
-            ForEach(SortCriterion.allCases) { criterion in
-              Text(criterion.resource)
-                .tag(criterion)
-            }
-          }
-
-          Picker("Order", selection: vm.currentOrder) {
-            ForEach(vm.sort.criterion.orders) { order in
-              Text(order.resource)
-                .tag(order)
-            }
-          }
-        } label: {
-          Image(systemName: "arrow.up.arrow.down")
-        }
-      }
     }
   }
 }

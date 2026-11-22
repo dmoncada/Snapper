@@ -168,6 +168,28 @@ final class AlbumHistoryViewModel {
     )
   }
 
+  var filteredIds: Set<Album.ID> {
+    let albums = (try? context.fetch(descriptor)) ?? []
+
+    return Set(albums.map(\.id))
+  }
+
+  var allSelected: Bool {
+    if selectedIds.isEmpty { return false }
+
+    let ids = filteredIds
+
+    return ids.isEmpty == false && ids.isSubset(of: selectedIds)
+  }
+
+  func selectAll(_ ids: Set<Album.ID>) {
+    selectedIds.formUnion(ids)
+  }
+
+  func deselectAll(_ ids: Set<Album.ID>) {
+    selectedIds.subtract(ids)
+  }
+
   func clearSelection() {
     selectedIds.removeAll()
     isSelecting = false

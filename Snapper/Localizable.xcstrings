@@ -4,15 +4,6 @@
     "" : {
 
     },
-    "Add album" : {
-
-    },
-    "Album %lld" : {
-
-    },
-    "Albums" : {
-
-    },
     "Albums need a captured location to appear on the map." : {
 
     },
@@ -75,9 +66,6 @@
 
     },
     "Could not look up this barcode: %@" : {
-
-    },
-    "Criteria" : {
 
     },
     "Error" : {
@@ -587,9 +575,6 @@
     "Made for the ❤️ of 🎵 in 🇲🇽" : {
 
     },
-    "Newest first" : {
-
-    },
     "No album locations" : {
 
     },
@@ -609,9 +594,6 @@
 
     },
     "Open first barcode result" : {
-
-    },
-    "Order" : {
 
     },
     "Point at a barcode or snap a photo" : {
@@ -694,9 +676,6 @@
     "Show All" : {
 
     },
-    "Sort albums" : {
-
-    },
     "spatial.cluster.sheet.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -718,6 +697,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
           }
         }
       }
@@ -763,6 +754,18 @@
             "state" : "translated",
             "value" : "Delete from history"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar del historial"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer de l’historique"
+          }
         }
       }
     },
@@ -796,6 +799,74 @@
             "state" : "translated",
             "value" : "Select"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionner"
+          }
+        }
+      }
+    },
+    "tools.select.all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select All"
+          }
+        }
+      }
+    },
+    "tools.select.all.undo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deselect All"
+          }
+        }
+      }
+    },
+    "tools.sort" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordenar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier"
+          }
+        }
+      }
+    },
+    "tools.sort.criteria" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criteria"
+          }
         }
       }
     },
@@ -828,6 +899,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Album Title"
+          }
+        }
+      }
+    },
+    "tools.sort.direction" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Direction"
           }
         }
       }
@@ -907,9 +989,6 @@
           }
         }
       }
-    },
-    "Your collection" : {
-
     }
   },
   "version" : "1.3"

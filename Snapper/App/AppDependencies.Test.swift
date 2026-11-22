@@ -15,13 +15,13 @@ struct TestDependencies: AppDependencies {
   let historyViewModel: AlbumHistoryViewModel
   let locationCoordinator: AlbumLocationCaptureCoordinator
 
-  init() {
+  init(limit: Int = 10) {
     let searchContainer: ModelContainer
     let historyContainer: ModelContainer
 
     do {
-      searchContainer = try SampleDataStore.makeContainer(named: "search")
-      historyContainer = try SampleDataStore.makeContainer(named: "albums")
+      searchContainer = try SampleDataStore.makeContainer(named: "search", limit: limit)
+      historyContainer = try SampleDataStore.makeContainer(named: "albums", limit: limit)
     } catch {
       fatalError("Unable to create schema.")
     }

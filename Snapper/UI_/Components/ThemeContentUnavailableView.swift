@@ -1,14 +1,16 @@
 import SwiftUI
 
 enum ThemeContentUnavailableView {
-  static func empty(
+  static func empty<Actions: View>(
     _ title: LocalizedStringResource,
     description: LocalizedStringResource,
+    @ViewBuilder actions: () -> Actions = { EmptyView() },
   ) -> some View {
     styled(
       title,
       systemImage: "tray.fill",
       description: description,
+      actions: actions,
     )
   }
 
@@ -30,10 +32,11 @@ enum ThemeContentUnavailableView {
     )
   }
 
-  private static func styled(
+  private static func styled<Actions: View>(
     _ title: LocalizedStringResource,
     systemImage: String,
     description: LocalizedStringResource,
+    @ViewBuilder actions: () -> Actions = { EmptyView() },
   ) -> some View {
     ContentUnavailableView {
       Label(title, systemImage: systemImage)
@@ -43,6 +46,8 @@ enum ThemeContentUnavailableView {
       Text(description)
         .font(.gillSans(.title3))
         .foregroundStyle(.secondary)
+    } actions: {
+      actions()
     }
     .foregroundStyle(
       .themePrimary,

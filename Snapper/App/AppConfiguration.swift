@@ -3,6 +3,14 @@ import SwiftData
 import SwiftUI
 
 enum Application {
+  static var isSimulator: Bool {
+    #if targetEnvironment(simulator)
+    true
+    #else
+    false
+    #endif
+  }
+
   static var isTest: Bool {
     #if DEBUG
     ProcessInfo.processInfo.arguments.contains(AppLaunchConfiguration.uiTest)

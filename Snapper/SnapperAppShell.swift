@@ -7,10 +7,13 @@ struct SnapperAppShell: View {
 
   @Environment(AlbumLocationCaptureCoordinator.self) private var locationCoordinator
 
-  @State private var screen: AppScreen = .search
+  @State private var navigation = AppNavigation()
 
   var body: some View {
-    AppTabView(selection: $screen)
+    @Bindable var navigation = navigation
+
+    AppTabView(selection: $navigation.screen)
+      .environment(\.navigation, navigation)
       .onChange(of: phase, initial: true) { _, next in
         switch next {
         case .active:

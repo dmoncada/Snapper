@@ -24,6 +24,18 @@
         }
       }
     },
+    "state.empty.button.label" : {
+      "comment" : "\n",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search albums"
+          }
+        }
+      }
+    },
     "state.empty.desc" : {
       "extractionState" : "manual",
       "localizations" : {
