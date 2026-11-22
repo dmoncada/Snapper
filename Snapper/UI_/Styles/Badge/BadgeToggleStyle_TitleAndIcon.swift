@@ -16,6 +16,8 @@ enum LabelBehavior {
 struct TitleAndIconBadgeToggleStyle: ToggleStyle {
   @Environment(\.controlSize) private var controlSize
 
+  @ScaledMetric(relativeTo: .body) private var badgePadding = Padding.md
+
   let labelStyle: LabelBehavior
   let appearance: BadgeAppearance
 
@@ -27,7 +29,7 @@ struct TitleAndIconBadgeToggleStyle: ToggleStyle {
     } label: {
       styled(configuration.label)
         .environment(\.isActive, configuration.isOn)
-        .padding(Padding.md)
+        .padding(badgePadding)
         .font(Typography.badge.for(controlSize))
         .foregroundStyle(appearance.text)
         .background {

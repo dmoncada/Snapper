@@ -1,6 +1,29 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "selected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "needs_review",
+                  "value" : "%1$(count)lld selected"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(count)lld selected"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "state.empty.desc" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -19,6 +42,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No albums"
+          }
+        }
+      }
+    },
+    "subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(count)lld album"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%1$(count)lld albums"
+                }
+              }
+            }
           }
         }
       }

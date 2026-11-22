@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-struct HomeView: View {
+struct AlbumSearchView: View {
   @AppStorage(.storageKeys.colorScheme)
   private var preference: ColorSchemePreference = .system
 
@@ -77,8 +77,10 @@ struct HomeView: View {
           )
         }
       }
+      .navigationTitle(.Search.title)
+      .navigationSubtitle(.Search.stateReady)
       .toolbar {
-        ToolbarTitle(.Search.title)
+        // ToolbarTitle(.Search.title)
         ToolbarItem(placement: .topBarTrailing) {
           Button(.Settings.title, systemImage: "gearshape") {
             isSettingsPresented = true
@@ -185,25 +187,25 @@ private struct AlbumSearchErrorView: View {
 }
 
 #if DEBUG
-extension HomeView {
+extension AlbumSearchView {
   fileprivate init(searching searchText: String) {
     _searchText = State(initialValue: searchText)
   }
 }
 
 #Preview("Default", traits: .withSearchContext) {
-  HomeView()
+  AlbumSearchView()
 }
 #Preview("Loading", traits: .withSearchContext(kind: .slow)) {
-  HomeView(searching: "slow")
+  AlbumSearchView(searching: "slow")
 }
 #Preview("Failure", traits: .withSearchContext(kind: .fail)) {
-  HomeView(searching: "fail")
+  AlbumSearchView(searching: "fail")
 }
 #Preview("No items", traits: .withSearchContext(kind: .stub(count: 0))) {
-  HomeView(searching: "stub(0)")
+  AlbumSearchView(searching: "stub(0)")
 }
 #Preview("With items", traits: .withSearchContext(kind: .stub(count: 3))) {
-  HomeView(searching: "stub(3)")
+  AlbumSearchView(searching: "stub(3)")
 }
 #endif

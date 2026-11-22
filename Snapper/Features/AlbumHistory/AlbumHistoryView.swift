@@ -1,8 +1,10 @@
 import SwiftData
 import SwiftUI
 
-struct HistoryView: View {
+struct AlbumHistoryView: View {
   @Environment(AlbumHistoryViewModel.self) private var vm
+
+  @Namespace private var namespace
 
   @State private var path = NavigationPath()
   @State private var alert: AlertDestination?
@@ -24,6 +26,10 @@ struct HistoryView: View {
             album: album,
             isSelecting: vm.isSelecting,
             isSelected: isSelected,
+          )
+          .matchedTransitionSource(
+            id: album.persistentModelID,
+            in: namespace,
           )
           .contextMenu {
             if vm.isSelecting == false {
@@ -61,6 +67,19 @@ struct HistoryView: View {
           text: $vm.searchText,
           prompt: .History.textfieldPlaceholder,
         )
+        // .searchSuggestions {
+        //   if vm.searchText.isEmpty {
+        //     AlbumSearchSuggestions()
+        //   }
+        // }
+        .navigationTitle(.History.title)
+        .navigationSubtitle(
+          Text(
+            vm.isSelecting && vm.selectedIds.isEmpty == false
+              ? .History.selected(count: vm.selectedIds.count)
+              : .History.subtitle(count: vm.albumCount)
+          )
+        )
         .toolbar {
           AlbumHistoryToolbar(vm: vm) {
             let count = vm.selectedIds.count
@@ -77,10 +96,37 @@ struct HistoryView: View {
             vm.delete(destination)
             path.removeLast()
           }
+          .navigationTransition(
+            .zoom(
+              sourceID: destination.persistentModelID,
+              in: namespace,
+            )
+          )
         }
         .withAlertDestination($alert)
         .withFullBackground()
       }
+    }
+  }
+}
+
+private struct AlbumSearchSuggestions: View {
+  @Query(sort: \Album.title) private var albums: [Album]
+
+  let maxResults: Int
+
+  init(maxResults: Int = 3) {
+    self.maxResults = maxResults
+  }
+
+  var titles: [String] {
+    Array(albums.map(\.title).prefix(min(albums.count, maxResults)))
+  }
+
+  var body: some View {
+    ForEach(titles, id: \.self) { title in
+      Text(title)
+        .searchCompletion(title)
     }
   }
 }
@@ -91,7 +137,7 @@ private struct AlbumHistoryToolbar: ToolbarContent {
   let deleteAction: () -> Void
 
   var body: some ToolbarContent {
-    ToolbarTitle(.History.title)
+    // ToolbarTitle(.History.title)
 
     if vm.isSelecting {
       ToolbarItemGroup {
@@ -176,7 +222,7 @@ private struct WithNoResults: View {
   @Query(sort: \Album.selectedAt, order: .reverse) private var albums: [Album]
 
   var body: some View {
-    HistoryView()
+    AlbumHistoryView()
       .onAppear {
         vm.searchText = "#"
       }
@@ -187,7 +233,7 @@ private struct WithDatesReset: View {
   @Query(sort: \Album.title) private var albums: [Album]
 
   var body: some View {
-    HistoryView()
+    AlbumHistoryView()
       .onAppear {
         let offsets: [DateOffset] = [
           .seconds(30),
@@ -209,21 +255,21 @@ private struct WithDatesReset: View {
 }
 
 #Preview("Empty", traits: .withHistoryContext(kind: .empty)) {
-  HistoryView()
+  AlbumHistoryView()
 }
 #Preview("No results", traits: .withHistoryContext(kind: .default)) {
   WithNoResults()
 }
 #Preview("With data", traits: .withHistoryContext(kind: .default)) {
-  HistoryView()
+  AlbumHistoryView()
 }
 #Preview("With dates reset", traits: .withHistoryContext(kind: .resetDates(to: .now))) {
   WithDatesReset()
 }
 #Preview("In tab", traits: .withHistoryContext(kind: .default)) {
   TabView {
-    Tab {
-      HistoryView()
+    Tab("History", systemImage: "clock") {
+      AlbumHistoryView()
     }
   }
 }

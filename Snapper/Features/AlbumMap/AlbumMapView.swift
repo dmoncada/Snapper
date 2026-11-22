@@ -64,16 +64,20 @@ struct AlbumMapView: View {
           }
         }
         .toolbar {
-          ToolbarTitle(.Spatial.title)
+          // ToolbarTitle(.Spatial.title)
 
-          ToolbarItemGroup(placement: .topBarTrailing) {
-            let disabled = albums.allSatisfy { $0.mapCoordinate == nil }
+          let disabled = albums.allSatisfy { $0.mapCoordinate == nil }
 
+          ToolbarItem(placement: .topBarTrailing) {
             Button("Show All", systemImage: "arrow.up.left.and.arrow.down.right") {
               showAll()
             }
             .disabled(disabled)
+          }
 
+          ToolbarSpacer(.fixed, placement: .topBarTrailing)
+
+          ToolbarItem(placement: .topBarTrailing) {
             Button("Latest", systemImage: "location.fill") {
               centerOnLatest()
             }

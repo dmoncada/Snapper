@@ -4,6 +4,15 @@
     "" : {
 
     },
+    "Add album" : {
+
+    },
+    "Album %lld" : {
+
+    },
+    "Albums" : {
+
+    },
     "Albums need a captured location to appear on the map." : {
 
     },
@@ -578,6 +587,9 @@
     "Made for the ❤️ of 🎵 in 🇲🇽" : {
 
     },
+    "Newest first" : {
+
+    },
     "No album locations" : {
 
     },
@@ -680,6 +692,9 @@
 
     },
     "Show All" : {
+
+    },
+    "Sort albums" : {
 
     },
     "spatial.cluster.sheet.title" : {
@@ -892,6 +907,9 @@
           }
         }
       }
+    },
+    "Your collection" : {
+
     }
   },
   "version" : "1.3"

@@ -7,35 +7,76 @@ struct SnapperAppShell: View {
 
   @Environment(AlbumLocationCaptureCoordinator.self) private var locationCoordinator
 
-  var body: some View {
-    TabView {
-      Tab(.Search.title, systemImage: "house") {
-        HomeView()
-      }
-      Tab(.History.title, systemImage: "clock") {
-        HistoryView()
-      }
-      Tab(.Spatial.title, systemImage: "map") {
-        AlbumMapView()
-      }
-      #if DEBUG && false
-      Tab("Export", systemImage: "square.and.arrow.up") {
-        SampleDataExportView()
-      }
-      #endif
-    }
-    .onChange(of: phase, initial: true) { _, next in
-      switch next {
-      case .active:
-        locationCoordinator.resumePending(in: context)
+  @State private var screen: AppScreen = .search
 
-      case .inactive:
-        break
-      case .background:
-        break
-      @unknown default:
-        break
+  var body: some View {
+    AppTabView(selection: $screen)
+      .onChange(of: phase, initial: true) { _, next in
+        switch next {
+        case .active:
+          locationCoordinator.resumePending(in: context)
+
+        case .inactive:
+          break
+        case .background:
+          break
+        @unknown default:
+          break
+        }
       }
+  }
+}
+
+struct AppTabView: View {
+  @Binding var selection: AppScreen
+
+  var body: some View {
+    TabView(selection: $selection) {
+      ForEach(AppScreen.allCases) { screen in
+        Tab(value: screen) {
+          screen.destination
+        } label: {
+          screen.label
+        }
+      }
+    }
+  }
+}
+
+enum AppScreen: Codable, Hashable, Identifiable, CaseIterable {
+  case search
+  case history
+  case spatial
+
+  var id: AppScreen { self }
+}
+
+extension AppScreen {
+  @ViewBuilder
+  var label: some View {
+    switch self {
+    case .search:
+      Label(.Search.title, systemImage: "house")
+
+    case .history:
+      Label(.History.title, systemImage: "clock")
+
+    case .spatial:
+      Label(.Spatial.title, systemImage: "map")
+    }
+  }
+
+  @ViewBuilder
+  var destination: some View {
+    switch self {
+    case .search:
+      AlbumSearchView()
+
+    case .history:
+      AlbumHistoryView()
+
+    case .spatial:
+      AlbumMapView()
     }
   }
 }
