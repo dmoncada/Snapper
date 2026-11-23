@@ -21,8 +21,14 @@ struct AlbumWikipediaSection: View {
   @State private var articleExpanded = true
 
   private var attributedExtract: AttributedString {
-    guard let attributed = try? AttributedString(markdown: extract) else {
+    guard var attributed = try? AttributedString(markdown: extract) else {
       return AttributedString(extract)
+    }
+
+    for run in attributed.runs {
+      if run.inlinePresentationIntent?.contains(.stronglyEmphasized) == true {
+        attributed[run.range].font = .zillaSlab(.callout).bold()
+      }
     }
 
     return attributed
@@ -32,7 +38,7 @@ struct AlbumWikipediaSection: View {
     VStack(alignment: .leading, spacing: Spacing.sm) {
       DisclosureGroup(isExpanded: $articleExpanded) {
         Text(attributedExtract)
-          .font(.gillSans(.body))
+          .font(.gillSans(.callout))
           .lineLimit(4)
           .padding(12)
       } label: {

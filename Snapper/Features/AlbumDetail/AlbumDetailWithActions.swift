@@ -9,7 +9,7 @@ struct AlbumDetailWithActions: View {
   var body: some View {
     @Bindable var album = album
 
-    AlbumDetailView(album: album)
+    AdaptiveAlbumDetailView(album: album)
       .toolbar {
         ToolbarItem(placement: .topBarTrailing) {
           Menu {

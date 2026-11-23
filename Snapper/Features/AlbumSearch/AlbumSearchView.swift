@@ -13,7 +13,7 @@ struct AlbumSearchView: View {
 
   @Environment(AlbumSearchViewModel.self) private var vm
 
-  @State private var searchText = ""
+  @State private var isMounted = false
   @State private var selectedAlbum: Album?
   @State private var isCameraPresented = false
   @State private var isSettingsPresented = false
@@ -21,6 +21,8 @@ struct AlbumSearchView: View {
   @FocusState private var isFocused: Bool
 
   var body: some View {
+    @Bindable var vm = vm
+
     NavigationStack {
       VStack(alignment: .leading, spacing: 0) {
         VStack(spacing: Spacing.sm) {
@@ -33,7 +35,7 @@ struct AlbumSearchView: View {
             .buttonStyle(.theme)
           }
 
-          TextField(text: $searchText) {
+          TextField(text: $vm.searchText) {
             Text(.Search.textfieldPlaceholder)
               .foregroundStyle(.themePlaceholder)
           }
@@ -43,7 +45,7 @@ struct AlbumSearchView: View {
           .accessibilityIdentifier("album-search-field")
           .textFieldStyle(
             .searchField(
-              text: $searchText,
+              text: $vm.searchText,
               isFocused: isFocused,
             )
           )
@@ -88,8 +90,10 @@ struct AlbumSearchView: View {
           }
         }
       }
-      .task(id: searchText) {
-        await vm.search(by: .term(searchText), locale: locale)
+      .task(id: vm.searchText) {
+        defer { isMounted = true }
+        guard isMounted else { return }
+        await vm.search(by: .term(vm.searchText), locale: locale)
       }
       .sheet(isPresented: $isSettingsPresented) {
         SettingsSheet()
@@ -100,9 +104,7 @@ struct AlbumSearchView: View {
       }
       .sheet(item: $selectedAlbum) { album in
         AlbumCreation(album: album)
-          .presentationDetents([
-            .large
-          ])
+          .presentationDetents([.large])
       }
       .withFullBackground()
       .dismissKeyboardOnTap()
@@ -131,23 +133,27 @@ private struct AlbumCandidateSection: View {
       switch vm.state {
       case .ready:
         Text(.Search.stateReady)
+          .secondary()
 
       case .searching:
         ProgressView(.Search.stateSearching)
+          .secondary()
 
       case .detecting:
         ProgressView(.Search.stateDetecting)
+          .secondary()
 
       case .cancelled:
         Text(.Search.stateCancelled)
+          .secondary()
 
-      case .failure(let error):
-        AlbumSearchErrorView(error: error)
+      case .failed(let error):
+        ThemeContentUnavailableView.error(.searchErrorLabel, description: error.resource)
 
-      case .success(let albums) where albums.isEmpty:
-        ContentUnavailableView.search
+      case .loaded(let albums) where albums.isEmpty:
+        ThemeContentUnavailableView.search(text: vm.searchText)
 
-      case .success(let albums):
+      case .loaded(let albums):
         ScrollView {
           ThemeSection {
             Section {
@@ -167,6 +173,8 @@ private struct AlbumCandidateSection: View {
         .scrollDismissesKeyboard(.immediately)
       }
     }
+    .font(.gillSans(.title3))
+    .foregroundStyle(.themePrimary)
     .frame(
       maxWidth: .infinity,
       maxHeight: .infinity,
@@ -174,22 +182,25 @@ private struct AlbumCandidateSection: View {
   }
 }
 
-private struct AlbumSearchErrorView: View {
-  let error: AlbumSearchError
-
-  var body: some View {
-    ContentUnavailableView {
-      Label(.searchErrorLabel, systemImage: "xmark.circle")
-    } description: {
-      Text(error.resource)
-    }
+extension View {
+  fileprivate func secondary() -> some View {
+    self
+      .font(.gillSans(.title3))
+      .foregroundStyle(.secondary)
   }
 }
 
 #if DEBUG
-extension AlbumSearchView {
-  fileprivate init(searching searchText: String) {
-    _searchText = State(initialValue: searchText)
+private struct TestAlbumSearchView: View {
+  @Environment(AlbumSearchViewModel.self) private var vm
+
+  let searching: String
+
+  var body: some View {
+    AlbumSearchView()
+      .onAppear {
+        vm.searchText = searching
+      }
   }
 }
 
@@ -197,15 +208,15 @@ extension AlbumSearchView {
   AlbumSearchView()
 }
 #Preview("Loading", traits: .withSearchContext(kind: .slow)) {
-  AlbumSearchView(searching: "slow")
+  TestAlbumSearchView(searching: "slow")
 }
 #Preview("Failure", traits: .withSearchContext(kind: .fail)) {
-  AlbumSearchView(searching: "fail")
+  TestAlbumSearchView(searching: "fail")
 }
 #Preview("No items", traits: .withSearchContext(kind: .stub(count: 0))) {
-  AlbumSearchView(searching: "stub(0)")
+  TestAlbumSearchView(searching: "stub(0)")
 }
 #Preview("With items", traits: .withSearchContext(kind: .stub(count: 3))) {
-  AlbumSearchView(searching: "stub(3)")
+  TestAlbumSearchView(searching: "stub(3)")
 }
 #endif

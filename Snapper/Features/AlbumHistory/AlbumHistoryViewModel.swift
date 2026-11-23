@@ -161,6 +161,20 @@ final class AlbumHistoryViewModel {
     context.getCount(using: descriptor)
   }
 
+  var resolvedSubtitle: LocalizedStringResource {
+    if isSelecting, selectedIds.isEmpty == false {
+      return .History.selected(count: selectedIds.count)
+    }
+
+    let filtersApplied = selectedFilters != [.all]
+
+    if filtersApplied {
+      return .History.subtitle(count: filteredCount)
+    }
+
+    return .History.subtitle(count: albumCount)
+  }
+
   var currentOrder: Binding<SortOrder> {
     Binding(
       get: { self.sort.getOrder(for: self.sort.criterion) },

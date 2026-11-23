@@ -79,13 +79,7 @@ struct AlbumHistoryView: View {
         //   }
         // }
         .navigationTitle(.History.title)
-        .navigationSubtitle(
-          Text(
-            vm.isSelecting && vm.selectedIds.isEmpty == false
-              ? .History.selected(count: vm.selectedIds.count)
-              : .History.subtitle(count: vm.albumCount)
-          )
-        )
+        .navigationSubtitle(Text(vm.resolvedSubtitle))
         .toolbar {
           albumHistoryToolbar {
             let count = vm.selectedIds.count
@@ -114,7 +108,9 @@ struct AlbumHistoryView: View {
       }
     }
   }
+}
 
+extension AlbumHistoryView {
   @ToolbarContentBuilder
   private func albumHistoryToolbar(
     deleteAction: @escaping () -> Void

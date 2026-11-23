@@ -14,6 +14,17 @@ enum ThemeContentUnavailableView {
     )
   }
 
+  static func error(
+    _ title: LocalizedStringResource,
+    description: LocalizedStringResource,
+  ) -> some View {
+    styled(
+      title,
+      systemImage: "xmark.circle.fill",
+      description: description,
+    )
+  }
+
   static func search(
     _ title: LocalizedStringResource,
     description: LocalizedStringResource,

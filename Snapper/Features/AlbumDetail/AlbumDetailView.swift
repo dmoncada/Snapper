@@ -2,62 +2,25 @@ import SwiftData
 import SwiftUI
 
 struct AlbumDetailView: View {
-  @Environment(\.modelContext) private var context
-  @Environment(\.previewPlayer) private var player
-
-  @Environment(AlbumDetailViewModel.self) private var vm
-
   let album: Album
   let showMetadata: Bool
 
-  init(album: Album, showMetadata: Bool = true) {
+  init(
+    album: Album,
+    showMetadata: Bool = true,
+  ) {
     self.album = album
     self.showMetadata = showMetadata
   }
 
   var body: some View {
-    ScrollView {
-      VStack(spacing: 0) {
-        AlbumCover(url: album.coverImageUrl)
-          .stretchable()
-
-        VStack(alignment: .leading, spacing: Spacing.lg) {
-          AlbumHeaderSection(album: album, showMetadata: showMetadata)
-
-          if showMetadata, album.artistInfo.hasInfo {
-            AlbumWikipediaSection(album.artistInfo.get())
-          }
-
-          if showMetadata, album.albumInfo.hasInfo {
-            AlbumWikipediaSection(album.albumInfo.get())
-          }
-
-          if showMetadata, let location = album.location {
-            AlbumLocationSection(location: location)
-          }
-
-          AlbumDetailSection(album: album, showMetadata: showMetadata)
-          AlbumTrackSection(vm: vm, musicUrl: album.musicUrl)
-        }
-        .padding(Padding.xl)
-      }
-      // .containerRelativeFrame(.horizontal)
-    }
-    .task {
-      await vm.resolveTracks(for: album)
-    }
-    .onDisappear {
-      Task {
-        await player.stopImmediately()
-      }
-    }
-    .ignoresSafeArea(.all, edges: .top)
-    .scrollIndicators(.hidden)
-    .withFullBackground()
+    AlbumDetailScrollView(album: album, showMetadata: showMetadata)
+      .withAlbumDetailLifecycle(album: album)
+      .withFullBackground()
   }
 }
 
-private struct AlbumCover: View {
+struct AlbumHero: View {
   let url: URL?
   let height: CGFloat
 
@@ -78,9 +41,14 @@ private struct AlbumCover: View {
   }
 }
 
-private struct AlbumHeaderSection: View {
+struct AlbumHeaderSection: View {
   let album: Album
-  let showMetadata: Bool
+  let showFavorite: Bool
+
+  init(album: Album, showFavorite: Bool = true) {
+    self.album = album
+    self.showFavorite = showFavorite
+  }
 
   var body: some View {
     @Bindable var album = album
@@ -102,8 +70,8 @@ private struct AlbumHeaderSection: View {
         Toggle(.toolsFavorite, isOn: $album.isFavorite)
           .toggleStyle(.favoriteIcon)
           .foregroundStyle(.accent)
-          .disabled(showMetadata == false)
-          .opacity(showMetadata ? 1 : 0)
+          .disabled(showFavorite == false)
+          .opacity(showFavorite ? 1 : 0)
       }
 
       AlbumGenresSection(genres: album.genre)
@@ -131,11 +99,16 @@ private struct AlbumGenresSection: View {
   }
 }
 
-private struct AlbumDetailSection: View {
+struct AlbumDetailSection: View {
   @Environment(\.locale) private var locale
 
   let album: Album
-  let showMetadata: Bool
+  let showDate: Bool
+
+  init(album: Album, showDate: Bool = true) {
+    self.album = album
+    self.showDate = showDate
+  }
 
   var body: some View {
     ThemeSection {
@@ -153,7 +126,7 @@ private struct AlbumDetailSection: View {
           LabeledContent(.Detail.labelsCountry, value: country ?? countryName)
         }
 
-        if showMetadata {
+        if showDate {
           LabeledContent {
             VStack(alignment: .trailing, spacing: Spacing.xs) {
               TimelineView(.everyMinute) { _ in
@@ -177,7 +150,7 @@ extension Date.FormatStyle {
   }
 }
 
-private struct AlbumTrackSection: View {
+struct AlbumTrackSection: View {
   let vm: AlbumDetailViewModel
   let musicUrl: URL?
 

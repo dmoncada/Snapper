@@ -14,9 +14,11 @@ final class AlbumSearchViewModel {
     case searching
     case detecting
     case cancelled
-    case success([Album])
-    case failure(AlbumSearchError)
+    case loaded([Album])
+    case failed(AlbumSearchError)
   }
+
+  var searchText = ""
 
   private(set) var state: State = .ready
 
@@ -77,12 +79,12 @@ final class AlbumSearchViewModel {
 
       logger.info("Found: \(results.count) albums for: '\(term ?? barcode ?? "nil")'")
 
-      state = .success(results)
+      state = .loaded(results)
     } catch is CancellationError {
       // No-op.
     } catch {
       logger.error("Search error: \(error.localizedDescription)")
-      state = .failure(.generic)
+      state = .failed(.generic)
     }
   }
 
@@ -98,7 +100,7 @@ final class AlbumSearchViewModel {
       try Task.checkCancellation()
 
       guard let barcode = result.barcode else {
-        state = .failure(.detection)
+        state = .failed(.detection)
         return
       }
 
@@ -107,7 +109,7 @@ final class AlbumSearchViewModel {
       // No-op.
     } catch {
       logger.error("Detection error: \(error.localizedDescription)")
-      state = .failure(.generic)
+      state = .failed(.generic)
     }
   }
 }

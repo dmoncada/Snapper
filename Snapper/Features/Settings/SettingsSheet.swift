@@ -4,8 +4,9 @@ struct SettingsSheet: View {
   var body: some View {
     NavigationStack {
       SettingsView()
+        .navigationTitle(.Settings.title)
+        .navigationBarTitleDisplayMode(.inline)
         .presentationDetents([.medium, .large])
-        .withToolbarTitle(.Settings.title, style: .inline)
         .withCloseButton()
     }
   }
@@ -40,7 +41,8 @@ private struct SettingsView: View {
       Section {
         NavigationLink {
           SchemeSelectionView(selection: $preference)
-            .withToolbarTitle(.Settings.themeTitle, style: .inline)
+            .navigationTitle(.Settings.themeTitle)
+            .navigationBarTitleDisplayMode(.inline)
             .containerBackground(.clear, for: .navigation)
             .scrollContentBackground(.hidden)
         } label: {
