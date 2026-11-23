@@ -15,44 +15,16 @@ struct AdaptiveAlbumDetailView: View {
   var body: some View {
     Group {
       if #available(iOS 27.1, *) {
-        _AdaptiveAlbumDetailView(album: album)
+        HingeAwareView {
+          AlbumDetailSplitView(album: album)
+        } fallback: {
+          AlbumDetailScrollView(album: album, showMetadata: showMetadata)
+        }
       } else {
-        AlbumDetailScrollView(album: album, showMetadata: true)
+        AlbumDetailScrollView(album: album, showMetadata: showMetadata)
       }
     }
     .withAlbumDetailLifecycle(album: album)
     .withFullBackground()
-  }
-}
-
-@available(iOS 27.1, *)
-private struct _AdaptiveAlbumDetailView: View {
-  let album: Album
-
-  @State private var isLandscape = false
-  @State private var hingeStatus: DeviceHinge.Status?
-
-  var body: some View {
-    let isHingeOpen = hingeStatus == .partiallyOpen || hingeStatus == .fullyOpen
-
-    ZStack {
-      if isHingeOpen, isLandscape {
-        AlbumDetailSplitView(album: album)
-      } else {
-        AlbumDetailScrollView(album: album, showMetadata: true)
-      }
-    }
-    .frame(
-      maxWidth: .infinity,
-      maxHeight: .infinity,
-    )
-    .onGeometryChange(for: Bool.self) { geometry in
-      geometry.size.width > geometry.size.height
-    } action: {
-      isLandscape = $0
-    }
-    .onHingeChange { _, context in
-      hingeStatus = context.hinge?.status
-    }
   }
 }

@@ -31,6 +31,7 @@ struct AlbumDetailSplitView: View {
           .padding(Padding.xl)
         }
       }
+      // 475px is half the display; see: https://sarunw.com/posts/splitarrangementlayoutratio/
       .splitArrangementLayoutSize(idealWidth: 475)
       .ignoresSafeArea(.all, edges: .top)
       .scrollIndicators(.hidden)
@@ -43,7 +44,6 @@ struct AlbumDetailSplitView: View {
         }
         .padding(Padding.xl)
       }
-      // .splitArrangementLayoutRatio(0.45)
       .scrollIndicators(.hidden)
     }
     .arrangementViewStyle(.split.axes(.horizontal))
