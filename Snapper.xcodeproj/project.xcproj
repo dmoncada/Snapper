@@ -97,11 +97,13 @@
         }, {
           "target": "SnapperWidget",
           "inclusions": [
+            "App/AppDeepLink.swift",
             "App/Constants.swift",
             "Models/Album.swift",
             "Models/Genre.swift",
             "Models/Track.swift",
             "Resources/Assets.xcassets",
+            "Resources/Localization/Search.xcstrings",
             "Services/Api/Dto/AlbumDto.swift",
             "Services/Api/Dto/AlbumWikiResponseDto.swift",
             "Services/Api/Dto/TrackDto.swift",

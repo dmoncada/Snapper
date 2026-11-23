@@ -9,6 +9,7 @@ struct AlbumSearchView: View {
   private var openFirstResult = true
 
   @Environment(\.locale) private var locale
+  @Environment(\.navigation) private var navigation
   @Environment(\.colorScheme) private var systemScheme
 
   @Environment(AlbumSearchViewModel.self) private var vm
@@ -98,9 +99,7 @@ struct AlbumSearchView: View {
       .sheet(isPresented: $isSettingsPresented) {
         SettingsSheet()
           .preferredColorScheme(preference.colorScheme ?? systemScheme)
-          .presentationDetents([
-            .fraction(3 / 4)
-          ])
+          .presentationDetents([.fraction(3 / 4)])
       }
       .sheet(item: $selectedAlbum) { album in
         AlbumCreation(album: album)
@@ -109,6 +108,19 @@ struct AlbumSearchView: View {
       .withFullBackground()
       .dismissKeyboardOnTap()
     }
+    .onChange(of: canPresentCameraFromDeepLink, initial: true) { _, canPresentCamera in
+      guard canPresentCamera, let navigation else { return }
+      navigation.deepLink = nil
+      isCameraPresented = true
+    }
+  }
+
+  private var canPresentCameraFromDeepLink: Bool {
+    true
+      && navigation?.screen == .search
+      && navigation?.deepLink == .camera
+      && isSettingsPresented == false
+      && selectedAlbum == nil
   }
 
   private func onBarcode(_ barcode: String) {

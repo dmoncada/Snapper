@@ -7,11 +7,9 @@ struct SnapperAppShell: View {
 
   @Environment(AlbumLocationCaptureCoordinator.self) private var locationCoordinator
 
-  @State private var navigation = AppNavigation()
+  @Bindable var navigation: AppNavigation
 
   var body: some View {
-    @Bindable var navigation = navigation
-
     AppTabView(selection: $navigation.screen)
       .environment(\.navigation, navigation)
       .onChange(of: phase, initial: true) { _, next in
@@ -30,7 +28,7 @@ struct SnapperAppShell: View {
   }
 }
 
-struct AppTabView: View {
+private struct AppTabView: View {
   @Binding var selection: AppScreen
 
   var body: some View {
@@ -42,44 +40,6 @@ struct AppTabView: View {
           screen.label
         }
       }
-    }
-  }
-}
-
-enum AppScreen: Codable, Hashable, Identifiable, CaseIterable {
-  case search
-  case history
-  case spatial
-
-  var id: AppScreen { self }
-}
-
-extension AppScreen {
-  @ViewBuilder
-  var label: some View {
-    switch self {
-    case .search:
-      Label(.Search.title, systemImage: "house")
-
-    case .history:
-      Label(.History.title, systemImage: "clock")
-
-    case .spatial:
-      Label(.Spatial.title, systemImage: "map")
-    }
-  }
-
-  @ViewBuilder
-  var destination: some View {
-    switch self {
-    case .search:
-      AlbumSearchView()
-
-    case .history:
-      AlbumHistoryView()
-
-    case .spatial:
-      AlbumMapView()
     }
   }
 }

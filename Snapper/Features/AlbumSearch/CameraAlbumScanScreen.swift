@@ -40,10 +40,12 @@ struct CameraAlbumScanScreen: View {
             )
         }
       }
-      .navigationToolbar(title: "Snap a photo") {
+      .navigationTitle(.Search.snapTitle)
+      .navigationBarTitleDisplayMode(.inline)
+      .withAlertDestination($alertItem)
+      .withCloseButton {
         requestClose()
       }
-      .withAlertDestination($alertItem)
     }
     .overlay {
       AlbumScanStatusView(model: model)

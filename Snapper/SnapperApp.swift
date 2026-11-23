@@ -34,6 +34,7 @@ private struct ContentView: View {
   @Environment(\.apiClient) private var client
 
   @State private var isLaunching = true
+  @State private var navigation = AppNavigation()
 
   var body: some View {
     TransitionView(
@@ -42,7 +43,7 @@ private struct ContentView: View {
     ) {
       LaunchView()
     } second: {
-      SnapperAppShell()
+      SnapperAppShell(navigation: navigation)
     }
     .preferredColorScheme(preference.colorScheme)
     .task {
@@ -53,6 +54,11 @@ private struct ContentView: View {
     }
     .task {
       try? await client.health()  // Warm up the backend.
+    }
+    .onOpenURL { url in
+      if let deepLink = AppDeepLink(url: url) {
+        navigation.open(deepLink)
+      }
     }
   }
 }

@@ -6,45 +6,82 @@ struct SnapperWidgetEntryView: View {
 
   var body: some View {
     let gridSize = entry.albums.count <= 4 ? 2 : 3
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: gridSize)
 
     GeometryReader { geometry in
       let side = max(geometry.size.width, geometry.size.height) * CGFloat(2).squareRoot()
+      let tileSide = side / CGFloat(gridSize)
 
-      LazyVGrid(columns: columns, spacing: 0) {
-        ForEach(0 ..< gridSize * gridSize, id: \.self) { index in
-          if index < entry.albums.count {
-            HistoryAlbumTile(album: entry.albums[index])
-          } else {
-            Color.clear
-              .aspectRatio(1, contentMode: .fit)
+      Canvas { context, size in
+        guard let grid = context.resolveSymbol(id: 0) else { return }
+
+        context.clip(to: Path(CGRect(origin: .zero, size: size)))
+        context.translateBy(x: size.width / 2, y: size.height / 2)
+        context.rotate(by: .degrees(45))
+        context.draw(grid, at: .zero)
+      } symbols: {
+        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+          ForEach(0 ..< gridSize, id: \.self) { row in
+            GridRow {
+              ForEach(0 ..< gridSize, id: \.self) { column in
+                let index = row * gridSize + column
+                Group {
+                  if index < entry.albums.count {
+                    HistoryAlbumTile(album: entry.albums[index])
+                  } else {
+                    Color.clear
+                  }
+                }
+                .frame(width: tileSide, height: tileSide)
+              }
+            }
           }
         }
+        .frame(width: side, height: side)
+        .tag(0)
       }
-      .frame(
-        width: side,
-        height: side,
-      )
-      .rotationEffect(.degrees(45))
-      .frame(
-        width: geometry.size.width,
-        height: geometry.size.height,
-      )
     }
     .clipped()
     .containerBackground(.fill.tertiary, for: .widget)
     .overlay(alignment: .topTrailing) {
-      Image(.musicSnapMini)
+      logo
+    }
+    .overlay(alignment: .bottomTrailing) {
+      if let url = AppDeepLink.camera.url {
+        cameraButton(url)
+      }
+    }
+  }
+
+  private var logo: some View {
+    Image(.musicSnapMini)
+      .resizable()
+      .scaledToFit()
+      .frame(height: 16)
+      .padding(.horizontal, 12)
+      .padding(.vertical, 8)
+      .foregroundStyle(
+        entry.albums.isEmpty
+          ? Color.primary
+          : Color.white
+      )
+  }
+
+  @ViewBuilder
+  private func cameraButton(_ url: URL) -> some View {
+    let size: CGFloat = 28
+
+    Link(destination: url) {
+      Image(systemName: "camera.fill")
         .resizable()
         .scaledToFit()
-        .frame(height: 16)
+        .frame(width: size, height: size)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 14)
         .foregroundStyle(
           entry.albums.isEmpty
             ? Color.primary
             : Color.white
         )
-        .padding(.trailing, 12)
-        .padding(.top, 8)
     }
   }
 }

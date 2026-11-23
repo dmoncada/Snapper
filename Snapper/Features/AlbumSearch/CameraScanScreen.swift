@@ -39,10 +39,12 @@ struct CameraScanScreen: View {
             )
         }
       }
-      .navigationToolbar(title: "Snap a photo") {
+      .navigationTitle(.Search.snapTitle)
+      .navigationBarTitleDisplayMode(.inline)
+      .withAlertDestination($alertItem)
+      .withCloseButton {
         requestClose()
       }
-      .withAlertDestination($alertItem)
     }
     .task {
       await scan()

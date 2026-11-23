@@ -23,6 +23,17 @@
         }
       }
     },
+    "snap.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Snap a photo"
+          }
+        }
+      }
+    },
     "state.cancelled" : {
       "extractionState" : "manual",
       "localizations" : {
