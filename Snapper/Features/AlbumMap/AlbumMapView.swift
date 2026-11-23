@@ -216,27 +216,6 @@ private struct AlbumDetailSheet: View {
   }
 }
 
-struct SheetCloseButton: ViewModifier {
-  @Environment(\.dismiss) private var dismiss
-
-  func body(content: Content) -> some View {
-    content
-      .toolbar {
-        ToolbarItem(placement: .topBarTrailing) {
-          Button(role: .cancel) {
-            dismiss()
-          }
-        }
-      }
-  }
-}
-
-extension View {
-  func withCloseButton() -> some View {
-    modifier(SheetCloseButton())
-  }
-}
-
 #if DEBUG
 #Preview(
   "Cluster",

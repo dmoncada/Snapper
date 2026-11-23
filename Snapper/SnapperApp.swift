@@ -42,7 +42,7 @@ private struct ContentView: View {
       animation: .easeInOut,
     ) {
       LaunchView()
-    } second: {
+    } secondary: {
       SnapperAppShell(navigation: navigation)
     }
     .preferredColorScheme(preference.colorScheme)

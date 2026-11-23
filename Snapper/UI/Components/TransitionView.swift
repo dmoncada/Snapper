@@ -1,37 +1,37 @@
 import SwiftUI
 
 struct TransitionView<
-  Content1: View,
-  Content2: View,
+  Primary: View,
+  Secondary: View,
   T: Transition,
 >: View {
   let showFirst: Bool
   let animation: Animation
   let transition: T
 
-  @ViewBuilder let first: () -> Content1
-  @ViewBuilder let second: () -> Content2
+  @ViewBuilder let primary: () -> Primary
+  @ViewBuilder let secondary: () -> Secondary
 
   init(
     showFirst: Bool,
     animation: Animation,
     transition: T = .opacity,
-    @ViewBuilder first: @escaping () -> Content1,
-    @ViewBuilder second: @escaping () -> Content2,
+    @ViewBuilder primary: @escaping () -> Primary,
+    @ViewBuilder secondary: @escaping () -> Secondary,
   ) {
     self.showFirst = showFirst
     self.animation = animation
     self.transition = transition
-    self.first = first
-    self.second = second
+    self.primary = primary
+    self.secondary = secondary
   }
 
   var body: some View {
     Group {
       if showFirst {
-        first().transition(transition)
+        primary().transition(transition)
       } else {
-        second().transition(transition)
+        secondary().transition(transition)
       }
     }
     .animation(animation, value: showFirst)
@@ -46,9 +46,9 @@ struct TransitionView<
     showFirst: showFirst,
     animation: .easeInOut,
   ) {
-    Text("First").withFullBackground(.red)
-  } second: {
-    Text("Second").withFullBackground(.blue)
+    Text("Primary").withFullBackground(.red)
+  } secondary: {
+    Text("Secondary").withFullBackground(.blue)
   }
   .task {
     while Task.isCancelled == false {
