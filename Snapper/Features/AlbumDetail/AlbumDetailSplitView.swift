@@ -31,6 +31,7 @@ struct AlbumDetailSplitView: View {
           .padding(Padding.xl)
         }
       }
+      .splitArrangementLayoutSize(idealWidth: 475)
       .ignoresSafeArea(.all, edges: .top)
       .scrollIndicators(.hidden)
     } secondary: {
