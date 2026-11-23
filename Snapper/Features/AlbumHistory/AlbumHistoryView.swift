@@ -54,19 +54,8 @@ struct AlbumHistoryView: View {
         }
         .onAppear { vm.refreshAvailableFilters() }
         .overlay {
-          if filteredHistory.isEmpty {
-            if vm.searchText.isEmpty {
-              ThemeContentUnavailableView.empty(
-                .History.stateEmptyTitle,
-                description: .History.stateEmptyDesc,
-              ) {
-                if let navigation {
-                  EmptyStateButton(navigation: navigation)
-                }
-              }
-            } else {
-              ThemeContentUnavailableView.search(text: vm.searchText)
-            }
+          if let state = vm.emptyState {
+            emptyStateView(state)
           }
         }
         .searchable(
@@ -79,7 +68,7 @@ struct AlbumHistoryView: View {
         //   }
         // }
         .navigationTitle(.History.title)
-        .navigationSubtitle(Text(vm.resolvedSubtitle))
+        .navigationSubtitle(vm.resolvedSubtitle)
         .toolbar {
           albumHistoryToolbar {
             let count = vm.selectedIds.count
@@ -106,6 +95,32 @@ struct AlbumHistoryView: View {
         .withAlertDestination($alert)
         .withFullBackground()
       }
+    }
+  }
+}
+
+extension AlbumHistoryView {
+  @ViewBuilder
+  private func emptyStateView(_ state: AlbumHistoryViewModel.EmptyState) -> some View {
+    switch state {
+    case .noAlbums:
+      ThemeContentUnavailableView.empty(
+        .History.stateEmptyAlbumsTitle,
+        description: .History.stateEmptyAlbumsDescription,
+      ) {
+        if let navigation {
+          EmptyStateButton(navigation: navigation)
+        }
+      }
+
+    case .noFilterResults:
+      ThemeContentUnavailableView.empty(
+        .History.stateEmptyFiltersTitle,
+        description: .History.stateEmptyFilterDescription,
+      )
+
+    case .noSearchResults:
+      ThemeContentUnavailableView.search(text: vm.searchText)
     }
   }
 }
@@ -254,7 +269,18 @@ private struct AlbumHistoryFilterBar: View {
 }
 
 #if DEBUG
-private struct WithNoResults: View {
+private struct WithNoFilterResults: View {
+  @Environment(AlbumHistoryViewModel.self) private var vm
+
+  var body: some View {
+    AlbumHistoryView()
+      .onAppear {
+        vm.selectedFilters = [.genre("nonexistent")]
+      }
+  }
+}
+
+private struct WithNoSearchResults: View {
   @Environment(AlbumHistoryViewModel.self) private var vm
 
   @Query(sort: \Album.selectedAt, order: .reverse) private var albums: [Album]
@@ -295,8 +321,11 @@ private struct WithDatesReset: View {
 #Preview("Empty", traits: .withHistoryContext(kind: .empty)) {
   AlbumHistoryView()
 }
-#Preview("No results", traits: .withHistoryContext(kind: .default)) {
-  WithNoResults()
+#Preview("No filter", traits: .withHistoryContext(kind: .default)) {
+  WithNoFilterResults()
+}
+#Preview("No search", traits: .withHistoryContext(kind: .default)) {
+  WithNoSearchResults()
 }
 #Preview("With data", traits: .withHistoryContext(kind: .default)) {
   AlbumHistoryView()

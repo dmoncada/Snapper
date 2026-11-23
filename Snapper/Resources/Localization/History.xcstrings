@@ -24,6 +24,28 @@
         }
       }
     },
+    "state.empty.albums.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Music will show up here when you start identifying songs"
+          }
+        }
+      }
+    },
+    "state.empty.albums.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No albums"
+          }
+        }
+      }
+    },
     "state.empty.button.label" : {
       "comment" : "\n",
       "extractionState" : "manual",
@@ -36,18 +58,18 @@
         }
       }
     },
-    "state.empty.desc" : {
+    "state.empty.filter.description" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Music will show up here when you start identifying songs"
+            "value" : "No albums"
           }
         }
       }
     },
-    "state.empty.title" : {
+    "state.empty.filters.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

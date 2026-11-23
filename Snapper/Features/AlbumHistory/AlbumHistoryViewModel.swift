@@ -6,6 +6,12 @@ import WidgetKit
 @MainActor
 @Observable
 final class AlbumHistoryViewModel {
+  enum EmptyState {
+    case noAlbums
+    case noFilterResults
+    case noSearchResults
+  }
+
   var searchText = ""
   var selectedFilters: Set<AlbumHistoryFilter> = [.all]
   var sort = SortModel()
@@ -159,6 +165,20 @@ final class AlbumHistoryViewModel {
 
   var filteredCount: Int {
     context.getCount(using: descriptor)
+  }
+
+  var emptyState: EmptyState? {
+    guard filteredCount == 0 else { return nil }
+
+    if albumCount == 0 {
+      return .noAlbums
+    }
+
+    if searchText.isEmpty == false {
+      return .noSearchResults
+    }
+
+    return .noFilterResults
   }
 
   var resolvedSubtitle: LocalizedStringResource {

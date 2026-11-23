@@ -66,6 +66,7 @@ private struct HistoryPreview: View {
       .modelContainer(container)
       .environment(detailViewModel)
       .environment(historyViewModel)
+      .environment(\.navigation, .init())
       .environment(\.previewPlayer, .live)
   }
 
